@@ -9,9 +9,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/admin/*" element={<AdminRouter />} /> {/* Use element prop */}
-        <Route path="/*" element={<UserRouter />} /> {/* Use element prop */}
-        {/* <Route path='/login' element={<Login />}></Route> */}
+        <Route path="/admin/*" element={<AdminRouter />} /> 
+        <Route path="/*" element={<UserRouter />} /> 
+       
       </Routes>
     </Router>
   );

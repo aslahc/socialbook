@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import User, { IUser } from '../models/user';
+import User, { IUser } from '../models/user/user';
 
 // Extend the Request interface to include a 'user' property
 declare module 'express' {

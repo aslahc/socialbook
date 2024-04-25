@@ -1,5 +1,5 @@
 import { WriteError } from 'mongodb';
-import User, { IUser } from '../models/user';
+import User, { IUser } from '../models/user/user';
 import bcrypt from 'bcrypt';
 
 export class UserRepository {

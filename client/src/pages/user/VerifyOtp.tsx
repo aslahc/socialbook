@@ -78,6 +78,7 @@ function VerifyOtp() {
             console.log(responseData)
             console.log(responseData.userData._id)
               dispatch(setUserDetails(responseData.userData));
+              
               navigate(`/profile/${responseData.userData._id}`);
           } else {
               throw new Error(responseData.error || "Unknown error");

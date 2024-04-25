@@ -6,9 +6,9 @@ import connectToMongoDB from '../src/config/database'; // Assuming this establis
 import userRoute from './routes/userRoute';
 import adminRoute from './routes/adminRoute';
 import MongoStore from "connect-mongo";
-import {requestLogger} from '../src/middleware/Reqestlog'
-import  cookieParser from 'cookie-parser';
-import {errorHandler} from './middleware/Errorhandling'
+import { requestLogger } from '../src/middleware/Reqestlog'
+import cookieParser from 'cookie-parser';
+import { errorHandler } from './middleware/Errorhandling'
 dotenv.config();
 
 const app = express();
@@ -20,7 +20,7 @@ app.use(
     secret: 'secret-key',
     resave: false,
     saveUninitialized: true,
-  
+
   })
 );
 
@@ -36,9 +36,9 @@ declare module 'express-session' {
   }
 }
 // Middleware
- 
+
 app.use(cors({
-  origin:'http://localhost:3000',
+  origin: 'http://localhost:3000',
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 }))
@@ -53,14 +53,14 @@ app.use('/admin', adminRoute);
 app.use('/', userRoute);
 
 // Error Handler Middleware (placed after all other middleware and routes)
-app.use(errorHandler);
+
 
 
 connectToMongoDB()
   .then(() => {
     console.log("Connected to MongoDB");
 
-   
+
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });

@@ -4,6 +4,7 @@ import Navbar from '../../components/layouts/NavBar'
 import NameCard from '../../components/layouts/NameCard'
 import SideNav from '../../components/layouts/SideNav'
 import ProfileCard from '../../components/Profile/ProfileCard'
+import CreatePost from '../../components/posts/CreatePost'
 
 function home() {
     return (
@@ -26,7 +27,7 @@ function home() {
 
      
       <div className="flex-1 ml-4 ">
-          {/* <ProfileCard /> */}
+      <CreatePost />
         </div>
     </div>
   </div>

@@ -8,7 +8,6 @@ import VerifyOtp from "../pages/user/VerifyOtp";
 import Home from "../pages/user/Home";
 import UserProfile from '../pages/user/UserProfile';
 import EditProfile from '../components/Profile/EditProfile';
-import Dashboard from "../pages/admin/Dashboard"
 import CompleteProfile from '../pages/user/CompleteProfile';
 import Forgetpass from '../pages/user/Forgetpass';
 import ForgetOtp from '../pages/user/ForgetOtp';
@@ -17,7 +16,7 @@ import Changepass from '../pages/user/changepass';
 
 function UserRouter() {
  const navigate = useNavigate()
-  const user = useSelector((state: any) => state.userDetails.user);
+const user = useSelector((state: any) => state.userDetails.user);
 const auth = localStorage.getItem('token')
 const isAdmin  = localStorage.getItem('admin')
 
@@ -29,6 +28,7 @@ const isAdmin  = localStorage.getItem('admin')
   }, [user]);
 
   return (
+    
     <Routes>
    <Route 
   path='/signup' 
@@ -44,6 +44,7 @@ const isAdmin  = localStorage.getItem('admin')
     )
   } 
 />
+
 <Route 
   path='/login' 
   element={
