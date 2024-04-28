@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from '../../utils/store'
+import { RootState } from '../../utils/store/store'
 
 import { setUserDetails } from '../../utils/reducers/userDetails';
 const baseURL = axiosInstance.defaults.baseURL;

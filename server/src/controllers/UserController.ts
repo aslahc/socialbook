@@ -152,7 +152,7 @@ export const verifyLogin = async (req: Request, res: Response): Promise<void> =>
       console.log("User not found for username:", username);
       res.status(404).json({ error: "User not found" });
       return;
-    }
+    } 
 
     const passwordMatch = await userRepository.comparePasswords(password, user.password);
     if (!passwordMatch) {
@@ -365,3 +365,5 @@ export const resendOtp = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ success: false, error: "Internal server error" });
   }
 }
+
+// create a new  post into feeed 

@@ -60,7 +60,7 @@ function Forgetpass() {
 
 
 <div className="flex flex-col md:flex-row h-screen">
-      <div className="w-full md:w-1/2 bg-teal-600 text-white p-8 flex items-center justify-center hidden md:flex">
+      <div className="w-full md:w-1/2 bg-indigo-400 text-white p-8 flex items-center justify-center hidden md:flex">
         <h3 className="text-3xl font-mono font-bold text-center">
           Online Community makes <br /> people more Creative
         </h3>
@@ -93,7 +93,7 @@ function Forgetpass() {
   <button
     type="button"
     onClick={handleVerification}
-    className="w-full py-5 bg-teal-700 text-white text-sm rounded-xl shadow-sm focus:outline-none"
+    className="w-full py-5 bg-indigo-700 text-white text-sm rounded-xl shadow-sm focus:outline-none"
   >
     Verify Account
   </button>

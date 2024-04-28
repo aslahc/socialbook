@@ -3,7 +3,7 @@ import React from 'react'
 function NameCard() {
   return (
     <div>
-<div className="max-w-xs md:max-w-64 ml-4 bg-teal-700 rounded-xl overflow-hidden shadow-lg">
+<div className="max-w-xs md:max-w-64 ml-4 bg-indigo-400 rounded-xl overflow-hidden shadow-lg">
   {/* <img className="w-full" 
   // src={imageUrl} alt={name}
   /> */}

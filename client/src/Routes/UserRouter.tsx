@@ -6,13 +6,13 @@ import SignUp from "../pages/user/SignUp";
 import Login from "../pages/user/Login";
 import VerifyOtp from "../pages/user/VerifyOtp";
 import Home from "../pages/user/Home";
-import UserProfile from '../pages/user/UserProfile';
+import UserProfile from '../pages/user/Profile';
 import EditProfile from '../components/Profile/EditProfile';
 import CompleteProfile from '../pages/user/CompleteProfile';
 import Forgetpass from '../pages/user/Forgetpass';
 import ForgetOtp from '../pages/user/ForgetOtp';
 import Changepass from '../pages/user/changepass';
-
+import UsersProfile from '../pages/user/UsersProfile'
 
 function UserRouter() {
  const navigate = useNavigate()
@@ -83,7 +83,8 @@ const isAdmin  = localStorage.getItem('admin')
       {/* Check if user exists before rendering UserProfile */}
       <Route path='/Profile/:id' element={auth ? <UserProfile /> : <Navigate to='/login' />} />
       <Route path='/editProfile/:id' element={auth ? <EditProfile /> : <Navigate to='/login' />} />
-
+      <Route path='/user-Profile/:id' element={auth ? <UsersProfile /> : <Navigate to='/login' />} />
+      
     </Routes>
   );
 }

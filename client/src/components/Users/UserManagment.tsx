@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUsers } from '../../utils/reducers/userData';
 import axiosInstance from '../../axios/axios';
 import { User } from '../../types/types'; // Make sure to import User interface
-import { RootState } from '../../utils/store'
+import { RootState } from '../../utils/store/store'
 import { Link } from "react-router-dom";
 const baseURL = axiosInstance.defaults.baseURL;
 
@@ -46,7 +46,7 @@ function   UserManagment() {
 
 
 
-<div className="overflow-x-auto">
+<div className="overflow-x-auto m-9 rounded-3xl  ">
   <table className="min-w-full bg-white font-sans">
     <thead className="whitespace-nowrap">
       <tr>

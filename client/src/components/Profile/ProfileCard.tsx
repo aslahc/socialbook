@@ -1,31 +1,21 @@
   import React,{useEffect} from 'react'
   import { useDispatch, useSelector } from "react-redux";
-  import { RootState } from '../../utils/store'
+  import { RootState } from '../../utils/store/store'
   import { Link } from 'react-router-dom';
 import {  useParams } from "react-router-dom";
-
+import {User } from '../../types/types'
 import axios from 'axios';
 
 import axiosInstance from '../../axios/axios';
 import {setUserDetails} from '../../utils/reducers/userDetails'
  const baseURL = axiosInstance.defaults.baseURL;
-  function ProfileCard() {
+
+
+  function ProfileCard({ userData }: { userData: User }) {
+    
     const dispatch = useDispatch();
     const { id } = useParams();
-    // useEffect(() => {
-    //   fetchUser();
-    // }, []);
-  
-    // const fetchUser = async (): Promise<void> => {
-    //   try {
-    //     const response = await axios.get(`${baseURL}/fetchUserData/${id}`);
-    //     console.log("Response:", response.data.usersData);
-    //     dispatch(setUserDetails(response.data.usersData)); // Dispatching setUsers action with correct payload
-    //   } catch (error) {
-    //     console.error("Error:", error);
-    //   }
-    // };
-    const userData = useSelector((state: any) => state.userDetails.user ||'');
+   
 
     console.log("ooooooo", userData.username);
     console.log(userData)

@@ -9,14 +9,14 @@ const baseURL = axiosInstance.defaults.baseURL;
 
 const CreatePost = () => {
   const userData = useSelector((state: any) => state.userDetails.user || '');
-
+  const userId = userData._id
   interface FormInputs {
     caption: string;
     postUrl: string;
   }
   const presetKey: string = 'cloudinaryimg'; 
   const cloudName: string = 'dy9ofwwjp';
-
+  
   const [postData, setPostData] = useState<FormInputs>({ caption: '', postUrl: '' });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [crop, setCrop] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
@@ -64,6 +64,7 @@ const CreatePost = () => {
   const handleCloseModal = async () =>{
     setCropImg(false)
   }
+ 
 
   const handleConfirmCrop = async () => {
     try {
@@ -73,17 +74,17 @@ const CreatePost = () => {
 
       // Check if selectedFile is not null before appending it to the FormData
       if (selectedFile) {
-        formDataFile.append('file', selectedFile);
+        formDataFile.append('file', croppedImageBlob);
       }
-      
+      setSelectedFile(null);
       formDataFile.append('upload_preset', presetKey);
       axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formDataFile)
         .then(res => {
+         
+          setCropImg(true)
           setImage(res.data.secure_url);
           setPostData({ ...postData, postUrl: res.data.secure_url });
-          console.log("--", res.data.secure_url);
-         setSelectedFile(null);
-         setCropImg(true)
+        
 
         })
         .catch(err => console.log(err));
@@ -100,6 +101,28 @@ const CreatePost = () => {
     }
   };
   
+  const handleCreatePostClick= async () =>{ 
+    try{
+  console.log(userId,"ithan njan banceknd kk akne ")
+      axios
+      .post(`${baseURL}/createPost`, {...postData,userId})
+      .then(response => {
+        console.log('Response from server:', response.data);
+        
+        setPostData({ caption: '', postUrl: '' });
+        setSelectedFile(null);
+        // Log the response from the server
+      })
+    .catch(error => {
+      console.error('Error creating post:', error);
+    });
+    }catch (error) {
+      console.error('Error cropping image:', error);
+    }
+  
+  }
+
+
   const closeModal = () => {
     setSelectedFile(null);
     // setShowConfirmButton(false);
@@ -121,7 +144,7 @@ const CreatePost = () => {
           croppedArea.x * scaleX,
           croppedArea.y * scaleY,
           croppedArea.width * scaleX,
-          croppedArea.height * scaleY,
+          croppedArea.height * scaleY, 
           0,
           0,
           croppedArea.width,
@@ -140,54 +163,51 @@ const CreatePost = () => {
 
   return (
     <div>
-      <div className="bg-white flex flex-col rounded-lg justify-between p-4">
-        <div className="flex items-center mb-3">
-          <img
-            src={userData.profileimg}
-            alt="Profile picture"
-            className="w-10 h-10 rounded-full object-cover ml-2"
-          />
-          <p className="font-semibold ml-4">{userData.username}</p>
-        </div>
-        <div className="text-gray-500 font-medium text-xs">What's Happening?........</div>
-        <input
-          type="text"
-          name="caption"
-          value={postData.caption}
-          onChange={handleInputChange}
-          placeholder="Write something here..."
-          className="border border-gray-300 rounded-lg px-4 py-2 mt-4"
-        />
-        <div className="flex items-center justify-between align-middle">
-          <div className="flex">
-            <ul className="flex gap-2">
-              <li>
-                <button
-                  type="button"
-                  className="flex items-center text-blue-400 hover:text-blue-600"
-                  onClick={handlePhotoIconClick}
-                >
-                  <AiOutlineCamera className="w-5 h-5" />
-                  <span className="ml-1">Photo</span>
-                </button>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  style={{ display: 'none' }}
-                  onChange={handleFileChange}
-                />
-              </li>
-            </ul>
-          </div>
-          <button
-            //   onClick={handleCreatePostClick}
-            className="text-xs mb-4 bg-gradient-to-b from-purple-600 to-blue-400 text-white px-4 py-2 mt-6 rounded-md hover:bg-gray-800 focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
-          >
-            Create Post
-          </button>
-        </div>
-        <hr />
-      </div>
+ <div className="bg-white border border-gray-300 rounded-lg shadow-md p-4 max-w-3xl">
+  <div className="flex items-center mb-3">
+    <img
+      src={userData.profileimg}
+      alt="Profile picture"
+      className="w-10 h-10 rounded-full object-cover ml-2"
+    />
+    <p className="font-semibold ml-4 underline italic">{userData.username}</p>
+  </div>
+  <input
+    type="text"
+    name="caption"
+    value={postData.caption}
+    onChange={handleInputChange}
+    placeholder="What's on your mind?"
+    className="border-b border-gray-300 focus:outline-none focus:border-blue-400"
+  />
+
+  <div className="flex items-center justify-between">
+    <div className="flex gap-2">
+      <button
+        type="button"
+        className="flex items-center text-blue-400 hover:text-blue-600 focus:outline-none"
+        onClick={handlePhotoIconClick}
+      >
+        <AiOutlineCamera className="w-5 h-5" />
+        <span className="ml-1">Add Photo</span>
+      </button>
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+    </div>
+    <button onClick={handleCreatePostClick} type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+
+<svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+</svg>
+<span className="sr-only">Icon description</span>
+</button>
+  </div>
+</div>
+
 
       {selectedFile && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">
@@ -197,7 +217,7 @@ const CreatePost = () => {
                 image={URL.createObjectURL(selectedFile)}
                 crop={crop}
                 zoom={zoom}
-                aspect={4 / 3}
+                aspect={2 / 2}
                 onCropChange={handleCropChange}
                 onZoomChange={handleZoomChange}
                 onCropComplete={onCropComplete}

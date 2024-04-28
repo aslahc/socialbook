@@ -85,7 +85,7 @@ function ForgetOtp() {
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
-      <div className="w-full md:w-1/2 bg-teal-600 text-white p-8 flex items-center justify-center hidden md:flex">
+      <div className="w-full md:w-1/2 bg-indigo-400 text-white p-8 flex items-center justify-center hidden md:flex">
         <h3 className="text-3xl font-mono font-bold text-center">
           Online Community makes <br /> people more Creative
         </h3>

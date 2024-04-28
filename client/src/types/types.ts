@@ -7,6 +7,7 @@ export interface User {
     lname?: string;
     bio?: string;
     dob?: string;
+    profession?:string;
     profileimg?: string;
     bannerImg?: string;
     phone: string; // New field
@@ -15,6 +16,23 @@ export interface User {
     isBlock?:boolean
     isAdmin?:boolean
   }
+  export interface IPost {
+    filter: any;
+    _id: string; // Change '_id' to 'id' if your post IDs are named 'id'
+    userId: {
+      _id: string;
+      username: string;
+      profileimg: string;
+    };
+    likes:any[]
+    createdAt: string;
+    postUrl: string;
+    caption: string;
+
+  }
+  
+
+  
   
   export interface UsersState {
     users: User[];
@@ -25,3 +43,6 @@ export interface User {
     // user:User[];
   }
   
+  export interface PostState{
+    posts:IPost[]
+  }

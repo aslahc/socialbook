@@ -3,4 +3,8 @@
 @tailwind utilities;
 .body{
     margin: 0%;
+   
+}
+.bg-color{
+  background-color:#f8f8fe;
 }

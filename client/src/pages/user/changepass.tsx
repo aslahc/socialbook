@@ -71,7 +71,7 @@ function Changepass() {
   return (
     <div>
       <div className="flex flex-col md:flex-row h-screen">
-        <div className="w-full md:w-1/2 bg-teal-600 text-white p-8 flex items-center justify-center hidden md:flex">
+        <div className="w-full md:w-1/2 bg-indigo-400 text-white p-8 flex items-center justify-center hidden md:flex">
           <h3 className="text-3xl font-mono font-bold text-center">
             Online Community makes <br /> people more Creative
           </h3>
@@ -118,7 +118,7 @@ function Changepass() {
               </div>
               <div className="flex flex-col mt-8 space-y-5">
                 <button
-                  className="w-full py-5 bg-blue-700 text-white text-sm rounded-xl shadow-sm focus:outline-none"
+                  className="w-full py-5 bg-indigo-400 text-white text-sm rounded-xl shadow-sm focus:outline-none"
                 //   disabled={!!errors.password || !!errors.confirmPassword}
                 >
                 Confirm

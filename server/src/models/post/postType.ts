@@ -1,21 +1,12 @@
 import { Document, Schema, Types } from "mongoose";
+import { CommentInterface } from "../comment/commentType"; // Assuming you have defined the Comment interface in a separate file
 
-
-interface Comment {
+export interface PostInterface extends Document {
     userId: Types.ObjectId;
-    content: string;
-    createdAt: Date;
-} 
-
-interface PostInterface extends Document {
-    userId: Types.ObjectId;
-    imageUrl: string;
-    title: string;
+    postUrl: string;
+    caption: string;
     createdOn: Date;
     likes: Types.ObjectId[];
-    comments:Comment[]
+    comments: Comment[]; // Use the Comment interface here
     isReport: boolean;
-    
 }
-
-export default PostInterface;

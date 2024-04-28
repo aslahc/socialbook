@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import  { setUserDetails } from '../../utils/reducers/userDetails'
-import { RootState } from '../../utils/store'
+import { RootState } from '../../utils/store/store'
 import { ToastContainer, toast } from 'react-toastify';
 import { GoogleLogin } from '@react-oauth/google';
 import axiosInstance from '../../axios/axios'
@@ -114,7 +114,7 @@ function Login() {
 
     <div className="flex flex-col h-screen  ">
       <div className="flex flex-col md:flex-row flex-grow ">
-        <div className="w-full md:w-1/2 bg-teal-600 text-white p-8  flex items-center justify-center hidden md:flex">
+        <div className="w-full md:w-1/2 bg-indigo-400 text-white p-8  flex items-center justify-center hidden md:flex">
           <h3 className="text-3xl font-mono font-bold text-center">
             Online Community makes <br /> people more Creative
           </h3>
@@ -122,7 +122,7 @@ function Login() {
         <div className="w-full md:w-1/2 p-8 flex justify-center items-center">
           <form className="w-full max-w-md" onSubmit={handleSubmit}>
             <h1 className="font-bold text-3xl text-center mb-3">Welcome back</h1>
-            <h2 className="text-lg text-center mb-4">Login into your account</h2>
+            <h2 className="text-lg text-center text-indigo-400 mb-4">Login into your account</h2>
             <div className="mb-5">
               <GoogleLogin
                 onSuccess={async (response) => {
@@ -179,15 +179,15 @@ function Login() {
                 value={formData.password}
                 onChange={handleinputChange}
                 placeholder='enter your password'
-                className={`bg-gray-300 border border-gray-500   text-gray-900 text-sm rounded-lg focus:ring-blue-500  focus:border-blue-500 block w-full p-2.5 ${errors.username ? 'border-red-500' : 'dark:red-gray-800'}  dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+                className={`bg-gray-300 border border-gray-500   text-gray-900 text-sm rounded-lg focus:ring-blue-300  focus:border-blue-300 block w-full p-2.5 ${errors.username ? 'border-red-500' : 'dark:red-gray-800'}  dark:placeholder-gray-400  dark:focus:ring-indigo-400 dark:focus:border-blue-500`}
 
               />
               {errors.password && <span className="text-red-500">{errors.password}</span>}
               <Link to='/verifyEmail'> forget password? </Link>
-              <button type="submit" className="w-full mt-4 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm py-2.5 text-center">
+              <button type="submit" className=" w-full mt-4 text-white bg-gradient-to-r from-indigo-500 via-indigo-400-600 to-indigo-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                 Login
               </button>
-              <h3 className="text-end  mb-4 mt-3">Don’t have an account?<Link to='/signup' className='text-green-400'>signup</Link></h3>
+              <h3 className="text-end  mb-4 mt-3">Don’t have an account?<Link to='/signup' className='text-indigo-400'>signup</Link></h3>
 
               <div>
                 <ToastContainer />

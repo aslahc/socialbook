@@ -15,7 +15,7 @@ function AdminNavbar() {
   return (
     <div>
 
-<nav className="flex items-center w-11/12 ml-8 px-7 justify-between mt-5 rounded-xl h-32 px-4 bg-teal-700">
+<nav className="flex items-center w-11/12 ml-8 px-7 justify-between mt-5 rounded-xl h-32 px-4 bg-indigo-400">
   <div className="hidden md:flex items-center justify-center w-full"> {/* Center the input on medium screens and above */}
     <div className="relative w-full max-w-screen-sm">
       <input

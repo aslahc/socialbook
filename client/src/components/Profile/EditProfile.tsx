@@ -30,6 +30,7 @@ const navigate = useNavigate();
 
 
   const userData = useSelector((state: any) => state.userDetails.user||'');
+  console.log(userData._id)
   console.log(userData)
   const [formData, setFormData] = useState<FormInputs>({
     firstName: userData.fname || '',
