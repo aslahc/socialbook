@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter } from "react-router-dom";
 
 import { PersistGate } from 'redux-persist/integration/react';
-import { ToastContainer, } from 'react-toastify';
+import { Toaster } from "sonner";
 
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -20,13 +20,14 @@ root.render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistStore(store)}>
         <GoogleOAuthProvider clientId="1005695494942-ogm8cd30tnavtcg1cqngos2n7to1rllv.apps.googleusercontent.com">
+        <Toaster richColors />
+
         <div className='bg-color'>    
-  <App />
-</div>
+            <App />
+        </div>
 
 
         </GoogleOAuthProvider>;
-        <ToastContainer />
 
       </PersistGate>
     </Provider>,

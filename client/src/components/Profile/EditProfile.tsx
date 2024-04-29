@@ -3,10 +3,14 @@ import axios from 'axios';
 import axiosInstance from '../../axios/axios'
 import {  useParams } from "react-router-dom";
 import { Link, useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import { useDispatch, useSelector } from "react-redux";
 
 import { setUserDetails } from '../../utils/reducers/userDetails';
+import { toast } from "sonner";
+
+
 const baseURL = axiosInstance.defaults.baseURL;
 interface FormInputs {
   firstName: string,
@@ -29,8 +33,8 @@ const navigate = useNavigate();
   const fileInputRefBanner = useRef<HTMLInputElement>(null);
 
 
-  const userData = useSelector((state: any) => state.userDetails.user||'');
-  console.log(userData._id)
+    const userData = useSelector((state: any) => state.userDetails.user||'');
+    console.log(userData._id)
   console.log(userData)
   const [formData, setFormData] = useState<FormInputs>({
     firstName: userData.fname || '',
@@ -62,37 +66,54 @@ const navigate = useNavigate();
   };
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
-    if (file) {
+    if (file && file.type.startsWith('image/')) {
       const formDataFile = new FormData();
-      formDataFile.append('file', file);
+      const uniqueFilename = `${uuidv4()}_${file.name}`; // Generate unique filename with UUID
+      formDataFile.append('file', file, uniqueFilename); // Append file with unique filename
       formDataFile.append('upload_preset', presetKey);
+  
       axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formDataFile)
         .then(res => {
           setImage(res.data.secure_url);
           setFormData({ ...formData, imageUrl: res.data.secure_url });
           console.log("--", res.data.secure_url);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err);
+          toast.error("Failed to upload image. Please try again.");
+        });
+  
       console.log('Selected file:', file);
+    } else {
+      toast.error("Please select another image.");
     }
   };
   
   const handleBannerFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
-    if (file) {
+    if (file && file.type.startsWith('image/')) {
       const formDataFile = new FormData();
-      formDataFile.append('file', file);
-      formDataFile.append('upload_preset', presetKey);
+      const uniqueFilename = `${uuidv4()}_${file.name}`; // Generate unique filename with UUID
+      formDataFile.append('file', file, uniqueFilename);
+      formDataFile.append('upload_preset', presetKey); // Use the presetKey for uploading to Cloudinary
+  
       axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formDataFile)
         .then(res => {
           setBannerImage(res.data.secure_url);
-          setFormData({ ...formData, bannerUrl: res.data.secure_url }); // Corrected to bannerUrl
+          setFormData({ ...formData, bannerUrl: res.data.secure_url }); // Update bannerUrl in formData
           console.log("--", res.data.secure_url);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err);
+          toast.error("Failed to upload image. Please try again.");
+        });
+  
       console.log('Selected file:', file);
+    } else {
+      toast.error("Please select another image.");
     }
   };
+  
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -12,6 +12,7 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
         const userId = req.body.userId;
         console.log(req.body);
         
+        
         // Call the savePost method of the postRepository to save the new post
         const newPost = await postRepository.savePost(caption, postUrl, userId);
         

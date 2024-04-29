@@ -6,9 +6,9 @@ import { signUp ,verifyOtp ,verifyLogin ,fetchUsers,fetchUser,resendOtp, verifye
 
 
 
-import { createPost ,fetchPosts ,addLike ,removeLike , deletePost } from '../controllers/PostController'
+import { createPost ,fetchPosts ,addLike ,removeLike , deletePost ,} from '../controllers/PostController'
 
-
+import {reportPost} from '../controllers/ReportPost'
 import {postComment , getComment ,deleteComment} from '../controllers/commentController'
 
 import user from '../models/user/user';
@@ -40,7 +40,7 @@ user_route.get("/fetchPost",fetchPosts)
 user_route.post('/posts/like/:id',addLike)
 user_route.delete('/posts/like/:id',removeLike)
 user_route.delete('/deletepost/:postId',deletePost)
-
+user_route.post('/reportPost',reportPost)
 
 //comment 
 user_route.post('/postComment',postComment)

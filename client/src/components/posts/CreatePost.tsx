@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import axios from 'axios';
 import axiosInstance from '../../axios/axios'
 import Cropper from 'react-easy-crop';
+import { toast } from "sonner";
+import { v4 as uuidv4 } from 'uuid';
 
 const baseURL = axiosInstance.defaults.baseURL;
 
@@ -42,11 +44,16 @@ const CreatePost = () => {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
+    
     if (fileList && fileList.length > 0) {
       const file = fileList[0];
+      if (file.type.startsWith('image/')) {
       setSelectedFile(file);
     //   setCroppedImage
     //   setShowConfirmButton(true);
+    } } else {
+      // If the selected file is not an image, show an error message
+      toast.error("Please select an image file.");
     }
   };
 
@@ -103,7 +110,7 @@ const CreatePost = () => {
   
   const handleCreatePostClick= async () =>{ 
     try{
-  console.log(userId,"ithan njan banceknd kk akne ")
+
       axios
       .post(`${baseURL}/createPost`, {...postData,userId})
       .then(response => {
