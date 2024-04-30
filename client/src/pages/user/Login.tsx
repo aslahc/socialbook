@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import  { setUserDetails } from '../../utils/reducers/userDetails'
 import { RootState } from '../../utils/store/store'
-import { ToastContainer, toast } from 'react-toastify';
 import { GoogleLogin } from '@react-oauth/google';
+import { toast } from "sonner";
+
 import axiosInstance from '../../axios/axios'
 import jwt_decode, { JwtPayload } from 'jwt-decode'
 
@@ -190,7 +191,6 @@ function Login() {
               <h3 className="text-end  mb-4 mt-3">Don’t have an account?<Link to='/signup' className='text-indigo-400'>signup</Link></h3>
 
               <div>
-                <ToastContainer />
 
               </div>
             </div>

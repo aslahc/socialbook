@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from "sonner";
+
 import { setUserDetails } from '../../utils/reducers/userDetails';
 import axiosInstance from '../../axios/axios';
 

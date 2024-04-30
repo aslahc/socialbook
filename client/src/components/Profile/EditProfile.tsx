@@ -11,6 +11,7 @@ import { setUserDetails } from '../../utils/reducers/userDetails';
 import { toast } from "sonner";
 
 
+
 const baseURL = axiosInstance.defaults.baseURL;
 interface FormInputs {
   firstName: string,

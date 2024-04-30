@@ -3,7 +3,8 @@ import axios from 'axios'; // Import Axios
 import { useLocation, useNavigate ,} from 'react-router-dom';
 // import { setUser } from '../../utils/reducers/userData';
 import { useDispatch } from "react-redux";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from "sonner";
+
 import {setUserDetails} from '../../utils/reducers/userDetails'
 import axiosInstance from '../../axios/axios'
 const baseURL = axiosInstance.defaults.baseURL;

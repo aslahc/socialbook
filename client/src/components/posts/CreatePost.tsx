@@ -1,14 +1,18 @@
-import React, { ChangeEvent, useState, useRef } from 'react';
+import React, { ChangeEvent, useState, useRef, Suspense } from 'react';
 import { AiOutlineCamera } from 'react-icons/ai';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
+
 import axios from 'axios';
 import axiosInstance from '../../axios/axios'
 import Cropper from 'react-easy-crop';
+import PostData, {addPost} from '../../utils/reducers/PostData'
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 
 const baseURL = axiosInstance.defaults.baseURL;
-
+const LazyLoadedImage = ({ imageUrl }: { imageUrl: string }) => {
+  return <img className="w-full h-auto object-contain" src={imageUrl} alt="Selected Post Photo" />;
+};
 const CreatePost = () => {
   const userData = useSelector((state: any) => state.userDetails.user || '');
   const userId = userData._id
@@ -16,6 +20,8 @@ const CreatePost = () => {
     caption: string;
     postUrl: string;
   }
+  const dispatch = useDispatch();
+
   const presetKey: string = 'cloudinaryimg'; 
   const cloudName: string = 'dy9ofwwjp';
   
@@ -34,7 +40,7 @@ const CreatePost = () => {
   };
   console.log(postData,".....00000")
 
-  const [image, setImage] = useState<string | undefined>(userData.profileimg || ''); 
+  const [image, setImage] = useState<string | undefined>(''); 
 
   const handlePhotoIconClick = () => {
     if (fileInputRef.current) {
@@ -69,6 +75,7 @@ const CreatePost = () => {
     setZoom(zoom);
   };
   const handleCloseModal = async () =>{
+    setImage("")
     setCropImg(false)
   }
  
@@ -85,10 +92,13 @@ const CreatePost = () => {
       }
       setSelectedFile(null);
       formDataFile.append('upload_preset', presetKey);
+
+      setCropImg(true)
+      
       axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formDataFile)
         .then(res => {
          
-          setCropImg(true)
+         
           setImage(res.data.secure_url);
           setPostData({ ...postData, postUrl: res.data.secure_url });
         
@@ -110,12 +120,19 @@ const CreatePost = () => {
   
   const handleCreatePostClick= async () =>{ 
     try{
-
+  console.log(userId,"ithan njan banceknd kk akne ")
       axios
       .post(`${baseURL}/createPost`, {...postData,userId})
       .then(response => {
+
         console.log('Response from server:', response.data);
-        
+        const newPost = response.data.postData;
+        console.log(newPost ,";+++++++++++++++++++++++++")
+      dispatch(addPost(newPost))
+      //   // Dispatch setPost action to add the new post to Redux store
+     
+  
+        setCropImg(false)
         setPostData({ caption: '', postUrl: '' });
         setSelectedFile(null);
         // Log the response from the server
@@ -170,51 +187,87 @@ const CreatePost = () => {
 
   return (
     <div>
- <div className="bg-white border border-gray-300 rounded-lg shadow-md p-4 max-w-3xl">
-  <div className="flex items-center mb-3">
+<div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl ">
+  <div className="flex items-center mb-4">
     <img
-      src={userData.profileimg}
+      src={userData?.profileimg}
       alt="Profile picture"
-      className="w-10 h-10 rounded-full object-cover ml-2"
+      className="w-12 h-12 rounded-full object-cover mr-4"
     />
-    <p className="font-semibold ml-4 underline italic">{userData.username}</p>
+    <p className="font-semibold text-gray-800 underline italic">
+      {userData?.username}
+    </p>
   </div>
-  <input
-    type="text"
-    name="caption"
-    value={postData.caption}
-    onChange={handleInputChange}
-    placeholder="What's on your mind?"
-    className="border-b border-gray-300 focus:outline-none focus:border-blue-400"
-  />
-
+  <div className="flex items-center mb-4">
+    <input
+      type="text"
+      name="caption"
+      value={postData.caption}
+      onChange={handleInputChange}
+      placeholder="What's on your mind?"
+      className="border-0 bg-gray-100 rounded-3xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+  </div>
   <div className="flex items-center justify-between">
-    <div className="flex gap-2">
-      <button
-        type="button"
-        className="flex items-center text-blue-400 hover:text-blue-600 focus:outline-none"
-        onClick={handlePhotoIconClick}
-      >
-        <AiOutlineCamera className="w-5 h-5" />
-        <span className="ml-1">Add Photo</span>
-      </button>
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
-      />
+    <div className="flex items-center">
+      <div className="bg-gray-100 rounded-3xl p-2 mr-4">
+        <label
+          onClick={handlePhotoIconClick}
+          className="flex items-center px-3 py-2 bg-white rounded-3xl shadow-md cursor-pointer hover:bg-gray-200 transition-colors duration-200"
+        >
+          <svg
+            className="w-5 h-5 text-blue-500 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+          <span className="text-sm font-medium text-gray-800">
+            Select a image
+          </span>
+        </label>
+      </div>
+     
     </div>
-    <button onClick={handleCreatePostClick} type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <input
+      type="file"
+      ref={fileInputRef}
+      style={{ display: 'none' }}
+      onChange={handleFileChange}
+    />
+{postData.caption && (
+  <button
+    onClick={handleCreatePostClick}
+    type="button"
+    className="bg-blue-500 rounded-3xl px-4 py-2 text-white font-medium flex items-center hover:bg-blue-600 transition-colors duration-200"
+  >
+    <svg
+      className="w-4 h-4 mr-2"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+      />
+    </svg>
+    <span>Post</span>
+  </button>
+)}
 
-<svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-</svg>
-<span className="sr-only">Icon description</span>
-</button>
   </div>
 </div>
-
 
       {selectedFile && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">
@@ -238,21 +291,92 @@ const CreatePost = () => {
         </div>
       )}
 
-      {cropedImg && (
-       <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-300 ease-in-out z-50">
-       <div className="flex items-center justify-center h-screen">
-         <div className="bg-white rounded-lg shadow-md px-4 pt-6 pb-8 w-full max-w-md">
-           <img className="w-full h-auto object-contain" src={image} alt="Selected Post Photo" />
-           <div className="flex justify-end mt-4"> {/* Updated line */}
-             <button  onClick={handleCloseModal} type="button" className="focus:outline-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
-               Next
-             </button>
-           </div>
-         </div>
-       </div>
-     </div>
-     
+     {cropedImg && (
+  <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-300 ease-in-out z-50">
+    <div className="flex items-center justify-center h-screen">
+      
+      <div className="bg-white rounded-lg shadow-md px-4 pt-6 pb-8 w-full max-w-md">
+        
+      <div className="mt-4">
+      <div className="flex items-center mb-4">
+    <input
+      type="text"
+      name="caption"
+      value={postData.caption}
+      onChange={handleInputChange}
+      placeholder="What's on your mind?"
+      className="border-0 bg-gray-100 rounded-3xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+  </div>
+        </div>
+        
+        {image && (
+      <Suspense fallback={<div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-50">
+      <div className="spinner"></div>
+    </div>}>
+      <LazyLoadedImage imageUrl={image} />
+    </Suspense>
       )}
+        
+        {/* Input box added below the image */}
+    
+        
+        {/* Button for next or close */}
+        <div className="flex justify-end mt-4">
+        <button
+  onClick={handleCloseModal}
+  type="button"
+  className="focus:outline-none bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-md mr-2
+    shadow-md transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg flex items-center justify-center"
+>
+  {/* Close (X) Icon */}
+  <svg
+    className="w-4 h-4 mr-1"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M6 18L18 6M6 6l12 12"
+    />
+  </svg>
+  Close
+</button>
+
+          {postData.postUrl && (
+  <button
+    onClick={handleCreatePostClick}
+    type="button"
+    className="bg-blue-500 rounded-3xl px-4 py-2 text-white font-medium flex items-center hover:bg-blue-600 transition-colors duration-200"
+  >
+    <svg
+      className="w-4 h-4 mr-2"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+      />
+    </svg>
+    <span>Post</span>
+  </button>
+)}
+
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

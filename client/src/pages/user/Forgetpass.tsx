@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import axiosInstance from '../../axios/axios'
 import { useLocation, useNavigate ,} from 'react-router-dom';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from "sonner";
+
 
 const baseURL = axiosInstance.defaults.baseURL;
 interface VerificationProps {

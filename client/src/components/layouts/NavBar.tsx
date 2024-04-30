@@ -54,7 +54,7 @@ console.log(filteredUsers,"filterd usre")
       <div className="relative w-full max-w-screen-sm">
         <input
           type="text"
-          className="rounded-lg pl-8 pr-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 w-full bg-gray-700 border border-transparent"
+          className="rounded-lg pl-8 pr-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 w-full bg-gray-700 border border-transparent"
           placeholder="Search"
           value={searchQuery}
           onChange={handleSearchChange}
@@ -72,15 +72,15 @@ console.log(filteredUsers,"filterd usre")
                 <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                  serach result 
                 </h3>
-                <a
-                  href="#"
-                  className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
+                <button
+                  className="text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400"
+                  onClick={closeModal}
                 >
-                  View all
-                </a>
+                  ✕
+                </button>
               </div>
               <div className="flow-root">
-                <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
+                <ul role="list" className="divide-y divide-gray-200 dark:divide-white">
                   {filteredUsers.map(user => (
                     
                     <li key={user._id.toString()} onClick={() => handleUserProfileClick(user._id)} className="py-3 sm:py-4">

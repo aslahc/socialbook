@@ -1,30 +1,34 @@
-// import jwt from "jsonwebtoken";
-// import { Response } from "express";
+import jwt from "jsonwebtoken"
 
-// const generateTokenAndSetCookie = (userId: string, res: Response) => {
+export interface UserPayload {
+    userId: string;
+    role: string;
+  }
 
-    
-//     const token = jwt.sign({ userId }, process.env.JWT_TOKEN as string, {
-//         expiresIn: '15d',
-//     });
-//     console.log(token)
-//     console.log("hello")
+export const generateToken = (userId:any,role:string)=>{
+    const stringUserId = userId.toString();
+    const payload:UserPayload = {
+        userId:stringUserId,
+        role
+    }
+    const token = jwt.sign(payload,process.env.JWT_SECRET as string,{ expiresIn: '10s' });
+    return token;
+}
 
-//  res.cookie("jwt", token, {
-//         maxAge: 15 * 24 * 60 * 60 * 1000,
-//         httpOnly: true,
-//         sameSite: "strict",
-       
-//     });
-//     // console.log("he",he)
 
-// };
+
+
+
+
+
+
+
 
 // // export { generateTokenAndSetCookie };
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
+// import jwt from 'jsonwebtoken';
+// import dotenv from 'dotenv';
+// dotenv.config();
 
-export const generateToken = (userId: string): string => {
-    return jwt.sign({ userId }, process.env.JWT_TOKEN as string, { expiresIn: '15d' });
-};
+// export const generateToken = (userId: string): string => {
+//     return jwt.sign({ userId }, process.env.JWT_TOKEN as string, { expiresIn: '15d' });
+// };

@@ -1,29 +1,42 @@
 import { PostInterface } from '../models/post/postType';
 import Post from '../models/post/post';
+import User, { IUser } from '../models/user/user';
+
 import { Types } from 'mongoose'
+
 export class PostRepository {
 
-    async savePost(caption: string, postUrl: string ,userId : string ): Promise<PostInterface> {
-        try {
-            console.log(userId,"in repository ");
-            // Create a new post instance using the Post model
-            const newPost = new Post({
-                userId: userId,
-                caption: caption,
-                postUrl: postUrl,
-                createdOn: Date.now()
-            });
-            
-    
-            // Save the new post to the database
-            const savedPost = await newPost.save();
-    
-            return savedPost; // Return the saved post
-        } catch (error) {
-            console.error("Error saving post:", error);
-            throw error; // Rethrow the error to be handled by the caller
+        async  savePost(caption: string, postUrl: string, userId: string): Promise<PostInterface> {
+            try {
+                console.log(userId, "in repository");
+        
+                // Find the corresponding user document
+                const user = await User.findById(userId);
+        
+                if (!user) {
+                    throw new Error('User not found');
+                }
+        
+                // Create a new post instance
+                const newPost = new Post({
+                    userId: user._id, // Assign the ObjectId of the user
+                    caption: caption,
+                    postUrl: postUrl,
+                    createdOn: Date.now()
+                });
+        
+                // Save the new post to the database
+                const savedPost = await newPost.save();
+        
+                // Populate the 'userId' field in the saved post
+                await savedPost.populate('userId')
+        
+                return savedPost; // Return the saved post with populated user data
+            } catch (error) {
+                console.error("Error saving post:", error);
+                throw error; // Rethrow the error to be handled by the caller
+            }
         }
-    }
     
 
     async  findPosts(): Promise<PostInterface[]> {
@@ -115,7 +128,24 @@ export class PostRepository {
             throw error;
         }
     }
-    
+    async editPost(postId: string, caption: string): Promise<PostInterface | null> {
+        try {
+            const updatedPost = await Post.findByIdAndUpdate(
+                postId,
+                { caption },
+                { new: true } // Return the updated document
+              ).populate('userId')
+
+            if (updatedPost) {
+                return updatedPost.toObject(); // Convert Mongoose document to plain object
+            }
+
+            return null; // Post not found
+        } catch (error) {
+            console.error('Error editing post:', error);
+            throw error;
+        }
+    }
+    }
     
 
-}

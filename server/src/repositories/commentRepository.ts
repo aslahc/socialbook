@@ -4,19 +4,16 @@ import { CommentInterface } from "../models/comment/commentType";
 export class CommentRepository {
     async saveComment(userId: string, content: string, postId: string): Promise<CommentInterface> {
         try {
-            console.log("going to save comment ");
-            // Create a new instance of the Comment model with the provided comment data
+         
             const newComment = new Comment({ 
                 userId: userId,
                 postId: postId,
                 comment: content,
                 createdAt: new Date()
             });
-            console.log(newComment);
-
             // Save the new comment to the database
             const savedComment = await newComment.save();
-
+             await savedComment.populate('userId')
             // Return the saved comment data
             return savedComment;
         } catch (error) {

@@ -30,7 +30,13 @@ function Home() {
             throw new Error(`Error: ${response.status} - ${response.statusText}`);
         }
         const responseData = await response.json();
-       dispatch( setPost(responseData.postData))
+
+        const sortedPosts = responseData.postData.sort((a: IPost, b: IPost) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+  
+        dispatch(setPost(sortedPosts));
+  
       //  setPosts(postData)
         // setPosts(responseData.postData);
     } catch (error) {

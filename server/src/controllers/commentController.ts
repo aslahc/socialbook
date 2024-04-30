@@ -7,9 +7,10 @@ const commentRepository = new CommentRepository();
 export const postComment = async (req: Request, res: Response): Promise<void> => {
     try {
         // Extract comment data from request body
+
         const { newComment,postId } = req.body;
               const userId = newComment.userId
-              const comment = newComment.content        
+              const comment = newComment.comment        
         // Create comment data object
       
         // Save comment data to database
@@ -17,7 +18,6 @@ export const postComment = async (req: Request, res: Response): Promise<void> =>
         const commentSaved = await commentRepository.saveComment(userId,comment,postId);
 
         if (commentSaved) {
-            console.log("commmenteeesh")
             res.status(200).json({ success: true, message: "Comment saved successfully" ,commentSaved});
         } else {
             res.status(500).json({ success: false, error: "Failed to save comment" });

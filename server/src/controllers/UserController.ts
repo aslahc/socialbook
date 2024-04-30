@@ -129,7 +129,7 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     const user = await userRepository.findByUserDetails(userData.username);
 
     if (user) {
-      const token = generateToken(user.id);
+      const token = generateToken(user.id , 'user');
       res.status(200).json({ success: true, message: "User registered successfully", userData: user, token });
     } else {
       res.status(404).json({ success: false, message: "User not found after registration" });
@@ -160,8 +160,13 @@ export const verifyLogin = async (req: Request, res: Response): Promise<void> =>
       res.status(401).json({ error: "Incorrect password" });
       return;
     }
+    if(user.isAdmin){
+      var token = generateToken(user.id,"admin"); // Assuming generateToken function is defined correctly
 
-    const token = generateToken(user.id); // Assuming generateToken function is defined correctly
+    }else{
+      var token = generateToken(user.id,"user"); // Assuming generateToken function is defined correctly
+
+    }
     const { password: _, ...userData } = user; // Remove password before sending user data in response
 
     console.log("User logged in successfully:", username);

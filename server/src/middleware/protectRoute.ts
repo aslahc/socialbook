@@ -1,53 +1,57 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
-import { Request, Response, NextFunction } from "express";
-import User, { IUser } from '../models/user/user';
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
-// Extend the Request interface to include a 'user' property
-declare module 'express' {
-  interface Request {
-    user?: IUser;
-  }
+interface UserPayload {
+  userId?: string,
+  role?: string
 }
 
-const portectRoutes = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const token: string | undefined = req.cookies.jwt;
-
-    if (!token) {
-      res
-        .status(401)
-        .json({ error: "Unauthorized - No Token Provided" });
-      return; // Ensure function returns void here
+declare module 'express' {
+    interface Request {
+      user?: UserPayload; 
     }
-
-    const decoded: JwtPayload | null = jwt.verify(token, "process.env.JWT_TOKEN") as JwtPayload;
-
-    if (!decoded) {
-      res.status(401).json({ error: "Unauthorized - No Valid Token" });
-      return; // Ensure function returns void here
-    }
-
-    const userId: string = decoded.userId as string;
-
-    const user: IUser | null = await User.findById(userId).select("-password").lean().exec() as IUser | null;
-
-    if (!user) {
-      res.status(404).json({ error: "User not found" });
-      return; // Ensure function returns void here
-    }
-
-    // Assign the 'user' property to the 'req' object
-    req.user = user;
-
-    next();
-
-    // Ensure function returns void after calling next()
-    return;
-  } catch (error) {
-    console.log("Error from protectRoute middleware", "error.message");
-    res.status(500).json({ error: "Internal server error" });
-    return; // Ensure function returns void here
   }
+
+export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+  const authorizationHeader = req.headers['authorization'];
+console.log("Chceking");
+
+  if (!authorizationHeader) {
+    res.status(400)
+    throw new Error("No token provided");
+  }
+
+  const token = authorizationHeader.split(' ')[1];  
+  jwt.verify(token, process.env.JWT_SECRET as string, (err:any, decoded:any) => {
+    
+
+    if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+      res.status(401); 
+      throw new Error('Token expired');
+    }
+    if (err) {
+      console.log(err);
+        res.status(400);
+        throw new Error("Failed to authenticate token");
+    }
+    
+    if (!decoded || !decoded.role) {
+        res.status(400);
+        throw new Error('Invalid token structure or missing role information' );
+    }
+
+    req.user = decoded;
+    next();
+  });
 };
 
-export default portectRoutes;
+
+// authorizeRole middleware
+export const authorizeRole = (requiredRole:string) => (req:Request, res:Response, next:NextFunction) => {
+  if (!req.user || !req.user.role || !req.user.role.includes(requiredRole)) {
+        res.status(400);
+        throw new Error('Insufficient permissions to access this resource');
+  }
+  
+  next();
+};

@@ -110,3 +110,24 @@ export const deletePost = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 };
+
+
+export const editPost = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { postId } = req.params;
+        const { caption } = req.body;
+
+        // Call the repository function to edit the post
+        const editedPost = await postRepository.editPost(postId, caption);
+         
+        if (editedPost) {
+            console.log("Post edited successfully:", editedPost);
+            res.status(200).json({ success: true, message: 'Post edited successfully' ,editedPost});
+        } else {
+            res.status(404).json({ success: false, message: 'Post not found or could not be edited' });
+        }
+    } catch (error) {
+        console.error('Error editing post:', error);
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+};
