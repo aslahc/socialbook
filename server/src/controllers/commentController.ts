@@ -23,7 +23,8 @@ export const postComment = async (req: Request, res: Response): Promise<void> =>
             res.status(500).json({ success: false, error: "Failed to save comment" });
         }
     } catch (error) {
-        console.error("Error posting comment:", error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 };
@@ -39,7 +40,8 @@ export const postComment = async (req: Request, res: Response): Promise<void> =>
         res.status(200).json({ success: true, comments })
 
     }catch(error){
-        console.error('Error fetching comments:', error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: 'Failed to fetch comments' });
 
     }
@@ -63,7 +65,8 @@ export const postComment = async (req: Request, res: Response): Promise<void> =>
         }
 
     }catch(error){
-        console.error('Error fetching comments:', error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: 'Failed to fetch comments' });
 
     }

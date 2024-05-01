@@ -31,7 +31,7 @@ const userSchema = new Schema<IUser>({
     profileimg: { type: String },
     bannerImg: { type: String },
     profession:{type:String,},
-    phone: { type: String, required: true }, // New field with required configuration
+    phone: { type: String, required: false }, // New field with required configuration
     followers: { type: Number, default: 0 },
     following: { type: Number, default: 0 },
     isBlock:{type:Boolean,default:false},

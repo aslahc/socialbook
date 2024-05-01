@@ -1,50 +1,54 @@
-import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
+import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
 interface UserPayload {
-  userId?: string,
-  role?: string
+  userId?: string;
+  role?: string;
 }
 
 declare module 'express' {
-    interface Request {
-      user?: UserPayload; 
-    }
+  interface Request {
+    user?: UserPayload;
   }
+}
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+  console.log("entering to mudleware  ")
   const authorizationHeader = req.headers['authorization'];
-console.log("Chceking");
-
-  if (!authorizationHeader) {
-    res.status(400)
-    throw new Error("No token provided");
+ console.log(authorizationHeader)
+  if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: "No token provided" });
   }
 
-  const token = authorizationHeader.split(' ')[1];  
-  jwt.verify(token, process.env.JWT_SECRET as string, (err:any, decoded:any) => {
-    
+  const token = authorizationHeader.split(' ')[1];
+      console.log(token)
 
-    if (decoded.exp && Date.now() >= decoded.exp * 1000) {
-      res.status(401); 
-      throw new Error('Token expired');
-    }
+  jwt.verify(token, process.env.JWT_SECRET as string, (err: JsonWebTokenError | null, decoded: any) => {
     if (err) {
-      console.log(err);
-        res.status(400);
-        throw new Error("Failed to authenticate token");
-    }
-    
-    if (!decoded || !decoded.role) {
-        res.status(400);
-        throw new Error('Invalid token structure or missing role information' );
+      if (err instanceof TokenExpiredError) {
+        // Token has expired
+        
+        return res.status(401).json({ error: "Token expired" });
+      } else {
+        // Other JWT verification errors
+        console.error("Failed to authenticate token:", err);
+        return res.status(401).json({ error: "Failed to authenticate token" });
+      }
     }
 
-    req.user = decoded;
+    if (!decoded || !decoded.role) {
+      return res.status(400).json({ error: 'Invalid token structure or missing role information' });
+    }
+    console.log("token suces")
+
+    req.user = {
+      userId: decoded.userId,
+      role: decoded.role,
+    };
+
     next();
   });
 };
-
 
 // authorizeRole middleware
 export const authorizeRole = (requiredRole:string) => (req:Request, res:Response, next:NextFunction) => {

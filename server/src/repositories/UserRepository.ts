@@ -18,7 +18,8 @@ export class UserRepository {
             const user = await User.findOne({ username });
             return !!user;
         } catch (error) {
-            console.error("Error checking username existence:", error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -29,7 +30,8 @@ export class UserRepository {
             await newUser.save();
             return newUser.toObject();
         } catch (error) {
-            console.error('Error saving user:', error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -39,7 +41,18 @@ export class UserRepository {
             const user = await User.findOne({ username });
             return user;
         } catch (error) {
-            console.error("Error finding user by username:", error);
+            console.error("Error:", (error as Error).message); 
+
+            throw error;
+        }
+    }
+    async findbyemail(email: string): Promise<IUser | null> {
+        try {
+            const user = await User.findOne({ email });
+            return user;
+        } catch (error) {
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -49,7 +62,8 @@ export class UserRepository {
             const user = await User.findOne({ username });
             return user;
         } catch (error) {
-            console.error("Error finding user by details:", error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -59,7 +73,8 @@ export class UserRepository {
             const match = await bcrypt.compare(candidatePassword, hashedPassword);
             return match;
         } catch (error) {
-            console.error("Error comparing passwords:", error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -69,7 +84,8 @@ export class UserRepository {
             const users = await User.find();
             return users;
         } catch (error) {
-            console.error("Error finding users:", error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -92,7 +108,8 @@ export class UserRepository {
             const updatedUser = await user.save();
             return updatedUser.toObject();
         } catch (error) {
-            console.error('Error updating user:', error);
+        console.error("Error:", (error as Error).message); 
+            
             throw error;
         }
     }
@@ -108,7 +125,8 @@ export class UserRepository {
             const updatedUser = await user.save();
             return updatedUser;
         } catch (error) {
-            console.error("Error blocking user:", error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -131,7 +149,8 @@ export class UserRepository {
           return updatedUser;
         } catch (error) {
           // Catch any errors that occur during the process
-          console.error("Error changing user password:", error);
+          console.error("Error:", (error as Error).message); 
+
           throw error;
         }}
 }

@@ -20,7 +20,8 @@ export class ReportRepository {
 
         ;
         } catch (error) {
-            console.error("Error saving comment:", error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -38,7 +39,8 @@ export class ReportRepository {
 
        
         } catch (error) {
-            console.error("Error saving comment:", error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -63,7 +65,8 @@ export class ReportRepository {
         return updatedPost;
         console.log("updaated")
     } catch (error) {
-        console.error("Error updating post:", error);
+        console.error("Error:", (error as Error).message); 
+
         throw error;
     }
 }

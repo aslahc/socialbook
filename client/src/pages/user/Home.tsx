@@ -26,6 +26,7 @@ function Home() {
   const fetchPosts = async (): Promise<void> => {
     try {
         const response = await fetch(`${baseURL}/fetchPost`);
+        console.log(response)
         if (!response.ok) {
             throw new Error(`Error: ${response.status} - ${response.statusText}`);
         }
@@ -45,7 +46,7 @@ function Home() {
 };
 const fetchUser = async (): Promise<void> => {
   try {
-    const response = await axios.get(`${baseURL}/fetchData`);
+    const response = await axiosInstance.get(`/fetchData`);
     console.log("Response:", response.data.usersData);
     dispatch(setUsers(response.data.usersData)); // Dispatching setUsers action with correct payload
   } catch (error) {
@@ -56,23 +57,24 @@ useEffect(() => {
     fetchPosts();
     fetchUser();
 
-}, [dispatch]);
+},[dispatch]);
 
  
   return (
       <div className="">
-        <div className="">
+        <div >
+  
           <Navbar />
 
           <div className="mt-4 flex">
-          <div className="w-full sm:w-72">
-  <div className="h-24">
-    <NameCard />
+            <div >
+    <div className="h-24">
+      <NameCard />
+    </div>
+    <div className="">
+      <SideNav />
+    </div>
   </div>
-  <div className="">
-    <SideNav />
-  </div>
-</div>
 
             <div className="flex-1 ml-4">
               <CreatePost />

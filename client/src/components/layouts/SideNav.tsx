@@ -10,7 +10,8 @@ function SideNav() {
   console.log("sidee",user)
   return (
 <div className="max-w-xs md:max-w-64 ml-4 bg-indigo-400 rounded-xl overflow-hidden shadow-lg flex flex-col">
-  <ul className="py-2 md:py-4 flex flex-col justify-center items-center">
+<ul className="py-2 md:py-4 px-5 md:px-14 flex flex-col justify-center items-center">
+
     <li
       onClick={() => {
         navigate('/home');

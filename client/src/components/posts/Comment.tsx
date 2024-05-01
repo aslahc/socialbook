@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../../axios/axios';
 
-const baseURL = axiosInstance.defaults.baseURL;
+// const baseURL = axiosInstance.defaults.baseURL;
 
 interface Comment {
   _id: string;
@@ -28,7 +28,7 @@ const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await axios.get(`${baseURL}/comment/${postId}`);
+        const response = await axiosInstance.get(`/comment/${postId}`);
         const { data } = response;
 
         if (data.comments) {
@@ -55,7 +55,7 @@ const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
       };
 
       try {
-        const response = await axios.post(`${baseURL}/postComment`, {
+        const response = await axiosInstance.post(`/postComment`, {
           newComment,
           postId,
         });
@@ -78,7 +78,7 @@ const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
   };
   const handleDeleteComment = async (commentId: string) => {
     try {
-      const response = await axios.delete(`${baseURL}/deleteComment/${commentId}`);
+      const response = await axiosInstance.delete(`/deleteComment/${commentId}`);
       const { data } = response;
 
       if (data.success) {

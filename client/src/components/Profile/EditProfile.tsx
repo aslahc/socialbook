@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 
 
-const baseURL = axiosInstance.defaults.baseURL;
+// const baseURL = axiosInstance.defaults.baseURL;
 interface FormInputs {
   firstName: string,
   lastName: string,
@@ -121,7 +121,7 @@ const navigate = useNavigate();
     console.log("this is the data iam passing ", formData);
 
     try {
-      const response = await axios.post(`${baseURL}/editprofile/${id}`, formData, {
+      const response = await axiosInstance.post(`/editprofile/${id}`, formData, {
         headers: {
           "Content-Type": "application/json",
         },

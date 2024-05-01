@@ -131,7 +131,7 @@ function SignUp() {
         });
       } else {
         // Handle non-200 status codes
-        if (responseData.error == "Username already exists") {
+        if (responseData.error === "Username already exists") {
           // Display toast for username already exists error
           // toast.error(responseData.error);
         } else if(responseData.error === "email is exist") {
@@ -151,106 +151,94 @@ function SignUp() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div className="flex h-full">
-          <div className="w-1/2 bg-indigo-400 text-white p-8 flex items-center justify-center">
-            <h3 className="text-3xl font-mono font-bold text-center">
-              Online Community makes <br /> people more Creative
-            </h3>
+    <div className="flex flex-col h-screen">
+    <form onSubmit={handleSubmit} className="flex-grow">
+      <div className="flex flex-col md:flex-row h-full">
+      <div className="w-full md:w-1/2 bg-indigo-400 text-white p-8  flex items-center justify-center hidden md:flex">
+        <h3 className="text-3xl font-mono font-bold text-center">
+          Online Community makes <br /> people more Creative
+        </h3>
+      </div>
+        <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
+          <h1 className="font-bold text-3xl text-center mb-3">Create your account</h1>
+          <h2 className="text-lg text-center text-indigo-400 mb-4">Sign up into your account</h2>
+          <button
+            type="button"
+            className="w-full text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 me-2 mb-2"
+          >
+            Sign in with Google
+          </button>
+          <div className="w-full flex justify-center my-4">
+            <hr className="flex-grow border-gray-500" /><span className="px-2 text-gray-600">or continue with </span> <hr className="flex-grow border-gray-500" />
           </div>
-          <div className="w-1/2 p-8">
-            {/* <h3 className='text-right mb-4'>Have an account? <Link to='/login'>Login</Link></h3> */}
-            <h1 className='font-bold text-3xl text-center mb-3'>Create your account</h1>
-            <h2 className='text-lg text-center text-indigo-400 mb-4'>Sign up into your account</h2>
-            <div>
-              <button
-                type="button"
-                className="ml-44 text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 me-2 mb-2"
-              >
-                <svg
-                  className="w-4 h-4 me-2"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 18 19"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8.842 18.083a8.8 8.8 0 0 1-8.65-8.948 8.841 8.841 0 0 1 8.8-8.652h.153a8.464 8.464 0 0 1 5.7 2.257l-2.193 2.038A5.27 5.27 0 0 0 9.09 3.4a5.882 5.882 0 0 0-.2 11.76h.124a5.091 5.091 0 0 0 5.248-4.057L14.3 11H9V8h8.34c.066.543.095 1.09.088 1.636-.086 5.053-3.463 8.449-8.4 8.449l-.186-.002Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Sign in with Google
-              </button>
-            </div>
-            <div className='w-full flex justify-center'>
-              <hr className='flex-grow border-gray-500' /><span className="px-2 text-gray-600">or continue with </span> <hr className='flex-grow border-gray-500' />
-            </div>
-            <div className="mb-5 px-20">
-              <label htmlFor="user-input" className="block mb-2 text-sm font-medium text-gray-900">Username</label>
-              <input
-                type="text"
-                id="user-input"
-                name="username"
-                placeholder='Enter your name'
-                value={formData.username}
-                onChange={handleInputChange}
-                className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${errors.username ? 'border-red-500' : 'dark:red-gray-800'} dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-              />
-              {errors.username && <span className="text-red-500">{errors.username}</span>}
-              <label htmlFor="email-input" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
-              <input
-                type="email"
-                id="email-input"
-                name='email'
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder='Enter your email'
-                className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${errors.email ? 'border-red-500' : 'dark:red-gray-800'} dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-              />
-              {errors.email && <span className="text-red-500">{errors.email}</span>}
-              <label htmlFor="phone-input" className="block mb-2 text-sm font-medium text-gray-900">Phone</label>
-              <input
-                type="text"
-                id="phone-input"
-                name='phone'
-                value={formData.phone}
-                onChange={handleInputChange}
-                placeholder='Enter your phone number'
-                className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${errors.phone ? 'border-red-500' : 'dark:red-gray-800'} dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-              />
-              {errors.phone && <span className="text-red-500">{errors.phone}</span>}
-              <label htmlFor="password-input" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
-              <input
-                type="password"
-                id="password-input"
-                name='password'
-                value={formData.password}
-                onChange={handleInputChange}
-                placeholder='Enter your password'
-                className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${errors.password ? 'border-red-500' : 'dark:red-gray-800'} dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-              />
-              {errors.password && <span className="text-red-500">{errors.password}</span>}
-              <label htmlFor="confirm-input" className="block mb-2 text-sm font-medium text-gray-900">Confirm Password</label>
-              <input
-                type="password"
-                id="confirm-input"
-                name='confirmPassword'
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                placeholder='Confirm your password'
-                className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${errors.confirmPassword ? 'border-red-500' : 'dark:red-gray-800'} dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-              />
-              {errors.confirmPassword && <span className="text-red-500">{errors.confirmPassword}</span>}
-              <button type="submit"  className=" w-full mt-4 text-white bg-gradient-to-r from-indigo-500 via-indigo-400-600 to-indigo-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Sign Up</button>
-              <h3 className="text-end  mb-4 mt-3">alredy have an account?<Link to='/login' className='text-indigo-400'>login</Link></h3>
-           
-            </div>
+          <div className="mb-5 px-4">
+            <label htmlFor="user-input" className="block mb-2 text-sm font-medium text-gray-900">Username</label>
+            <input
+              type="text"
+              id="user-input"
+              name="username"
+              placeholder="Enter your name"
+              value={formData.username}
+              onChange={handleInputChange}
+              className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${errors.username ? 'border-red-500' : 'dark:red-gray-800'} dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+
+            />
+            {errors.username && <span className="text-red-500">{errors.username}</span>}
+            <label htmlFor="email-input" className="block mb-2 text-sm font-medium text-gray-900">Email</label>
+            <input
+              type="email"
+              id="email-input"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${errors.username ? 'border-red-500' : 'dark:red-gray-800'} dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+
+            />
+            {errors.email && <span className="text-red-500">{errors.email}</span>}
+            <label htmlFor="phone-input" className="block mb-2 text-sm font-medium text-gray-900">Phone</label>
+            <input
+              type="text"
+              id="phone-input"
+              name="phone"
+              placeholder="Enter your phone number"
+              value={formData.phone}
+              onChange={handleInputChange}
+              className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${errors.username ? 'border-red-500' : 'dark:red-gray-800'} dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+
+            />
+            {errors.phone && <span className="text-red-500">{errors.phone}</span>}
+            <label htmlFor="password-input" className="block mb-2 text-sm font-medium text-gray-900">Password</label>
+            <input
+              type="password"
+              id="password-input"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleInputChange}
+              className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${errors.username ? 'border-red-500' : 'dark:red-gray-800'} dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+
+            />
+            {errors.password && <span className="text-red-500">{errors.password}</span>}
+            <label htmlFor="confirm-input" className="block mb-2 text-sm font-medium text-gray-900">Confirm Password</label>
+            <input
+              type="password"
+              id="confirm-input"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${errors.username ? 'border-red-500' : 'dark:red-gray-800'} dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+
+            />
+            {errors.confirmPassword && <span className="text-red-500">{errors.confirmPassword}</span>}
+            <button type="submit" className="w-full mt-4 text-white bg-gradient-to-r from-indigo-500 via-indigo-400-600 to-indigo-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Sign Up</button>
+            <h3 className="text-right mb-4 mt-3">already have an account?<Link to="/login" className="text-indigo-400">Login</Link></h3>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
+  </div>
   );
 }
 

@@ -26,14 +26,14 @@ function UsersProfile() {
                     <Navbar />
                 </div>
                 <div className="mt-4 flex ">
-                    <div className="w-64">
-                        <div className="">
-                            <NameCard />
-                        </div>
-                        <div className="mt-4">
-                            <SideNav />
-                        </div>
-                    </div>
+                <div >
+    <div className="h-24">
+      <NameCard />
+    </div>
+    <div className="">
+      <SideNav />
+    </div>
+  </div>
                     <div className="flex-1 ml-4 ">
 
                         {/* Only render ProfileCard if userData is defined */}

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from '../../utils/store/store';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -47,6 +49,7 @@ console.log(filteredUsers,"filterd usre")
   };
 
   return (
+    <div>
     <nav className="flex items-center justify-between h-16 px-4 bg-indigo-400">
       <div className="flex items-center space-x-2">
         <span className="text-xl text-white font-bold">socialBook</span>
@@ -54,23 +57,23 @@ console.log(filteredUsers,"filterd usre")
       <div className="relative w-full max-w-screen-sm">
         <input
           type="text"
-          className="rounded-lg pl-8 pr-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 w-full bg-gray-700 border border-transparent"
+          className="rounded-lg pl-5 md:pl-8 pr-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 w-full bg-gray-700 border border-transparent"
           placeholder="Search"
           value={searchQuery}
           onChange={handleSearchChange}
         />
-        <button
+        {/* <button
           className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"
           onClick={handleSearchSubmit}
         >
           Search
-        </button>
+        </button> */}
         {showModal && (
           <div className="absolute top-full left-0 w-full mt-1  max-w-2xl mx-auto">
             <div className="p-4 bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                 serach result 
+                  Search Result
                 </h3>
                 <button
                   className="text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400"
@@ -116,9 +119,12 @@ console.log(filteredUsers,"filterd usre")
         onClick={handleLogout}
         className="bg-transparent hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
       >
-        Logout
+        <FontAwesomeIcon icon={faSignOutAlt} /> {/* Font Awesome Logout Icon */}
       </button>
     </nav>
+  </div>
+  
+
   );
 }  
 

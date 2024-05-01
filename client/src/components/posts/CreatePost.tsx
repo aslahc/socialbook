@@ -9,7 +9,7 @@ import PostData, {addPost} from '../../utils/reducers/PostData'
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 
-const baseURL = axiosInstance.defaults.baseURL;
+// const baseURL = axiosInstance.defaults.baseURL;
 const LazyLoadedImage = ({ imageUrl }: { imageUrl: string }) => {
   return <img className="w-full h-auto object-contain" src={imageUrl} alt="Selected Post Photo" />;
 };
@@ -54,13 +54,14 @@ const CreatePost = () => {
     if (fileList && fileList.length > 0) {
       const file = fileList[0];
       if (file.type.startsWith('image/')) {
+        
       setSelectedFile(file);
     //   setCroppedImage
     //   setShowConfirmButton(true);
-    } } else {
-      // If the selected file is not an image, show an error message
+    }else {
+
       toast.error("Please select an image file.");
-    }
+    } } 
   };
 
   const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
@@ -117,34 +118,28 @@ const CreatePost = () => {
       console.error('Error cropping image:', error);
     }
   };
+  const token = localStorage.getItem('token')
+  const handleCreatePostClick = async () => {
+    try {
+      const response = await axiosInstance.post(`/createPost`, { ...postData, userId }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
-  const handleCreatePostClick= async () =>{ 
-    try{
-  console.log(userId,"ithan njan banceknd kk akne ")
-      axios
-      .post(`${baseURL}/createPost`, {...postData,userId})
-      .then(response => {
-
-        console.log('Response from server:', response.data);
-        const newPost = response.data.postData;
-        console.log(newPost ,";+++++++++++++++++++++++++")
-      dispatch(addPost(newPost))
-      //   // Dispatch setPost action to add the new post to Redux store
-     
+      console.log('Response from server:', response.data);
+      const newPost = response.data.postData;
+      dispatch(addPost(newPost));
   
-        setCropImg(false)
-        setPostData({ caption: '', postUrl: '' });
-        setSelectedFile(null);
-        // Log the response from the server
-      })
-    .catch(error => {
+      setCropImg(false);
+      setPostData({ caption: '', postUrl: '' });
+      setSelectedFile(null);
+    } catch (error) {
       console.error('Error creating post:', error);
-    });
-    }catch (error) {
-      console.error('Error cropping image:', error);
     }
+  };
   
-  }
 
 
   const closeModal = () => {
@@ -153,7 +148,7 @@ const CreatePost = () => {
   };
 
   const getCroppedImage = (file: File, croppedArea: any) => {
-    return new Promise<Blob>((resolve, reject) => {
+    return new Promise<Blob>((resolve, reject) => { 
       const image = new Image();
       image.src = URL.createObjectURL(file);
       image.onload = () => {
@@ -187,7 +182,7 @@ const CreatePost = () => {
 
   return (
     <div>
-<div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl ">
+<div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl">
   <div className="flex items-center mb-4">
     <img
       src={userData?.profileimg}
@@ -230,11 +225,10 @@ const CreatePost = () => {
             />
           </svg>
           <span className="text-sm font-medium text-gray-800">
-            Select a image
+            Select an image
           </span>
         </label>
       </div>
-     
     </div>
     <input
       type="file"
@@ -242,32 +236,32 @@ const CreatePost = () => {
       style={{ display: 'none' }}
       onChange={handleFileChange}
     />
-{postData.caption && (
-  <button
-    onClick={handleCreatePostClick}
-    type="button"
-    className="bg-blue-500 rounded-3xl px-4 py-2 text-white font-medium flex items-center hover:bg-blue-600 transition-colors duration-200"
-  >
-    <svg
-      className="w-4 h-4 mr-2"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-      />
-    </svg>
-    <span>Post</span>
-  </button>
-)}
-
+    {postData.caption && (
+      <button
+        onClick={handleCreatePostClick}
+        type="button"
+        className="bg-blue-500 rounded-3xl px-4 py-2 text-white font-medium flex items-center hover:bg-blue-600 transition-colors duration-200"
+      >
+        <svg
+          className="w-4 h-4 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+          />
+        </svg>
+        <span>Post</span>
+      </button>
+    )}
   </div>
 </div>
+
 
       {selectedFile && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">

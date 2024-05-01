@@ -14,7 +14,8 @@ export const reportPost = async (req: Request, res: Response): Promise<void> => 
         res.status(200).json({ success: true, message: "Post reported successfully" });
     } catch (error) {
         // Catch any errors that occur during the process
-        console.error("Error reporting post:", error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 };
@@ -28,7 +29,8 @@ export const fetchReport = async (req: Request, res: Response): Promise<void> =>
         res.status(200).json({ success: true, message: "Post reported successfully",reportedPost });
     } catch (error) {
         // Catch any errors that occur during the process
-        console.error("Error reporting post:", error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: "Internal server error" });
     }
     
@@ -50,7 +52,8 @@ export const blockPost = async (req: Request, res: Response): Promise<void> => {
     }
     } catch (error) {
         // Catch any errors that occur during the process
-        console.error("Error reporting post:", error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 

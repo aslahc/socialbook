@@ -5,7 +5,7 @@ function AdminSIdeBar() {
   const navigate = useNavigate()
 
   return (
-    <div>
+    <div  className="sticky top-0 h-screen">
 
 <div>
     <nav className="max-w-xs md:max-w-64 ml-4 bg-indigo-400 rounded-xl overflow-hidden shadow-lg h-85 flex flex-col justify-center">

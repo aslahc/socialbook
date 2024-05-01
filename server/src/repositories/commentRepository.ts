@@ -17,7 +17,8 @@ export class CommentRepository {
             // Return the saved comment data
             return savedComment;
         } catch (error) {
-            console.error("Error saving comment:", error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -32,7 +33,8 @@ export class CommentRepository {
             // Return the array of comments
             return comments;
         } catch (error) {
-            console.error("Error fetching comments:", error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -47,7 +49,8 @@ export class CommentRepository {
                 return false; // Comment not found or already deleted
             }
         } catch (error) {
-            console.error('Error deleting comment:', error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }

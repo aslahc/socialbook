@@ -93,7 +93,7 @@ const baseURL = axiosInstance.defaults.baseURL;
           };
           const handleDeletePost = async () => {
             try {
-              const response = await axios.delete(`${baseURL}/deletepost/${post._id}`);
+              const response = await axiosInstance.delete(`/deletepost/${post._id}`);
               console.log(response,"ssssss")
               if (response.data.success === true) {
                 console.log('Post deleted successfully');

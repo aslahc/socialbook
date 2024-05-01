@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../../utils/store/store'
 
 import { setUserDetails } from '../../utils/reducers/userDetails';
-const baseURL = axiosInstance.defaults.baseURL;
+// const baseURL = axiosInstance.defaults.baseURL;
 interface FormInputs {
   firstName: string,
   lastName: string,
@@ -103,7 +103,7 @@ function AdminEditUser() {
     console.log("this is the data iam passing ", formData);
 
     try {
-      const response = await axios.post(`${baseURL}/editprofile/${id}`, formData, {
+      const response = await axiosInstance.post(`/editprofile/${id}`, formData, {
         headers: {
           "Content-Type": "application/json",
         },

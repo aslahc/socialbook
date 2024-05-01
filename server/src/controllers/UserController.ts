@@ -65,7 +65,9 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
 
     // Additional logic or response handling here
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
+
     // Handle the error or send an appropriate response
   }
 }
@@ -135,8 +137,8 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
       res.status(404).json({ success: false, message: "User not found after registration" });
     }
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
   }
 }
 
@@ -173,12 +175,65 @@ export const verifyLogin = async (req: Request, res: Response): Promise<void> =>
     res.status(200).json({ success: true, message: "User logged in successfully", token, user: userData });
 
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
 
   }
 };
+export const googlelogin = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { email, firstName, lastName, username } = req.body;
 
+    // Check if the email already exists in the database
+    const user = await userRepository.findbyemail(email);
+
+    if(user){
+
+    
+
+
+
+    // Assuming the user is new and needs to be registered
+    
+
+    // Generate token for the new user
+    const token = generateToken(user._id, "user"); // Assuming generateToken function is defined correctly
+
+    console.log("User logged in successfully:", username);
+    res.status(200).json({ success: true, message: "User logged in successfully", token, user: user });
+  }else{
+    const password = generatePassword();
+    const hashsedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      username: username,
+      email: email,
+      password: hashsedPassword,
+      // phone: userData.phone
+    });
+
+    const savedUser = await userRepository.saveUser(newUser);
+    
+    const user = await userRepository.findByUserDetails(newUser.username);
+
+    if (user) {
+      const token = generateToken(user.id , 'user');
+      res.status(200).json({ success: true, message: "User registered successfully", userData: user, token });
+    } else {
+      res.status(404).json({ success: false, message: "User not found after registration" });
+    }
+  }
+
+  } catch (error) {
+    console.error("Error:", (error as Error).message);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+const generatePassword = () => {
+  return Math.random().toString(36).slice(2, 10);
+}
+
+export default generatePassword;
 //fetch the all user details 
 
 
@@ -203,8 +258,9 @@ export const fetchUser = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json({ success: true, message: "User signup  successfully", usersData: users });
 
-  } catch {
-    console.log("error in fetcch users")
+  } catch(error) {
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
   }
 }
 
@@ -224,8 +280,9 @@ export const editprofile = async (req: Request, res: Response): Promise<void> =>
 
     res.status(200).json({ success: true, message: "profile updated succes fully ", userData: updatedData })
 
-  } catch {
-    console.log("error in edit profile ")
+  } catch(error) {
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
   }
 }
 
@@ -243,8 +300,9 @@ export const block = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({ message: "User blocked successfully" });
 
 
-  } catch {
-    console.log("error in edit profile ")
+  } catch(error) {
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
   }
 }
 
@@ -276,7 +334,8 @@ export const verifyemail = async (req: Request, res: Response): Promise<void> =>
   }
   catch (error) {
 
-    console.log(error)
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
 
   }
 
@@ -310,8 +369,8 @@ export const verifyEmailOtp = async (req: Request, res: Response): Promise<void>
 
   }
   catch (error) {
-
-    console.log(error)
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
 
   }
 
@@ -347,8 +406,8 @@ export const changepassword = async (req: Request, res: Response): Promise<void>
     }
   } catch (error) {
     //   Catch any errors that occur during the process
-        console.error("Error changing password:", error);
-      res.status(500).json({ success: false, error: "Internal server error" });
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
   }
 }
 
@@ -366,8 +425,8 @@ export const resendOtp = async (req: Request, res: Response): Promise<void> => {
 
   } catch (error) {
     // Catch any errors that occur during the process
-    console.error("Error changing password:", error);
-    res.status(500).json({ success: false, error: "Internal server error" });
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
   }
 }
 

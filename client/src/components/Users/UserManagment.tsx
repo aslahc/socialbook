@@ -7,7 +7,7 @@ import axiosInstance from '../../axios/axios';
 import { User } from '../../types/types'; // Make sure to import User interface
 import { RootState } from '../../utils/store/store'
 import { Link } from "react-router-dom";
-const baseURL = axiosInstance.defaults.baseURL;
+// const baseURL = axiosInstance.defaults.baseURL;
 
 function   UserManagment() {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ function   UserManagment() {
 
   const fetchUser = async (): Promise<void> => {
     try {
-      const response = await axios.get(`${baseURL}/fetchData`);
+      const response = await axiosInstance.get(`/fetchData`);
       console.log("Response:", response.data.usersData);
       dispatch(setUsers(response.data.usersData)); // Dispatching setUsers action with correct payload
     } catch (error) {
@@ -31,7 +31,7 @@ function   UserManagment() {
     try {
       console.log(user)
       // Make a request to the backend to toggle the block status
-      await axios.put(`${baseURL}/admin/block`, { userId: user._id, isBlock: !user.isBlock }).then(res=>console.log("user blocked succes fully"))
+      await axiosInstance.put(`/admin/block`, { userId: user._id, isBlock: !user.isBlock }).then(res=>console.log("user blocked succes fully"))
       // Update the local state or trigger a refetch of users
       fetchUser();
     } catch (error) {

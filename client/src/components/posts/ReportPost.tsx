@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import axiosInstance from '../../axios/axios';
 
-const baseURL = axiosInstance.defaults.baseURL;
+// const baseURL = axiosInstance.defaults.baseURL;
 
 function ReportPost({ postId, toggleReportModal }: { postId: string; toggleReportModal: () => void }) {
   const [selectedOption, setSelectedOption] = useState<string>('');
@@ -29,7 +29,7 @@ function ReportPost({ postId, toggleReportModal }: { postId: string; toggleRepor
   const handleConfirmReport = async () => {
     try {
       console.log(selectedOption,";;slfsdiofsduf")
-      const response = await axios.post(`${baseURL}/reportPost`, {
+      const response = await axiosInstance.post(`/reportPost`, {
         postId,
         userId,
         reason: selectedOption

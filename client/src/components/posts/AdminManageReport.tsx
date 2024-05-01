@@ -4,7 +4,7 @@ import axios from 'axios';
 import axiosInstance from '../../axios/axios';
 
 // Extract baseURL from axiosInstance.defaults
-const baseURL = axiosInstance.defaults.baseURL;
+// const baseURL = axiosInstance.defaults.baseURL;
 
 interface Report {
   postId: {
@@ -26,7 +26,7 @@ function AdminManageReport() {
 
   const fetchReport = async (): Promise<void> => {
     try {
-      const response = await axios.get(`${baseURL}/admin/fetchReport`);
+      const response = await axiosInstance.get(`/admin/fetchReport`);
 
       if (response.status === 200) {
         setReports(response.data.reportedPost || []); // Handle potential absence of data
@@ -41,7 +41,7 @@ function AdminManageReport() {
         const updatedIsBlocked = !report.isBlocked;
     
         // Send POST request to block/unblock the post
-        const response = await axios.post(`${baseURL}/admin/blockPost`, {
+        const response = await axiosInstance.post(`/admin/blockPost`, {
           postId: report.postId,
           isBlocked: updatedIsBlocked,
         });

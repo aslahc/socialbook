@@ -33,7 +33,8 @@ export class PostRepository {
         
                 return savedPost; // Return the saved post with populated user data
             } catch (error) {
-                console.error("Error saving post:", error);
+                console.error("Error:", (error as Error).message); 
+
                 throw error; // Rethrow the error to be handled by the caller
             }
         }
@@ -41,7 +42,7 @@ export class PostRepository {
 
     async  findPosts(): Promise<PostInterface[]> {
         try {
-          const posts = await Post.find().populate('userId');
+          const posts = await Post.find({ isReport: false }).populate('userId').populate('comments');;
           return posts;
         } catch (error) {
           console.log("Error", error);
@@ -72,7 +73,7 @@ export class PostRepository {
          
           // Save the updated post document
           await post.save();
-      
+       await post.populate('userId')
           // Return the updated post object
           return post;
 
@@ -106,10 +107,13 @@ export class PostRepository {
     
             // Save the updated post document
             await post.save();
+            await post.populate('userId')
     
             // Return the updated post object
             return post;
         } catch (error) {
+        console.error("Error:", (error as Error).message); 
+
             throw error; // Rethrow the error to be caught by the calling function
         }
     }
@@ -124,7 +128,8 @@ export class PostRepository {
                 return false; // Comment not found or already deleted
             }
         } catch (error) {
-            console.error('Error deleting comment:', error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }
@@ -142,7 +147,8 @@ export class PostRepository {
 
             return null; // Post not found
         } catch (error) {
-            console.error('Error editing post:', error);
+            console.error("Error:", (error as Error).message); 
+
             throw error;
         }
     }

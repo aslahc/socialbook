@@ -5,7 +5,7 @@
     import axiosInstance from '../../axios/axios';
     import { toast } from 'sonner';
     import {updatePost} from '../../utils/reducers/PostData'
-    const baseURL = axiosInstance.defaults.baseURL;
+    // const baseURL = axiosInstance.defaults.baseURL;
 
     interface EditPostProps {
         postId: string;
@@ -38,7 +38,7 @@
 
                     console.log("this is the caption iam try ing to send ",caption)
                     // Send a PUT request to update the post caption
-                const response =  await axios.put(`${baseURL}/editPost/${postId}`, { caption });
+                const response =  await axiosInstance.put(`/editPost/${postId}`, { caption });
                 console.log("resposdf",response)
                     if(response.status === 200){
                         const updatedPost = response.data.editedPost;
@@ -69,11 +69,14 @@
                                     className="w-full px-4 py-2 rounded-3xl bg-gray-200 text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 shadow-inner"
                                 />
                             </div>
-                            <img
+                          {
+selectedPost?.postUrl &&(
+                          <img
                                 className="w-full h-auto object-contain rounded-2xl shadow-md"
                                 src={selectedPost?.postUrl}
                                 alt="Selected Post Photo"
                             />
+                       ) }
                             {/* Input box added below the image */}
                             {/* Button for next or close */}
                             <div className="flex justify-end mt-4">

@@ -23,7 +23,8 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
         }
     } catch (error) {
         // Catch any errors that occur during the process
-        console.error("Error creating post:", error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 }
@@ -36,7 +37,8 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
         console.log("post data", postData,);
         res.status(200).json({ success: true, postData });
     } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 };
@@ -61,7 +63,8 @@ export const addLike = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({ success: true, message: 'Like added successfully', like });
 
     } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 };
@@ -86,7 +89,8 @@ export const removeLike = async (req: Request, res: Response): Promise<void> => 
         res.status(200).json({ success: true, message: 'Like added successfully', like });
 
     } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 };
@@ -106,7 +110,8 @@ export const deletePost = async (req: Request, res: Response): Promise<void> => 
       
 
     } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 };
@@ -127,7 +132,29 @@ export const editPost = async (req: Request, res: Response): Promise<void> => {
             res.status(404).json({ success: false, message: 'Post not found or could not be edited' });
         }
     } catch (error) {
-        console.error('Error editing post:', error);
+        console.error("Error:", (error as Error).message); 
+
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+};
+
+export const googlelogin = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { postId } = req.params;
+        const { caption } = req.body;
+
+        // Call the repository function to edit the post
+        const editedPost = await postRepository.editPost(postId, caption);
+         
+        if (editedPost) {
+            console.log("Post edited successfully:", editedPost);
+            res.status(200).json({ success: true, message: 'Post edited successfully' ,editedPost});
+        } else {
+            res.status(404).json({ success: false, message: 'Post not found or could not be edited' });
+        }
+    } catch (error) {
+        console.error("Error:", (error as Error).message); 
+
         res.status(500).json({ success: false, error: 'Internal server error' });
     }
 };

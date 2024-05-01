@@ -5,9 +5,9 @@ import  { setUserDetails } from '../../utils/reducers/userDetails'
 import { RootState } from '../../utils/store/store'
 import { GoogleLogin } from '@react-oauth/google';
 import { toast } from "sonner";
-
+import useGoogleLogin from '../../utils/google/googleLogin'
 import axiosInstance from '../../axios/axios'
-import jwt_decode, { JwtPayload } from 'jwt-decode'
+import jwt_decode, { JwtPayload, jwtDecode } from 'jwt-decode'
 
 const baseURL = axiosInstance.defaults.baseURL;
 interface FormInputs {
@@ -18,6 +18,8 @@ interface FormInputs {
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const googleLogin = useGoogleLogin()
+
   const [formData, setFormData] = useState<FormInputs>({
     username: '',
     password: '',
@@ -110,16 +112,32 @@ function Login() {
 
 
   };
+  // const handleGoogleSignIn = (credentialResponse: { credential?: string }) => {
+  //   if (credentialResponse?.credential) {
+  //     const decoded = jwtDecode(credentialResponse.credential);
+  //     const { email, given_name, name } = decoded as {
+  //       email: string;
+  //       given_name: string;
+  //       name: string;
+  //     };
+  //     googleLogin({
+  //       email,
+  //       firstName: name?.split(" ")[0],
+  //       lastName: name?.split(" ")[1],
+  //       given_name,
+  //     });
+  //   }
+  // };
   const userData = useSelector((state: RootState) => state.userDetails.user)
   return (
 
     <div className="flex flex-col h-screen  ">
-      <div className="flex flex-col md:flex-row flex-grow ">
-        <div className="w-full md:w-1/2 bg-indigo-400 text-white p-8  flex items-center justify-center hidden md:flex">
-          <h3 className="text-3xl font-mono font-bold text-center">
-            Online Community makes <br /> people more Creative
-          </h3>
-        </div>
+    <div className="flex flex-col md:flex-row flex-grow ">
+      <div className="w-full md:w-1/2 bg-indigo-400 text-white p-8  flex items-center justify-center hidden md:flex">
+        <h3 className="text-3xl font-mono font-bold text-center">
+          Online Community makes <br /> people more Creative
+        </h3>
+      </div>
         <div className="w-full md:w-1/2 p-8 flex justify-center items-center">
           <form className="w-full max-w-md" onSubmit={handleSubmit}>
             <h1 className="font-bold text-3xl text-center mb-3">Welcome back</h1>
@@ -135,14 +153,19 @@ function Login() {
                     if (token) {
                       // Log the token for verification
                       console.log('Token:', token);
-
-                      // Call jwt_decode with the token
-                      // const decodedResponse: JwtPayload = jwt_decode(token);
-
-                      // Log the decoded response
-                      // console.log('Decoded Response:', decodedResponse);
-
-                      // Here you can handle the decoded response as needed
+                      const decoded = jwtDecode(token);
+                      console.log(decoded)
+                      const { email, given_name, name } = decoded as {
+                        email: string;
+                        given_name: string;
+                        name: string;
+                      };
+                      console.log("kk",email,given_name,name)
+                           googleLogin({
+                        email,
+                        name: name?.split(" ")[1],
+                        given_name,
+                      });
                     } else {
                       console.error('Token is undefined');
                     }
