@@ -1,18 +1,19 @@
 import React from 'react'
 import AdminNavbar from '../../components/layouts/AdminNavbar'
 import AdminSIdeBar from '../../components/layouts/AdminSIdeBar'
-import NameCard from '../../components/layouts/NameCard'
+// import NameCard from '../../components/layouts/NameCard'
 import UserManagment from '../../components/Users/UserManagment'
+import AdminLogoCard from '../../components/layouts/AdminLogoCard'
 
 function Dashboard() {
   
   return (
   
-<div className="mt-4 flex">
+<div className=" flex">
   <div className="w-64">
-    <div className="">
+    <div className="mt-4">
       {/* Include the NameCard component */}
-      <NameCard />
+      <AdminLogoCard />
     </div>
 
     <div className="mt-4">

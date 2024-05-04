@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import axiosInstance from '../../axios/axios';
+import { GoogleLogin } from '@react-oauth/google';
+import useGoogleLogin from '../../utils/google/googleLogin'
+import jwt_decode, { JwtPayload, jwtDecode } from 'jwt-decode'
+
 import { toast } from "sonner";
 
 
@@ -17,6 +21,8 @@ interface FormInputs {
 
 function SignUp() {
   const navigate = useNavigate();
+  const googleLogin = useGoogleLogin()
+
   const [formData, setFormData] = useState<FormInputs>({
     username: '',
     email: '',
@@ -109,7 +115,6 @@ function SignUp() {
       });
     
       const responseData = await response.json();
-    console.log(responseData.error ,"erro an ")
     toast.error(responseData.error);
 
       if (response.ok) {
@@ -162,12 +167,40 @@ function SignUp() {
         <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
           <h1 className="font-bold text-3xl text-center mb-3">Create your account</h1>
           <h2 className="text-lg text-center text-indigo-400 mb-4">Sign up into your account</h2>
-          <button
-            type="button"
-            className="w-full text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 me-2 mb-2"
-          >
-            Sign in with Google
-          </button>
+          <GoogleLogin
+                onSuccess={async (response) => {
+                  try {
+                    // Ensure response.credential is a string containing a valid JWT
+                    const token: string | undefined = response.credential;
+
+                    // Check if token is defined before proceeding
+                    if (token) {
+                      // Log the token for verification
+                      console.log('Token:', token);
+                      const decoded = jwtDecode(token);
+                      console.log(decoded)
+                      const { email, given_name, name } = decoded as {
+                        email: string;
+                        given_name: string;
+                        name: string;
+                      };
+                      console.log("kk",email,given_name,name)
+                           googleLogin({
+                        email,
+                        name: name?.split(" ")[1],
+                        given_name,
+                      });
+                    } else {
+                      console.error('Token is undefined');
+                    }
+                  } catch (error) {
+                    console.error('Error decoding token:', error);
+                  }
+                }}
+                onError={() => {
+                  console.log("Login Failed");
+                }}
+              />
           <div className="w-full flex justify-center my-4">
             <hr className="flex-grow border-gray-500" /><span className="px-2 text-gray-600">or continue with </span> <hr className="flex-grow border-gray-500" />
           </div>

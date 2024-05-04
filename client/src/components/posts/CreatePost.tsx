@@ -131,7 +131,6 @@ const CreatePost = () => {
       console.log('Response from server:', response.data);
       const newPost = response.data.postData;
       dispatch(addPost(newPost));
-  
       setCropImg(false);
       setPostData({ caption: '', postUrl: '' });
       setSelectedFile(null);
@@ -185,7 +184,7 @@ const CreatePost = () => {
 <div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl">
   <div className="flex items-center mb-4">
     <img
-      src={userData?.profileimg}
+      src={userData?.profileimg || "/download.jpeg"}
       alt="Profile picture"
       className="w-12 h-12 rounded-full object-cover mr-4"
     />

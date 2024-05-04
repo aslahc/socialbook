@@ -3,29 +3,43 @@ import Report from '../models/Report/Report'
 import Post from '../models/post/post';
 
 export class ReportRepository {
-    async saveReport(userId: string, reason: string, postId: string): Promise<ReportInterface> {
+    async saveReport(userId: string, reason: string, postId: string): Promise<void> {
         try {
-         
-            const report  = new Report({ 
+            // Create a new report instance
+            const report = new Report({
                 userId: userId,
                 postId: postId,
                 reason: reason,
                 createdAt: new Date()
             });
-    
 
-            // Save the new comment to the database
-            const savedReport = await report.save();
-             return savedReport
+            // Save the new report to the database
 
-        ;
+            // Fetch the post associated with the reported postId
+            const post = await Post.findById(postId);
+
+            if (!post) {
+                throw new Error('Post not found');
+            }
+
+            // Increment reportCount
+            post.reportCount += 1;
+
+            // Check if reportCount reaches 3 and update isReport accordingly
+            if (post.reportCount >= 3) {
+                // post.isReport = true;
+            await report.save();
+
+            }
+
+            // Save the updated post
+            await post.save();
+
         } catch (error) {
-            console.error("Error:", (error as Error).message); 
-
+            console.error("Error:", (error as Error).message);
             throw error;
         }
     }
-
 
 
 

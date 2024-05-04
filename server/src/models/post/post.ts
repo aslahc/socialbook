@@ -32,6 +32,10 @@
             type: Schema.Types.ObjectId,
             ref: 'Comment'
         }],
+        reportCount:{
+            type: Number, // Changed 'number' to 'Number'
+            default: 0
+        },
         isReport: {
             type: Boolean,
             default: false

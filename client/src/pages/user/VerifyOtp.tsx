@@ -76,11 +76,12 @@ function VerifyOtp() {
   
       if (response.ok) {
           if (responseData.success) {
-            console.log(responseData)
-            console.log(responseData.userData._id)
+            console.log("verify otp resposne",responseData)
+            const token = responseData.token
               dispatch(setUserDetails(responseData.userData));
+            localStorage.setItem('token', token);
               
-              navigate(`/profile/${responseData.userData._id}`);
+              navigate('/home');
           } else {
               throw new Error(responseData.error || "Unknown error");
           }

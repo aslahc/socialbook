@@ -6,10 +6,12 @@ import { signUp ,verifyOtp ,verifyLogin ,fetchUsers,fetchUser,resendOtp, verifye
 
 
 
-import { createPost ,fetchPosts ,addLike ,removeLike ,   deletePost ,editPost ,} from '../controllers/PostController'
+import { createPost ,fetchPosts ,addLike ,removeLike ,   deletePost ,editPost } from '../controllers/PostController'
 
 import {reportPost} from '../controllers/ReportPost'
 import {postComment , getComment ,deleteComment} from '../controllers/commentController'
+import { createStory ,fetchStoryData} from '../controllers/storyController';
+
 
 
 import {verifyToken ,   authorizeRole} from '../middleware/protectRoute'
@@ -46,9 +48,17 @@ user_route.delete('/posts/like/:id' , removeLike)
 user_route.delete('/deletepost/:postId', verifyToken , isBlock , deletePost)
 user_route.post('/reportPost', verifyToken,isBlock, reportPost )
 user_route.put('/editPost/:postId', verifyToken ,isBlock,  editPost)
+
+
+
 //comment 
 user_route.post('/postComment', verifyToken ,isBlock,  postComment)
 user_route.get('/comment/:postId', verifyToken ,isBlock, getComment)
 user_route.delete('/deleteComment/:commentId',isBlock, verifyToken , deleteComment)
 
+
+
+// story route 
+user_route.post('/createStory',createStory)
+user_route.get('/fetchStoryData',fetchStoryData)
 export default user_route;

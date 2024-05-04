@@ -7,7 +7,6 @@ import Post from '../../components/posts/Post';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../utils/store/store';
 import { useParams } from 'react-router-dom';
-
 function UsersProfile() {
     const { id } = useParams();
     const users = useSelector((state: RootState) => state.users.users);
@@ -32,10 +31,10 @@ function UsersProfile() {
     </div>
     <div className="">
       <SideNav />
+      
     </div>
   </div>
                     <div className="flex-1 ml-4 ">
-
                         {/* Only render ProfileCard if userData is defined */}
                         {userData && <ProfileCard userData={userData} />}
                         {userPosts && userPosts.map((post) => (

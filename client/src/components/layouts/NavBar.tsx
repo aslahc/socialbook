@@ -50,7 +50,7 @@ console.log(filteredUsers,"filterd usre")
 
   return (
     <div>
-    <nav className="flex items-center justify-between h-16 px-4 bg-indigo-400">
+    <nav className="flex items-center rounded-xl mx-3  justify-between h-16 px-4 bg-indigo-400">
       <div className="flex items-center space-x-2">
         <span className="text-xl text-white font-bold">socialBook</span>
       </div>
@@ -91,7 +91,7 @@ console.log(filteredUsers,"filterd usre")
                         <div className="flex-shrink-0">
                           <img
                             className="w-8 h-8 rounded-full"
-                            src={user.profileimg} 
+                            src={user.profileimg ||  "/download.jpeg"} 
                             alt={`${user.username} avatar`}
                           />
                         </div>

@@ -30,7 +30,22 @@ export interface User {
     caption: string;
 
   }
-  
+  export interface Istory {
+    _id: string;
+    userId: {
+        _id: string;
+        username: string;
+        profileimg: string;
+    };
+    stories: {
+        storyImg: string;
+        views: string[];
+        createOn: string;
+        expireOn: string;
+        _id: string;
+    }[];
+}
+
 
   
   
@@ -46,3 +61,7 @@ export interface User {
   export interface PostState{
     posts:IPost[]
   }
+
+  export interface StoryState {
+    story: Istory[];
+}

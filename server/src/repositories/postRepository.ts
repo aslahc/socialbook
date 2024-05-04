@@ -6,7 +6,7 @@ import { Types } from 'mongoose'
 
 export class PostRepository {
 
-        async  savePost(caption: string, postUrl: string, userId: string): Promise<PostInterface> {
+        async     savePost(caption: string, postUrl: string, userId: string): Promise<PostInterface> {
             try {
                 console.log(userId, "in repository");
         

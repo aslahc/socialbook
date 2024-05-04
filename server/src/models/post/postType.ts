@@ -7,6 +7,7 @@ export interface PostInterface extends Document {
     caption: string;
     createdOn: Date;
     likes: Types.ObjectId[];
-    comments: Comment[]; // Use the Comment interface here
+    comments: Comment[];
+    reportCount:number, // Use the Comment interface here
     isReport: boolean;
 }

@@ -7,6 +7,7 @@ import { RootState } from '../../utils/store/store'
 import { useDispatch, useSelector } from 'react-redux';
 import {deletePost} from '../../utils/reducers/PostData'
 import {updatePost} from '../../utils/reducers/PostData'
+import { useNavigate } from 'react-router-dom';
 import Comment from './Comment';
 
 import axiosInstance from '../../axios/axios'
@@ -19,7 +20,10 @@ const baseURL = axiosInstance.defaults.baseURL;
       }
     
       const Post: React.FC<PostProps> = ({ post }) => {
-  console.log(post,"[[[]]")
+   
+
+         const navigate = useNavigate()
+
   const dispatch = useDispatch();
 
         const [liked, setLiked] = useState<boolean>(false)
@@ -91,6 +95,10 @@ const baseURL = axiosInstance.defaults.baseURL;
           const toggleOptions = () => {
             setShowOptions(!showOptions);
           };
+
+          const handleUsernameClick = () =>{
+           navigate(`/user-Profile/${post.userId._id}`)
+          }
           const handleDeletePost = async () => {
             try {
               const response = await axiosInstance.delete(`/deletepost/${post._id}`);
@@ -112,11 +120,13 @@ const baseURL = axiosInstance.defaults.baseURL;
     <div className="border   max-w-xl mx-11  mt-8 p-4 bg-white shadow-md rounded-md">
         <div className="flex items-center justify-between">
             <div className="flex items-center">
-            <span className="relative flex h-10 w-15 shrink-0 overflow-hidden  mr-4">
-    <img src={post.userId?.profileimg} alt="Profile Image" className="w-10 h-10 rounded-full object-cover ml-2" />
+            <span className="relative flex h-10 w-15 shrink-0 overflow-hidden  mr-4 z-50">
+    <img src={post.userId?.profileimg||"/download.jpeg"} alt="Profile Image" className="w-10 h-10 rounded-full object-cover ml-2 z-50" />
 </span>
             <div>
-                <h4 className="font-bold">{post.userId?.username}</h4>
+                <h4
+                onClick={handleUsernameClick}
+                 className="font-bold hover:cursor-pointer ">{post.userId?.username}</h4>
                 <p className="text-sm text-gray-500">{formattedDate}</p>
             </div>
             </div>

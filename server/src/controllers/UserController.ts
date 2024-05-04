@@ -36,7 +36,6 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
     const existUsername = await userRepository.usernameExists(username);
 
     if (existUsername) {
-      console.log("enter to the existuser")
       res.status(400).json({ error: "Username already exists" });
 
     }
@@ -44,7 +43,6 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
     const emailExists = await userRepository.emailExists(email);
 
     if (emailExists) {
-      console.log("enter to the existuser")
       res.status(400).json({ error: "email is exist" });
 
     }
@@ -151,14 +149,12 @@ export const verifyLogin = async (req: Request, res: Response): Promise<void> =>
 
     const user = await userRepository.findByUsername(username);
     if (!user) {
-      console.log("User not found for username:", username);
       res.status(404).json({ error: "User not found" });
       return;
     } 
 
     const passwordMatch = await userRepository.comparePasswords(password, user.password);
     if (!passwordMatch) {
-      console.log("Incorrect password for user:", username);
       res.status(401).json({ error: "Incorrect password" });
       return;
     }
@@ -182,11 +178,12 @@ export const verifyLogin = async (req: Request, res: Response): Promise<void> =>
 };
 export const googlelogin = async (req: Request, res: Response): Promise<any> => {
   try {
+    console.log("enter to goolelogin")
     const { email, firstName, lastName, username } = req.body;
 
     // Check if the email already exists in the database
     const user = await userRepository.findbyemail(email);
-
+   console.log(user)
     if(user){
 
     
@@ -199,8 +196,7 @@ export const googlelogin = async (req: Request, res: Response): Promise<any> => 
     // Generate token for the new user
     const token = generateToken(user._id, "user"); // Assuming generateToken function is defined correctly
 
-    console.log("User logged in successfully:", username);
-    res.status(200).json({ success: true, message: "User logged in successfully", token, user: user });
+    // res.status(200).json({ success: true, message: "User logged in successfully", token, user: user });
   }else{
     const password = generatePassword();
     const hashsedPassword = await bcrypt.hash(password, 10);
@@ -208,13 +204,13 @@ export const googlelogin = async (req: Request, res: Response): Promise<any> => 
       username: username,
       email: email,
       password: hashsedPassword,
-      // phone: userData.phone
+      phone: "0987665"
     });
 
     const savedUser = await userRepository.saveUser(newUser);
-    
+    console.log("new user creatd with google ")
     const user = await userRepository.findByUserDetails(newUser.username);
-
+    console.log(user,"in gooele")
     if (user) {
       const token = generateToken(user.id , 'user');
       res.status(200).json({ success: true, message: "User registered successfully", userData: user, token });
@@ -241,7 +237,7 @@ export const fetchUsers = async (req: Request, res: Response): Promise<void> => 
   try {
 
     const users = await userRepository.findUsers()
-    console.log(users)
+  
 
     res.status(200).json({ success: true, message: "User signup  successfully", usersData: users });
 
@@ -252,9 +248,7 @@ export const fetchUsers = async (req: Request, res: Response): Promise<void> => 
 export const fetchUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params
-    console.log(";;")
     const users = await userRepository.findUsers()
-    console.log(users)
 
     res.status(200).json({ success: true, message: "User signup  successfully", usersData: users });
 
@@ -272,11 +266,9 @@ export const fetchUser = async (req: Request, res: Response): Promise<void> => {
 
 export const editprofile = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log(req.body)
     const { userId } = req.params; // Assuming you have the user ID in the request parameters
     const userData = req.body;
     const updatedData = await userRepository.updateUser(userId, userData)
-    console.log(updatedData)
 
     res.status(200).json({ success: true, message: "profile updated succes fully ", userData: updatedData })
 
@@ -292,7 +284,6 @@ export const editprofile = async (req: Request, res: Response): Promise<void> =>
 
 export const block = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log("for block", req.body)
 
     const { userId, isBlock } = req.body;
     // Call the repository method to block the user
@@ -311,7 +302,6 @@ export const block = async (req: Request, res: Response): Promise<void> => {
 
 export const verifyemail = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log(req.body, "ind")
     const { email } = req.body
 
 
@@ -319,7 +309,6 @@ export const verifyemail = async (req: Request, res: Response): Promise<void> =>
     const emailExists = await userRepository.emailExists(email);
 
     if (!emailExists) {
-      console.log("enter to the existuser")
 
 
       res.status(400).json({ error: "email is exist" });
@@ -348,14 +337,12 @@ export const verifyemail = async (req: Request, res: Response): Promise<void> =>
 export const verifyEmailOtp = async (req: Request, res: Response): Promise<void> => {
   try {
 
-    console.log("enter to new otp ")
 
 
     const { otp } = req.body;
 
     if (otp == otpVal) {
 
-      console.log("otp is correct forget ")
       res.status(200).json({ success: true, message: "otp verified" })
 
 
@@ -383,7 +370,6 @@ export const verifyEmailOtp = async (req: Request, res: Response): Promise<void>
 
 export const changepassword = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log("Entering changepassword function");
     console.log(req.body);
 
     // Extract email and password from request body
@@ -397,11 +383,9 @@ export const changepassword = async (req: Request, res: Response): Promise<void>
 
                          if (user) {
       // If user is found and password is updated successfully
-      console.log("Password changed successfully");
       res.status(200).json({ success: true, message: "Password changed successfully" });
     } else {
       // If user is not found
-            console.log("User not found");
       res.status(404).json({ success: false, error: "User not found" });
     }
   } catch (error) {

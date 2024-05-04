@@ -7,15 +7,14 @@ export const reportPost = async (req: Request, res: Response): Promise<void> => 
         console.log("Entering reportPost function");
         const { userId, postId, reason } = req.body;
 
-        // Call the saveReport method from ReportRepository
+        // Call the saveReport method from ReportRepository to save the report
         await reportRepository.saveReport(userId, reason, postId);
 
         // Respond with success message
         res.status(200).json({ success: true, message: "Post reported successfully" });
     } catch (error) {
-        // Catch any errors that occur during the process
-        console.error("Error:", (error as Error).message); 
-
+        // Handle errors
+        console.error("Error:", (error as Error).message);
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 };

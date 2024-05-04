@@ -38,12 +38,12 @@ const useGoogleLogin = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-    
+       console.log("ii",response)
       const data = response.data;
       console.log("from back ",data)
       if (data) {
-        console.log(data.user)
-        dispatch(setUserDetails(data.user));
+        console.log(data.userData)
+        dispatch(setUserDetails(data.userData));
         const { token, role } = data;
 
         // Store the accessToken and role in localStorage

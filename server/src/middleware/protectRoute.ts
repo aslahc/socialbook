@@ -13,15 +13,12 @@ declare module 'express' {
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-  console.log("entering to mudleware  ")
   const authorizationHeader = req.headers['authorization'];
- console.log(authorizationHeader)
   if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: "No token provided" });
   }
 
   const token = authorizationHeader.split(' ')[1];
-      console.log(token)
 
   jwt.verify(token, process.env.JWT_SECRET as string, (err: JsonWebTokenError | null, decoded: any) => {
     if (err) {
@@ -39,7 +36,6 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     if (!decoded || !decoded.role) {
       return res.status(400).json({ error: 'Invalid token structure or missing role information' });
     }
-    console.log("token suces")
 
     req.user = {
       userId: decoded.userId,
