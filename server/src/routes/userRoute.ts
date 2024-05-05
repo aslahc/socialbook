@@ -10,7 +10,7 @@ import { createPost ,fetchPosts ,addLike ,removeLike ,   deletePost ,editPost } 
 
 import {reportPost} from '../controllers/ReportPost'
 import {postComment , getComment ,deleteComment} from '../controllers/commentController'
-import { createStory ,fetchStoryData} from '../controllers/storyController';
+import { createStory ,fetchStoryData ,deleteStory} from '../controllers/storyController';
 
 
 
@@ -61,4 +61,5 @@ user_route.delete('/deleteComment/:commentId',isBlock, verifyToken , deleteComme
 // story route 
 user_route.post('/createStory',createStory)
 user_route.get('/fetchStoryData',fetchStoryData)
+user_route.delete('/deleteStory/:id',deleteStory)
 export default user_route;

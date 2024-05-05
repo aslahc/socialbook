@@ -66,4 +66,22 @@ export class StoryRepository {
         throw error;
     }
 }
+
+
+async deleteStory(userId:string,storyId:string): Promise<void> {
+    try { 
+        console.log(storyId)
+        // const updatedStory = await StoryModel.findOneAndUpdate(
+        //     { userId: userId }, // Find the document by userId
+        //     { $pull: { stories: { _id: storyId } } }, // Pull (remove) the story with the given storyId from the stories array
+        //     { new: true } // Return the updated document after the update operation
+        //   );
+
+    
+
+    } catch (error) {
+        console.error("Error:", (error as Error).message);
+        throw error;
+    }
 }
+}``

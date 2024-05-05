@@ -33,3 +33,18 @@ export const fetchStoryData = async (req: Request, res: Response): Promise<void>
       res.status(500).json({ success: false, error: "Internal server error" });
   }
 };
+
+  export const deleteStory = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const {userId} = req.body
+      const { storyId } = req.params;               
+        const storyData = await storyRepository.deleteStory(userId,storyId)
+        // res.status(200).json({ success: true, storyData });
+
+  
+    } catch (error) {
+        console.error("Error:", (error as Error).message); 
+
+        res.status(500).json({ success: false, error: "Internal server error" });
+    }
+  };

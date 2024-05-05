@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import axiosInstance from '../../axios/axios'
 
 interface Istory {
   _id: string;
@@ -28,7 +30,13 @@ function ViewStory({ setShowStory, storyData }: ViewStoryProps) {
 
   const currentUser = storyData[currentUserIndex];
   const currentStory = currentUser?.stories[currentStoryIndex];
+  
 
+  const userData = useSelector((state: any) => state.userDetails.user || '');
+  const userId = userData._id
+
+
+   
   const handleNextUser = () => {
     if (currentUserIndex < storyData.length - 1) {
       setCurrentUserIndex(currentUserIndex + 1);
@@ -64,10 +72,35 @@ function ViewStory({ setShowStory, storyData }: ViewStoryProps) {
   };
 
   const handleDeleteStory = async () => {
-    // Placeholder for delete story logic
-    console.log('Delete story');
-    // You can implement delete functionality here based on your backend
+    try {
+      // Get the story ID to be deleted
+      const storyIdToDelete = currentStory._id;
+  
+      // Send a DELETE request to your backend endpoint
+      const response = await axiosInstance.delete(`/deleteStory/${storyIdToDelete}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: {
+          userId: userId
+        }
+      });
+      
+      // Check the response status
+      if (response.status === 200) {
+        console.log('Story deleted successfully');
+        // If the story is deleted successfully, you can update your UI or perform any necessary actions
+        // For example, you might want to remove the story from the local state or trigger a reload of data
+      } else {
+        console.log('Failed to delete story');
+        // Handle any error scenarios here
+      }
+    } catch (error) {
+      console.error('Error deleting story:', error);
+      // Handle errors such as network issues or server errors
+    }
   };
+  
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50 bg-black bg-opacity-75">
@@ -117,8 +150,13 @@ function ViewStory({ setShowStory, storyData }: ViewStoryProps) {
                   />
                 </svg>
               </button>
-              <button
-                className="absolute bottom-4 right-4 p-2 rounded-full shadow-md bg-white text-gray-500 hover:bg-gray-100 focus:outline-none"
+            
+          { 
+          userId ===currentUser.userId._id &&(
+
+          
+             <button
+                className="absolute bottom-4 right-4 p-2 rounded-full shadow-md bg-white  text-red-500 hover:bg-gray-100 focus:outline-none"
                 onClick={handleDeleteStory}
               >
                 <svg
@@ -136,6 +174,9 @@ function ViewStory({ setShowStory, storyData }: ViewStoryProps) {
                   />
                 </svg>
               </button>
+          )
+
+}  
               <button
                 className="absolute top-2/4 right-4 transform -translate-y-2/4 p-2 rounded-full shadow-md bg-white text-gray-500 hover:bg-gray-100 focus:outline-none"
                 onClick={handleNextStory}

@@ -22,9 +22,10 @@ function Home() {
   const userId = userData._id
 
   const postData = useSelector((state: RootState) => state.postData.posts);
-  const stories = useSelector((state: RootState) => state.StoryData.story);
-  const storyData = stories.filter((story) => story.userId._id !== userId);
-  
+  const stories = useSelector((state: RootState) => state.StoryData.story || []);
+  const storyData = Array.isArray(stories) ? stories.filter((story) => story.userId._id !== userId) : [];
+
+
   console.log("from stoory datttettetet",storyData)
 
 
