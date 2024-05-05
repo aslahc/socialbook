@@ -38,7 +38,7 @@ export const isBlock = (req: Request, res: Response, next: NextFunction) => {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      if (user.isBlock) {
+      if (user.isBlock) { 
         return res.status(403).json({ error: 'User is blocked' });
       }
 

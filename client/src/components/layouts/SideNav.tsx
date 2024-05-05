@@ -18,7 +18,9 @@ function SideNav() {
           <FiHome />
           <span className="hidden md:inline ml-2">HOME</span>
         </li>
-        <li className="flex items-center justify-center py-2 md:py-4 text-white hover:bg-gray-700 cursor-pointer md:w-full">
+        <li
+         onClick={() => navigate('/chat')}
+         className="flex items-center justify-center py-2 md:py-4 text-white hover:bg-gray-700 cursor-pointer md:w-full">
           <FiMessageSquare />
           <span className="hidden md:inline ml-2">MESSAGE</span>
         </li>

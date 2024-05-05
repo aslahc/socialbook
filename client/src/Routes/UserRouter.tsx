@@ -13,6 +13,7 @@ import Forgetpass from '../pages/user/Forgetpass';
 import ForgetOtp from '../pages/user/ForgetOtp';
 import Changepass from '../pages/user/changepass';
 import UsersProfile from '../pages/user/UsersProfile'
+import Chat from '../pages/user/Chat';
 
 function UserRouter() {
  const navigate = useNavigate()
@@ -84,7 +85,7 @@ const isAdmin  = localStorage.getItem('admin')
       <Route path='/Profile/:id' element={auth ? <UserProfile /> : <Navigate to='/login' />} />
       <Route path='/editProfile/:id' element={auth ? <EditProfile /> : <Navigate to='/login' />} />
       <Route path='/user-Profile/:id' element={auth ? <UsersProfile /> : <Navigate to='/login' />} />
-      
+      <Route path='/chat' element={auth ? <Chat /> : <Navigate to='/login' />} />
     </Routes>
   );
 }

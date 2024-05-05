@@ -12,7 +12,9 @@ import {reportPost} from '../controllers/ReportPost'
 import {postComment , getComment ,deleteComment} from '../controllers/commentController'
 import { createStory ,fetchStoryData ,deleteStory} from '../controllers/storyController';
 
-
+import {findChat ,userChats ,  createChat } from '../controllers/ChatController'
+ 
+import {getMessages,addMessage} from '../controllers/messageController'
 
 import {verifyToken ,   authorizeRole} from '../middleware/protectRoute'
 import {isBlock } from '../middleware/IsBlock'
@@ -62,4 +64,20 @@ user_route.delete('/deleteComment/:commentId',isBlock, verifyToken , deleteComme
 user_route.post('/createStory',createStory)
 user_route.get('/fetchStoryData',fetchStoryData)
 user_route.delete('/deleteStory/:id',deleteStory)
+
+
+
+// chat route 
+
+user_route.post('/chat',createChat)
+user_route.get("/chat/:userId",userChats)
+user_route.get('/find/:firstId/:secondId',findChat)
+
+
+
+// message 
+
+user_route.post("/message",addMessage)
+user_route.get('/message/:chatId',getMessages)
+
 export default user_route;
