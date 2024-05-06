@@ -1,5 +1,5 @@
 import express from 'express';
-const user_route = express()
+const  user_route = express()
 
 import { signUp ,verifyOtp ,verifyLogin ,fetchUsers,fetchUser,resendOtp, verifyemail
     ,editprofile ,verifyEmailOtp,changepassword,googlelogin} from '../controllers/UserController';
@@ -12,9 +12,9 @@ import {reportPost} from '../controllers/ReportPost'
 import {postComment , getComment ,deleteComment} from '../controllers/commentController'
 import { createStory ,fetchStoryData ,deleteStory} from '../controllers/storyController';
 
-import {findChat ,userChats ,  createChat } from '../controllers/ChatController'
+import {saveMessage ,messages} from '../controllers/ChatController'
  
-import {getMessages,addMessage} from '../controllers/messageController'
+// import {getMessages,addMessage} from '../controllers/messageController'
 
 import {verifyToken ,   authorizeRole} from '../middleware/protectRoute'
 import {isBlock } from '../middleware/IsBlock'
@@ -43,7 +43,7 @@ user_route.post('/editprofile/:userId',verifyToken, editprofile);
 
 
 // posts
-user_route.post("/createPost",verifyToken,isBlock, createPost)
+user_route.post("/createPost", createPost)
 user_route.get("/fetchPost",   fetchPosts)
 user_route.post('/posts/like/:id' ,addLike)
 user_route.delete('/posts/like/:id' , removeLike)
@@ -69,15 +69,17 @@ user_route.delete('/deleteStory/:id',deleteStory)
 
 // chat route 
 
-user_route.post('/chat',createChat)
-user_route.get("/chat/:userId",userChats)
-user_route.get('/find/:firstId/:secondId',findChat)
+// user_route.post('/chat',createChat)
+// user_route.get("/chat/:userId",userChats)
+// user_route.get('/find/:firstId/:secondId',findChat)
 
 
 
 // message 
 
-user_route.post("/message",addMessage)
-user_route.get('/message/:chatId',getMessages)
+// user_route.post("/message",addMessage)
+// user_route.get('/message/:chatId',getMessages)
 
+user_route.post("/saveChat",saveMessage)
+user_route.get("/messages/:userId/:receiverId",messages)
 export default user_route;

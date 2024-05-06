@@ -93,9 +93,9 @@ const CreatePost = () => {
       }
       setSelectedFile(null);
       formDataFile.append('upload_preset', presetKey);
-
+   
       setCropImg(true)
-      
+       console.log(formDataFile)
       axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formDataFile)
         .then(res => {
          

@@ -1,33 +1,47 @@
-import mongoose, { Document, Schema, Model } from 'mongoose';
+  import { model, Schema } from 'mongoose';
+  import { MessageDocument } from './messageType';
 
-export interface IMessage extends Document {
-  chatId: string;
-  senderId: string;
-  text: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const MessageSchema: Schema<IMessage> = new Schema<IMessage>(
-  {
-    chatId: {
-      type: String,
-      required: true,
+  const MessageSchema = new Schema<MessageDocument>(
+    {
+      conversationId: {
+        type: String,
+        required: true,
+      },
+      sender: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      reciver: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },  
+      text: {
+        type: String,
+        required: true,
+      },
+      attachment: {
+        type: {
+          type: String,
+          enum: ['image', 'video', 'file','audio'],
+        },
+        url: String,
+        filename: String,
+        size: Number,
+      },
+      timestamp:{
+          type:Number
+      },
+      isRead:{
+        type:Boolean,
+        default:false
+      }
     },
-    senderId: {
-      type: String,
-      required: true,
-    },
-    text: {
-      type: String,
-      required: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
+    { timestamps: true }
+  );
 
-const MessageModel: Model<IMessage> = mongoose.model<IMessage>('Message', MessageSchema);
 
-export default MessageModel;
+  const Message = model<MessageDocument>('Message', MessageSchema);
+
+  export default Message;

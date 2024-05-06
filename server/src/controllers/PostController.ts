@@ -34,7 +34,6 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
   export const fetchPosts = async (req: Request, res: Response): Promise<void> => {
     try {
         const postData = await postRepository.findPosts();
-        console.log("post data", postData,);
         res.status(200).json({ success: true, postData });
     } catch (error) {
         console.error("Error:", (error as Error).message); 

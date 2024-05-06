@@ -1,48 +1,74 @@
 import { Request, Response } from 'express';
-import ChatModel, { IChat } from '../models/chat/chat';
+import Conversation from '../models/chat/conversation';
+import { ConversationDocument } from '../models/chat/conversationType';
+import { MessageDocument } from '../models/chat/messageType';
+import Message from '../models/chat/message';
+import {conversationRepo} from '../repositories/conversationRepo'
+import {MessageRepository} from '../repositories/MessageRepository'
 
-export const createChat = async (req: Request, res: Response): Promise<void> => {
-  const { senderId, receiverId } = req.body;
+const ConversationRepository = new conversationRepo
+const    messageRepository  = new MessageRepository
 
-  const newChat: IChat = new ChatModel({
-    members: [senderId, receiverId],
-  });
 
-  try {
-    const result: IChat = await newChat.save();
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create chat' });
-  }
-};
+export  const saveMessage = async(req:Request, res: Response) : Promise<void> =>{
+     
+    try{
 
-export const userChats = async (req: Request, res: Response): Promise<void> => {
-  const { userId } = req.params;
+         console.log("enter to save chat controller ")
+        console.log(req.body)
+        const { _id, messageText,reciver,timestamp } = req.body;
+        
+        let conversation = await ConversationRepository.findOneByMember(_id);
 
-  try {
-    const chats: IChat[] = await ChatModel.find({
-      members: { $in: [userId] },
-    });
-    console.log(chats)
-    res.status(200).json(chats);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch user chats' });
-  }
-};
-
-export const findChat = async (req: Request, res: Response): Promise<void> => {
-  const { firstId, secondId } = req.params;
-
-  try {
-    const chat: IChat | null = await ChatModel.findOne({
-      members: { $all: [firstId, secondId] },
-    });
-    if (chat) {
-      res.status(200).json(chat);
-    } else {
-      res.status(404).json({ message: 'Chat not found' });
+        if (!conversation) {
+          conversation = await ConversationRepository.create([_id]);
+        }
+    
+        await messageRepository.create(conversation._id, _id, messageText ,reciver ,timestamp);
+         
+       const  ConversationId = conversation._id
+        res.status(200).json({ success: true, message: 'Message saved successfully' ,ConversationId});
+    }catch(error){
+        console.error('Error saving message:', error);
+    res.status(500).json({ success: false, error: 'Failed to save message' });
     }
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to find chat' });
-  }
-};
+    
+}
+export const messages = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { userId, receiverId } = req.params;
+     
+  
+      // Find conversation IDs where the current user is a member
+      const userConversations = await Conversation.find({ members: userId });
+  
+      // Find conversation IDs where the receiver is a member
+      const receiverConversations = await Conversation.find({ members: receiverId });
+  
+      // Extract conversation IDs from results
+      const userConvIds = userConversations.map(conv => conv._id);
+      const receiverConvIds = receiverConversations.map(conv => conv._id);
+  
+      // Find messages sent by the current user in their conversations
+      const sentMessages: MessageDocument[] = await Message.find({
+        conversationId: { $in: userConvIds }, // Filter by conversations where the user is a member
+        sender: userId, // Filter by sender (current user)
+        reciver: receiverId // Filter by receiver
+      });
+  
+      // Find messages received by the current user in conversations with the receiver
+      const receivedMessages: MessageDocument[] = await Message.find({
+        conversationId: { $in: receiverConvIds }, // Filter by conversation IDs where the receiver is a member
+        sender: receiverId ,
+        reciver:userId
+        // Filter by sender (receiver)
+      });
+    //  console.log(sentMessages,"send message")
+    //  console.log("=========================================================")
+    //  console.log(receivedMessages,"redceeeedvvd")
+      res.status(200).json({ success: true, sentMessages, receivedMessages });
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      res.status(500).json({ success: false, error: 'Failed to fetch messages' });
+    }
+}

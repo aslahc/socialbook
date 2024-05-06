@@ -9,6 +9,9 @@ import MongoStore from "connect-mongo";
 import { requestLogger } from '../src/middleware/Reqestlog'
 import cookieParser from 'cookie-parser';
 import { errorHandler } from './middleware/Errorhandling'
+import socketIo_Config from './socket/socket'
+import { Server, Socket } from "socket.io";
+import http from "http";
 dotenv.config();
 
 const app = express();
@@ -48,12 +51,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(cookieParser());
+
+const server = http.createServer(app);
+const io: Server = new Server(4000, {
+  cors: { origin: 'http://localhost:3000' },
+});
+
+// Configure Socket.IO
+socketIo_Config(io);
 // Routes
 app.use('/admin', adminRoute);
 app.use('/', userRoute);
 
 // Error Handler Middleware (placed after all other middleware and routes)
-
 
 
 connectToMongoDB()

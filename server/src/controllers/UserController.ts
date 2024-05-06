@@ -129,7 +129,10 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     const user = await userRepository.findByUserDetails(userData.username);
 
     if (user) {
+
       const token = generateToken(user.id , 'user');
+
+      
       res.status(200).json({ success: true, message: "User registered successfully", userData: user, token });
     } else {
       res.status(404).json({ success: false, message: "User not found after registration" });

@@ -1,5 +1,6 @@
 export interface User {
-    _id:String;
+    _id:string;
+  
     username: string;
     email: string;
     password: string;
@@ -15,6 +16,9 @@ export interface User {
     following?: number;
     isBlock?:boolean
     isAdmin?:boolean
+  }
+  export interface UserWithMessages extends User {
+    messages?: { senderId: string; text: string }[];
   }
   export interface IPost {
     filter: any;
