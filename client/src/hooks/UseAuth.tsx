@@ -6,7 +6,6 @@ const useAuth = (): boolean | null => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-        console.log("pppppppppppppppppppppppppppp")
       // If token exists, user is authenticated
       setAuthUser(true);
     } else {

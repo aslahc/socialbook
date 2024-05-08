@@ -15,27 +15,30 @@
     const users = usersData.filter((user) => user._id !== userId);
 
     return (
-      <div>
-        {users.map((user) => (
-          <div
-            key={user._id}
-            onClick={() => onUserSelect(user)}
-            className="flex flex-row py-4 px-2 justify-center items-center border-b-2"
-          >
-            <div className="w-1/4">
+      <div className="bg-gray-100 py-4">
+      {users.map((user) => (
+        <div
+          key={user._id}
+          onClick={() => onUserSelect(user)}
+          className="flex flex-row items-center bg-white rounded-2xl mx-4 my-2 p-4 transition duration-300 hover:bg-indigo-50"
+        >
+          <div className="w-1/4 flex justify-center">
+            <div className="relative">
               <img
                 src={user.profileimg || 'https://via.placeholder.com/150'}
-                className="object-cover h-12 w-12 rounded-full shadow-lg"
+                className="object-cover h-16 w-16 rounded-full"
                 alt=""
               />
-            </div>
-            <div className="w-full">
-              <div className="text-lg font-semibold">{user.username}</div>
-              {/* <span className="text-gray-500">Pick me at 9:00 AM</span> */}
+              <div className="absolute bottom-0 right-0 h-4 w-4 bg-indigo-400 rounded-full border-2 border-white"></div>
             </div>
           </div>
-        ))}
-      </div>
+          <div className="w-3/4 ml-4">
+            <div className="text-lg font-semibold text-indigo-400">{user.username}</div>
+            <div className="text-gray-500">Available</div>
+          </div>
+        </div>
+      ))}
+    </div>
     );
   }
 

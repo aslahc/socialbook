@@ -5,13 +5,14 @@ import { ConversationDocument } from "../models/chat/conversationType";
 import { Types } from 'mongoose';
 
 export class MessageRepository {
-  async create(conversationId: string, sender: string, text: string , reciver:string, timestamp:number): Promise<MessageDocument> {
+  async create(conversationId: string, sender: string, text: string , reciver:string, timestamp:number,messageType:string): Promise<MessageDocument> {
     try {
       const newMessage = new Message({
         conversationId: conversationId, 
         sender:  sender,
         reciver: reciver,
         text: text , 
+        messageType:messageType,
         timestamp:timestamp
         
         });

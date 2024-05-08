@@ -69,7 +69,7 @@ console.log(filteredUsers,"filterd usre")
           Search
         </button> */}
         {showModal && (
-          <div className="absolute top-full left-0 w-full mt-1  max-w-2xl mx-auto">
+          <div className="absolute top-full left-0 w-full mt-1  max-w-2xl mx-auto z-50">
             <div className="p-4 bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">

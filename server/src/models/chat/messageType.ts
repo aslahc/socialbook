@@ -6,6 +6,7 @@ export interface Message {
   sender: Types.ObjectId;
   reciver:Types.ObjectId;
   text: string;
+  messageType:string;
   attachment: { 
     type: string;
     url: string;

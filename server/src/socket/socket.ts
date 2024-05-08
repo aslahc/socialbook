@@ -56,7 +56,7 @@ const socketIo_Config = (io: any) => {
         console.log("Message received by:", receiverId);
         console.log("timestam in soct",timestamp)
         // console.log("Message:", text);
-        // console.log("Message type:", messageType);
+        console.log("Message type:", messageType);
 
         const user = getUser(receiverId);
         if (user) {
@@ -74,6 +74,21 @@ const socketIo_Config = (io: any) => {
         }
       }
     );
+
+    socket.on("videoCallRequest", (data: any) => {
+      const emitdata = {
+        roomId: data.roomId,
+        senderName:data.senderName,
+        senderProfile:data.senderProfile
+      };
+      console.log(emitdata)
+      const user = getUser(data.recieverId);
+      if(user){
+        io.to(user.socketId).emit("videoCallResponse", emitdata );
+      }
+    });
+
+
   });
 };
 

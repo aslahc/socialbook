@@ -21,6 +21,7 @@
     "@types/redux-persist": "^4.3.1",
     "@types/redux-thunk": "^2.1.0",
     "@types/socket.io-client": "^3.0.0",
+    "@zegocloud/zego-uikit-prebuilt": "^2.0.1",
     "axios": "^1.6.8",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",

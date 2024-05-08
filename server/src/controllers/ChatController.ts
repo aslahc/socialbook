@@ -16,7 +16,7 @@ export  const saveMessage = async(req:Request, res: Response) : Promise<void> =>
 
          console.log("enter to save chat controller ")
         console.log(req.body)
-        const { _id, messageText,reciver,timestamp } = req.body;
+        const { _id, messageText,reciver,timestamp ,messageType} = req.body;
         
         let conversation = await ConversationRepository.findOneByMember(_id);
 
@@ -24,7 +24,7 @@ export  const saveMessage = async(req:Request, res: Response) : Promise<void> =>
           conversation = await ConversationRepository.create([_id]);
         }
     
-        await messageRepository.create(conversation._id, _id, messageText ,reciver ,timestamp);
+        await messageRepository.create(conversation._id, _id, messageText ,reciver ,timestamp ,messageType);
          
        const  ConversationId = conversation._id
         res.status(200).json({ success: true, message: 'Message saved successfully' ,ConversationId});

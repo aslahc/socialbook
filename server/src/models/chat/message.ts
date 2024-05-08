@@ -21,6 +21,11 @@
         type: String,
         required: true,
       },
+      messageType:{
+        type:String,
+        required: false,
+      
+      },
       attachment: {
         type: {
           type: String,

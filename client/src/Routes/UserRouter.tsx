@@ -15,6 +15,7 @@ import Changepass from '../pages/user/changepass';
 import UsersProfile from '../pages/user/UsersProfile'
 import Chat from '../pages/user/Chat';
 import Conversation from '../components/chat/Conversation';
+import VideoCall from '../components/chat/VideoCall';
 
 function UserRouter() {
  const navigate = useNavigate()
@@ -87,6 +88,7 @@ const isAdmin  = localStorage.getItem('admin')
       <Route path='/editProfile/:id' element={auth ? <EditProfile /> : <Navigate to='/login' />} />
       <Route path='/user-Profile/:id' element={auth ? <UsersProfile /> : <Navigate to='/login' />} />
       <Route path='/chat' element={auth ? <Chat /> : <Navigate to='/login' />} />
+      <Route path='/video-call/:roomId/:userId' element={auth ? <VideoCall /> : <Navigate to='/login' />}  />
       
     </Routes>
   );
