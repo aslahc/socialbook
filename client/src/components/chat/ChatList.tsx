@@ -1,21 +1,20 @@
-  import React from 'react';
-  import { useSelector } from 'react-redux';
-  import { RootState } from '../../utils/store/store';
-  import { User } from '../../types/types';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../utils/store/store';
+import { User } from '../../types/types';
 
-  interface ChatListProps {
-    onUserSelect: (user: User) => void; // Callback function for user selection
-  }
+interface ChatListProps {
+  onUserSelect: (user: User) => void; // Callback function for user selection
+}
 
-  function ChatList({ onUserSelect }: ChatListProps) {
-    const userData = useSelector((state: any) => state.userDetails.user || '');
-    const userId = userData._id;
+function ChatList({ onUserSelect }: ChatListProps) {
+  const userData = useSelector((state: any) => state.userDetails.user || '');
+  const userId = userData._id;
+  const usersData = useSelector((state: RootState) => state.users.users);
+  const users = usersData.filter((user) => user._id !== userId);
 
-    const usersData = useSelector((state: RootState) => state.users.users);
-    const users = usersData.filter((user) => user._id !== userId);
-
-    return (
-      <div className="bg-gray-100 py-4">
+  return (
+    <div className="bg-gray-100 py-4 min-h-screen max-h-screen overflow-y-auto  custom-scroller"> {/* Add a fixed height and overflow-y: auto */}
       {users.map((user) => (
         <div
           key={user._id}
@@ -33,13 +32,15 @@
             </div>
           </div>
           <div className="w-3/4 ml-4">
-            <div className="text-lg font-semibold text-indigo-400">{user.username}</div>
+            <div className="text-lg font-semibold text-indigo-400">
+              {user.username}
+            </div>
             <div className="text-gray-500">Available</div>
           </div>
         </div>
       ))}
     </div>
-    );
-  }
+  );
+}
 
-  export default ChatList;
+export default ChatList;

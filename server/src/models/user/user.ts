@@ -1,6 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 
 // Define interface for user document
+
 export interface IUser extends Document {
     username: string;
     email: string;
@@ -13,8 +14,9 @@ export interface IUser extends Document {
     bannerImg?: string;
     profession?:string;
     phone: string; // New field
-    followers?: number;
-    following?: number;
+    followers?: string[];
+    following?: string[];
+    savedPost:string[];
     isBlock?:boolean
     isAdmin?:boolean
 }
@@ -32,8 +34,17 @@ const userSchema = new Schema<IUser>({
     bannerImg: { type: String },
     profession:{type:String,},
     phone: { type: String, required: false }, // New field with required configuration
-    followers: { type: Number, default: 0 },
-    following: { type: Number, default: 0 },
+    followers: {
+        type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        default: [] },
+    following: {
+        type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+         default: [] },
+    savedPost: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
+        default: []
+    }],
     isBlock:{type:Boolean,default:false},
     isAdmin: { type: Boolean, default: false },
 

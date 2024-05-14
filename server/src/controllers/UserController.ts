@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import nodemailer from 'nodemailer';
 import { UserRepository } from '../repositories/UserRepository';
+import {NotificationRepository} from '../repositories/Notifcation';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 dotenv.config();
@@ -20,8 +21,10 @@ dotenv.config();
 
 import User, { IUser } from '../models/user/user';
 import user from '../models/user/user';
+import mongoose from 'mongoose';
 
 const userRepository = new UserRepository();
+const notificationRepository = new NotificationRepository()
 
 
 
@@ -417,4 +420,45 @@ export const resendOtp = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-// create a new  post into feeed 
+
+// followUser 
+export const followUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+  //  const 
+  console.log("Entering tp thie",req.body)
+  const {userId} = req.params;
+  const {followerId} = req.body
+  await User.findByIdAndUpdate(followerId, { $push: { following: userId } });
+
+  // Update user's followers list
+  await User.findByIdAndUpdate(userId, { $push: { followers: followerId } });
+  console.log("going to save notification")
+  await notificationRepository.saveNotification(userId,followerId,'follow')
+
+  res.status(200).json({ success:true , message: 'User followed successfully' });
+
+
+  } catch (error) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+}
+
+export const unfollowUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+  //  const 
+  console.log("Entering tp thie",req.body)
+  const {userId} = req.params;
+  const {followerId} = req.body
+  await User.findByIdAndUpdate(followerId, { $pull: { following: userId } });
+
+ 
+    await User.findByIdAndUpdate(userId, { $pull: { followers: followerId } });
+
+    res.status(200).json({ message: 'User unfollowed successfully' });
+
+
+  } catch (error) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+}
+

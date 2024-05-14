@@ -6,5 +6,106 @@
    
 }
 .bg-color{
-  background-color:#f8f8fe;
+  
+  background-color:#f6f6fb  ;
+}
+.bg-indigo-400{
+  background-color:#6366F1   ;
+
+}
+
+/* Define custom scrollbar styles */
+.custom-scroller::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.custom-scroller::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background color of the scrollbar track */
+}
+
+.custom-scroller::-webkit-scrollbar-thumb {
+  background-color: #6574cd; /* Indigo-400 color (hex value) */
+  border-radius: 4px; /* Rounded corners of the scrollbar thumb */
+}
+
+.custom-scroller::-webkit-scrollbar-thumb:hover {
+  background-color: #b9c2f3; /* Darker shade on hover */
+}
+  
+/* .neumorphism {
+  box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.1), -6px -6px 16px rgba(255, 255, 255, 0.9);
+} */
+/* Add this CSS to your component's stylesheet or global styles */  
+
+/* Style the container that wraps the horizontal scrollable content */
+.scrollable-container {
+  position: relative;
+  width: 100%; /* Adjust as needed */
+  overflow-x: auto;
+}
+
+/* Style the scrollbar track and thumb */
+.scrollable-container::-webkit-scrollbar {
+  height: 8px; /* Height of the scrollbar */
+  width: 8px; /* Width of the scrollbar */
+}
+
+.scrollable-container::-webkit-scrollbar-track {
+  background: transparent; /* Transparent track */
+}
+
+.scrollable-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Rounded corners */
+}
+
+/* Hide the scrollbar by default */
+.scrollable-container::-webkit-scrollbar-thumb {
+  visibility: hidden;
+}
+
+/* Show the scrollbar on hover */
+.scrollable-container:hover::-webkit-scrollbar-thumb {
+  visibility: visible;
+}
+
+
+/* For mobile devices */
+@media only screen and (max-width: 768px) {
+  /* Hide the chat conversation area by default */
+  .chat-conversation {
+    display: none;
+  }
+
+  /* Show the chat list container */
+  .chat-list-container {
+    display: block;
+  }
+}
+
+/* For larger screens (like tablets and desktops) */
+@media only screen and (min-width: 769px) {
+  /* Show the chat conversation area */
+  .chat-conversation {
+    display: block;
+  }
+
+  /* Hide the chat list container initially */
+  .chat-list-container {
+    display: none;
+  }
+}
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+/* CSS styles for Masonry items */
+.masonry-item {
+  margin-bottom: 20px; /* Optional spacing between Masonry items */
+}
+
+.masonry-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
 }

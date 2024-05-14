@@ -15,7 +15,6 @@ function UserProfile() {
 
   const userData = useSelector((state: any) => state.userDetails.user ||'');
 
-  console.log(userData._id)
   const _id = userData._id;
   const PostsData = useSelector((state: RootState) => state.postData.posts); 
   // Filter the user's posts based on their ID

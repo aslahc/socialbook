@@ -4,7 +4,7 @@ import axiosInstance from '../../axios/axios';
 import axios from 'axios';
 import VideoCall from './VideoCall';
 import { Link, useNavigate } from 'react-router-dom';
-import { io, Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 import VideoMessage from './videoMessage';
 import FileMessage from './FileMessage';
 import FileChat from './FileChat';
@@ -15,14 +15,22 @@ interface Message {
   timestamp: number;
   messageType: string
 }
-
+interface TypingData {
+  senderId: string;
+  receiverId: string;
+  isTyping: boolean;
+}
 interface ConversationProps {
   user: User;
   sendMessage: (receiverId: string, text: string, timestamp: number ,messageType:string) => void;
   sentMessages: Message[];
   receivedMessages: Message[];
   currentUserId: string;
-  videoCall: (emitData: EmitData) => void; 
+  videoCall: (emitData: EmitData) => void;
+  socket?: Socket | null;   
+  handleTyping: (typingData: TypingData) => void;
+  handleStopTyping: (typingData: TypingData) => void;
+  goBack :()=>void
 }
 
 interface EmitData {
@@ -41,6 +49,10 @@ const Conversation: React.FC<ConversationProps> = ({
   receivedMessages,
   currentUserId,
   videoCall,
+  socket: propSocket,
+  handleTyping,
+  handleStopTyping,
+  goBack,
 }) => {
 
 const navigate = useNavigate();
@@ -50,7 +62,8 @@ const socket = useRef<Socket | null>(null);
   const [sortedMessage, setSortedMessages] = useState<Message[]>([]);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
 
   const presetKey: string = 'cloudinaryimg'; 
   const cloudName: string = 'dy9ofwwjp';
@@ -64,8 +77,6 @@ const socket = useRef<Socket | null>(null);
     ];
 
     const sortedMessages = allMessages.sort((a, b) => a.timestamp - b.timestamp);
-     console.log("sort wokring")
-     console.log(sortedMessages)
     setSortedMessages(sortedMessages);
   }, [sentMessages, receivedMessages, currentUserId, user._id]);
 
@@ -77,13 +88,16 @@ const socket = useRef<Socket | null>(null);
         const formData = new FormData();
         formData.append('file', selectedImage);
         formData.append('upload_preset', presetKey);
+        setUploading(true);
 
 
         try {
           axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData).then(
             res =>{
+             setUploading(false);
+    setSelectedImage(null);
+          
                const imageUrl = res.data.secure_url
-               console.log(imageUrl)
                const messageType = 'image';
 
                sendMessage(user._id, imageUrl, timestamp, messageType,);
@@ -122,6 +136,45 @@ const socket = useRef<Socket | null>(null);
     input.click(); // Trigger the file input dialog
   };
   
+  
+  // const handleTyping = () => {
+  //   setIsTyping(true);
+  //   const typingData: TypingData = {
+  //     senderId: currentUserId,
+  //     receiverId: user._id,
+  //     isTyping: true,
+  //   };
+  //   propSocket?.emit('typing', typingData);
+  // };
+  useEffect(() => {
+
+    if (socket.current && currentUserId) {
+      socket.current.emit('addUser', currentUserId);
+    }
+  }, [currentUserId, socket.current]);
+  useEffect(() => {
+    if (propSocket) {
+      propSocket.on('userTyping', ({ senderId, isTyping }) => {
+        if (senderId === user._id) {
+          setIsTyping(true);
+        }
+      });
+  
+      propSocket.on('userStopTyping', ({ senderId }) => {
+        if (senderId === user._id) {
+
+          setIsTyping(false);
+        }
+      });
+  
+      return () => {
+        propSocket.off('userTyping');
+        propSocket.off('userStopTyping');
+      };
+    }
+  }, [propSocket, user._id]);
+
+
 
 
   const saveMessage = async (receiverId: string, messageText: string, timestamp: number,messageType:string): Promise<void> => {
@@ -135,7 +188,6 @@ const socket = useRef<Socket | null>(null);
       });
 
       if (response.data.success) {
-        console.log(response.data.ConversationId, 'Conversation ID');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -181,61 +233,89 @@ const socket = useRef<Socket | null>(null);
     const parts = filePath.split('/');
     return parts[parts.length - 1];
   };
-  return (
-<div className="w-full px-5 flex flex-col justify-between bg-gradient-to-br from-indigo-50 to-pink-50 rounded-3xl shadow-neumorphic-large">
-<div className="bg-white rounded-3xl shadow-neumorphic-concave p-4 ">
-  <div className="flex justify-between items-center mb-4">
-  <div className="flex items-center w-full"> 
-      <div className="relative">
-        <img
-          src={user.profileimg || 'https://via.placeholder.com/150'}
-          className="object-cover h-16 w-16 rounded-full shadow-neumorphic-convex"
-          alt=""
-        />
-        <div className="absolute bottom-0 right-0 bg-green-500 rounded-full shadow-neumorphic-concave p-1">
-          <div className="bg-white rounded-full p-1"></div>
-        </div>
-      </div>
-      <div className="ml-4">
-        <div className="text-xl font-semibold text-indigo-600">
-          {user.username}
-        </div>
-        <span className="text-green-500">Online</span>
-      </div>
-    </div>
-    <div className="flex items-center space-x-2">
-      <div className="bg-white rounded-full shadow-neumorphic-convex p-3 relative">
-      <svg
-          onClick={handleVideoCall}
-        className="w-6 h-6 text-indigo-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-        ></path>
-      </svg>
-      {/* <VideoCall roomId={123} userId={user._id} /> */}
+    return (
+  <div className="w-full min-h-screen max-h-lvh flex flex-col justify-between bg-gradient-to-br from-indigo-50 to-pink-50 rounded-3xl shadow-neumorphic-large">
+  <div className="bg-white rounded-3xl shadow-neumorphic-concave p-4 ">
+{/* Back Button (Small Screen) */}
+<button
+  onClick={() => goBack()}
+  className="sm:hidden text-indigo-500 focus:outline-none"
+>
+  <svg
+    className="w-6 h-6"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M15 19l-7-7 7-7"
+    ></path>
+  </svg>
+</button>
+    <div className="flex justify-between items-center mb-4">
 
-       
-        <div className="absolute -top-1 -right-1 bg-white rounded-full shadow-neumorphic-concave p-1">
-          <div className="bg-indigo-400 rounded-full p-1"></div>
+    <div className="flex items-center w-full"> 
+
+        <div className="relative">
+          
+          <img
+            src={user.profileimg || 'https://via.placeholder.com/150'}
+            className="object-cover h-16 w-16 rounded-full shadow-neumorphic-convex"
+            alt=""
+          />
+          <div className="absolute bottom-0 right-0 bg-green-500 rounded-full shadow-neumorphic-concave p-1">
+            <div className="bg-white rounded-full p-1"></div>
+          </div>
+        </div>
+        <div className="ml-4">
+
+          <div className="text-xl font-semibold text-indigo-600">
+            {user.username}
+          </div>
+          <div className="typing-indicator">
+        {isTyping && <p>{user.username} is typing...</p>}
+        {/* Your chat UI here */}
+      </div>
+          <span className="text-green-500">Online</span>
         </div>
       </div>
-     
+      <div className="flex items-center space-x-2">
+        <div className="bg-white rounded-full shadow-neumorphic-convex p-3 relative">
+        <svg
+            onClick={handleVideoCall}
+          className="w-6 h-6 text-indigo-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+          ></path>
+        </svg>
+        {/* <VideoCall roomId={123} userId={user._id} /> */}
+
+        
+          <div className="absolute -top-1 -right-1 bg-white rounded-full shadow-neumorphic-concave p-1">
+            <div className="bg-indigo-400 rounded-full p-1"></div>
+          </div>
+        </div>
+      
+      </div>
     </div>
   </div>
-</div>
-  <div className="py-5 flex-grow overflow-y-auto">
-    <div className="flex flex-col mt-5">
-    {sortedMessage.map((message, index) => (
-  <div
-    key={index}
+    <div className="py-5 flex-grow overflow-y-auto">
+      <div className="flex flex-col mt-5">
+      {sortedMessage.map((message, index) => (
+    <div
+      key={index}
     className={`flex justify-${message.sender === currentUserId ? 'end' : 'start'} mb-4`}
   >
     {message.sender !== currentUserId && (
@@ -246,28 +326,50 @@ const socket = useRef<Socket | null>(null);
       />
     )}
     <div className={`ml-${message.sender === currentUserId ? '2' : '0'} bg-white text-gray-800 py-3 px-4 rounded-full shadow-neumorphic-concave`}>
+      {/* Display message content based on messageType */}
       {message.messageType === 'text' ? (
-        // Render text message
-        <span>{message.text}</span>
+        // Render text message with timestamp
+        <div>
+          <span>{message.text}</span>
+          <span className="text-xs text-gray-500">
+  {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+</span>
+
+        </div>
       ) : message.messageType === 'image' ? (
-        // Render image message
-        <img
-          src={message.text}
-          alt="Sent Image"
-          className="max-w-[200px] h-auto rounded-lg shadow-neumorphic-convex"
-        />
+        // Render image message with timestamp
+        <div>
+          <img
+            src={message.text}
+            alt="Sent Image"
+            className="max-w-[200px] h-auto "
+          />
+         <span className="text-xs text-gray-500">
+  {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+</span>
+        </div>
       ) : message.messageType === 'video' ? (
-        // Render video message
-        <video
-          src={message.text} // Assuming message.text is the video URL
-          controls
-          className="max-w-[300px] h-auto rounded-lg shadow-neumorphic-convex"
-        ></video>
-      ) :message.messageType === 'file' ? (
-        <FileChat
-          fileUrl={message.text}
-          fileName={getFileNameFromPath(message.text)}
-        />
+        // Render video message with timestamp
+        <div>
+          <video
+            src={message.text} // Assuming message.text is the video URL
+            controls
+            className="max-w-[300px] h-auto bg-transparent "
+          ></video>
+         <span className="text-xs text-gray-500">
+  {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+</span>
+        </div>
+      ) : message.messageType === 'file' ? (
+        // Render file message with timestamp
+        
+        <>
+     
+                    <FileChat
+                      fileUrl={message.text}
+                      fileName={getFileNameFromPath(message.text)} /><span className="text-xs text-gray-500">
+                       {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span></>
       ) : null}
     </div>
     {message.sender === currentUserId && (
@@ -279,18 +381,35 @@ const socket = useRef<Socket | null>(null);
     )}
   </div>
 ))}
+
       <div ref={messagesEndRef} />
     </div>
   </div>
   <div className="flex justify-between items-center mt-4">
   <div className="relative w-full">
-    <input
-      className="w-full bg-white py-3 px-5 rounded-lg shadow-neumorphic-convex border-2 border-transparent focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition-all duration-300"
-      type="text"
-      placeholder="Type your message here..."
-      value={messageText}
-      onChange={(e) => setMessageText(e.target.value)}
-    />
+  <input
+  className="w-full bg-white py-3 px-5 rounded-lg shadow-neumorphic-convex border-2 border-transparent focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition-all duration-300"
+  type="text"
+  placeholder="Type your message here..."
+  value={messageText}
+  onChange={(e) => setMessageText(e.target.value)}
+  onInput={(e) => {
+    const isTyping = e.currentTarget.value.trim().length > 0;
+    if (socket && user._id) {
+      
+      const typingData = {
+        senderId: currentUserId,
+        receiverId: user._id,
+        isTyping,
+      };
+      if (isTyping) {
+        handleTyping(typingData)
+      } else {
+        handleStopTyping(typingData)
+      }
+    }
+  }}
+/>
     <div className="absolute inset-y-0 right-0 pl-3 flex items-center space-x-2">
       
       <svg
@@ -341,18 +460,38 @@ const socket = useRef<Socket | null>(null);
           alt="Selected Image"
           className="max-w-full h-auto rounded-lg shadow-neumorphic-convex"
         />
+
+{uploading  ? (
+ <button
+ type="button"
+ className="mt-4 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg shadow-neumorphic-convex hover:shadow-neumorphic-concave transition-all duration-300"
+ disabled
+>
+ <div className="relative w-6 h-6 mr-2">
+   {/* Loading spinner background */}
+   <div className="absolute inset-0 rounded-full bg-blue-400 blur-sm"></div>
+   {/* Loading spinner animation */}
+   <div className="relative flex items-center justify-center rounded-full h-5 w-5 bg-blue-500 shadow-md">
+     <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-2 border-t-blue-200"></div>
+   </div>
+ </div>
+</button>
+) : (
         <button
           className="mt-4 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg shadow-neumorphic-convex hover:shadow-neumorphic-concave transition-all duration-300"
           onClick={handleSendMessage}
         >
           Send Image
         </button>
-        <button
-          onClick={closeModal}
+)}
 
-        >
-         sdfsas
-        </button>
+<button 
+  onClick={closeModal}
+  className="text-white font-bold py-2 px-4 rounded bg-red-500 hover:bg-red-700"
+>
+  Close
+</button>
+
       </div>
     </div>
   )}

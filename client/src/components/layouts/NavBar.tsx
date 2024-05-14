@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -49,15 +49,15 @@ console.log(filteredUsers,"filterd usre")
   };
 
   return (
-    <div>
-    <nav className="flex items-center rounded-xl mx-3  justify-between h-16 px-4 bg-indigo-400">
+    <div className="min-w-full">
+    <nav className="flex items-center rounded-xl mx-3  justify-between h-16 px-4 bg-white">
       <div className="flex items-center space-x-2">
-        <span className="text-xl text-white font-bold">socialBook</span>
+        <span className="text-xl text-indigo-500  font-bold">socialBook</span>
       </div>
       <div className="relative w-full max-w-screen-sm">
         <input
           type="text"
-          className="rounded-lg pl-5 md:pl-8 pr-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 w-full bg-gray-700 border border-transparent"
+          className="rounded-lg pl-5 md:pl-8 pr-3 py-2 text-indigo-500  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 w-full bg-gray-700 border border-transparent"
           placeholder="Search"
           value={searchQuery}
           onChange={handleSearchChange}
@@ -72,7 +72,7 @@ console.log(filteredUsers,"filterd usre")
           <div className="absolute top-full left-0 w-full mt-1  max-w-2xl mx-auto z-50">
             <div className="p-4 bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-indigo-500 ">
                   Search Result
                 </h3>
                 <button
@@ -96,14 +96,14 @@ console.log(filteredUsers,"filterd usre")
                           />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                          <p className="text-sm font-medium text-gray-900 truncate dark:text-indigo-500 ">
                             {user.username}
                           </p>
                           <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                             {user.email}
                           </p>
                         </div>
-                        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-indigo-500 ">
                           {/* ${customer.amount} */} follow
                         </div>
                       </div>
@@ -117,7 +117,7 @@ console.log(filteredUsers,"filterd usre")
       </div>
       <button
         onClick={handleLogout}
-        className="bg-transparent hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+        className="bg-transparent hover:bg-gray-700 text-indigo-500  font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
       >
         <FontAwesomeIcon icon={faSignOutAlt} /> {/* Font Awesome Logout Icon */}
       </button>

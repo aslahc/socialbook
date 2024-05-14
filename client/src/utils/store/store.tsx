@@ -7,7 +7,7 @@ import userReducers from '../reducers/userData'; // Assuming this is your user s
 import userDetailsReducer from '../reducers/userDetails';
 import postsReducer from '../reducers/PostData'
 import storyReducer from '../reducers/StoryData'
-
+import friendReducer from '../reducers/FreindManage'
 import TokenSlice  from "../reducers/TokenSlice";
 // import StoryData from "../reducers/StoryData";
 const rootReducer = combineReducers({
@@ -15,7 +15,8 @@ const rootReducer = combineReducers({
   userDetails: userDetailsReducer,
   postData:postsReducer,
   StoryData :storyReducer,
-  token:TokenSlice
+  token:TokenSlice,
+  firiend:friendReducer,
 });
 
 const persistConfig = {

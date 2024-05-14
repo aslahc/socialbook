@@ -40,7 +40,7 @@ function UserStory({ story }: UserStoryProps) {
           onClick={() => {
             setShowStory(!showStory);
           }}
-          src={story.userId.profileimg}
+          src={story.userId.profileimg || "/download.jpeg"}
           alt=""
           className="w-full h-full object-cover"
         />

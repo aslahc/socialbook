@@ -8,7 +8,7 @@ export const createStory = async (req: Request, res: Response): Promise<void> =>
       const { storyImg, userId } = req.body;
 
       const savedStory = await storyRepository.SaveStory(storyImg, userId);
-
+      console.log("this  is i saved in the story",savedStory)
       if (savedStory) {
           res.status(201).json({ success: true, data: savedStory });
       } else {

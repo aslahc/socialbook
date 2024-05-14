@@ -8,7 +8,6 @@ export class PostRepository {
 
         async     savePost(caption: string, postUrl: string, userId: string): Promise<PostInterface> {
             try {
-                console.log(userId, "in repository");
         
                 // Find the corresponding user document
                 const user = await User.findById(userId);
@@ -45,7 +44,6 @@ export class PostRepository {
           const posts = await Post.find({ isReport: false }).populate('userId').populate('comments');;
           return posts;
         } catch (error) {
-          console.log("Error", error);
           throw error;
         }
       }
@@ -58,7 +56,6 @@ export class PostRepository {
 
           // Find the post by postId
           const post = await Post.findById(postId);
-          console.log(post,"gott")
           if (!post) {
               throw new Error('Post not found');
           }
@@ -89,7 +86,6 @@ export class PostRepository {
     
             // Find the post by postId
             const post = await Post.findById(postId);
-            console.log(post, "got post");
     
             // Check if the post exists
             if (!post) {

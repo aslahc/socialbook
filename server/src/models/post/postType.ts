@@ -3,7 +3,7 @@ import { CommentInterface } from "../comment/commentType"; // Assuming you have 
 
 export interface PostInterface extends Document {
     userId: Types.ObjectId;
-    postUrl: string;
+    postUrl: string[];
     caption: string;
     createdOn: Date;
     likes: Types.ObjectId[];

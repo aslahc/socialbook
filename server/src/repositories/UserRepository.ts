@@ -153,4 +153,53 @@ export class UserRepository {
 
           throw error;
         }}
+
+
+        // async savePostToUser
+        async savePostToUser(userId: string, postId: string): Promise<IUser | null> {
+            try {
+                const user = await User.findById(userId);
+                if (!user) {
+                    throw new Error('User not found');
+                  }
+              
+                  if (user.savedPost.includes(postId)) {
+                    throw new Error('Post already saved');
+                  }
+              
+                  user.savedPost.push(postId);
+                  return user.save();
+            } catch (error) {
+                console.error("Error:", (error as Error).message); 
+    
+                throw error;
+            }
+        }
+        async UnsavePostToUser(userId: string, postId: string): Promise<IUser | null> {
+            try {
+                const user = await User.findById(userId);
+                if (!user) {
+                    throw new Error('User not found');
+                  }
+              
+                  const savedPostIndex = user.savedPost.findIndex(savedId => String(savedId) === String(postId));
+                  if (savedPostIndex === -1) {
+                      throw new Error('Post is not saved by this user');
+                  }
+                  
+                  // Remove the postId from the savedPost array
+                  user.savedPost.splice(savedPostIndex, 1); // Remove the element at savedPostIndex
+          
+                  // Save the updated user document
+                  const updatedUser = await user.save();
+
+                
+                  
+        return updatedUser;
+            } catch (error) {
+                console.error("Error:", (error as Error).message); 
+    
+                throw error;
+            }
+        }
 }

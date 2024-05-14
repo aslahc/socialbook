@@ -7,6 +7,8 @@ import { RootState } from '../../utils/store/store'
 import { Istory } from '../../types/types';
 import axiosInstance from '../../axios/axios'
 import { setStory } from '../../utils/reducers/StoryData';
+import {addStory} from '../../utils/reducers/StoryData';
+
 import ViewStory from './ViewStory';
 function AddStory() {
 
@@ -32,6 +34,7 @@ function AddStory() {
   const [showModal, setShowModal] = useState<boolean>(false);
  const [Img ,setImg] =  useState<string | undefined>('');
  const [showStory, setShowStory] = useState<boolean>(false)
+ const [uploading, setUploading] = useState<boolean>(false);
 
   const presetKey: string = 'cloudinaryimg'; 
   const cloudName: string = 'dy9ofwwjp';
@@ -136,10 +139,13 @@ function AddStory() {
   
       setCropImg(true); // Show modal while uploading
       console.log("hey goig to cloudin")
+      setUploading(true);
       // Upload cropped image to Cloudinary
       const cloudinaryResponse = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formDataFile);
      console.log(cloudinaryResponse,"res fromc lurd")
       console.log(cloudinaryResponse)
+      setUploading(false);
+
       const imageUrl = cloudinaryResponse.data.secure_url;
       // SetstoryData({ storyUrl: imageUrl }); // Update storyImg with Cloudinary URL
       setImage(imageUrl); // Set image state with Cloudinary URL
@@ -162,7 +168,7 @@ function AddStory() {
           setCropImg(false); // Reset cropping state
           // SetstoryData({ storyUrl: '' }); // Reset story data
           setSelectedFile(null); // Reset selected file
-          dispatch(setStory(response.data.data))
+          dispatch(addStory(response.data.data))
         } else {
           console.error("Failed to create story");
         }
@@ -227,10 +233,14 @@ function AddStory() {
       }}
     >
       <img src={userData.profileimg ||"/download.jpeg"} alt="" 
-onClick={()=>{
-  setShowStory(!showStory)
+     onClick={()=>{
+      setShowStory(!showStory)
 
-}}      className="w-full h-full object-cover" />
+       }}     
+
+
+
+className="w-full h-full object-cover" />
       <span className="absolute bottom-4 left-4 text-indigo-400 font-medium">{userData.username}</span>
       <button
       onClick={handleIConClick}
@@ -280,6 +290,7 @@ onClick={()=>{
         {/* Display the cropped image */}
         <img src={Img} alt="Cropped" className="w-full h-[20rem] object-contain" />
         {/* Close button */}
+  
         <button
           onClick={handleCloseShowModal}
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 rounded-full shadow-lg shadow-black/30 bg-white/20 p-2"
@@ -299,19 +310,51 @@ onClick={()=>{
             />
           </svg>
         </button>
-        {/* Post Story button */}
-        <button
-        onClick={handleConfirmStory}
-        className="absolute bottom-4 left-4 right-4 text-white bg-blue-500 hover:bg-blue-600 rounded-full shadow-lg shadow-black/30 py-2">
-          Post Story
-        </button>
+         
+      
+        {uploading  ? (
+  <button
+    type="button"
+    className="absolute bottom-4 left-4 right-4 flex items-center justify-center text-white bg-blue-500 hover:bg-blue-600 rounded-full shadow-lg shadow-black/30 py-2 px-4"
+    disabled
+  >
+    <div className="relative w-6 h-6 mr-2">
+      <div className="absolute inset-0 rounded-full bg-blue-400 blur-sm"></div>
+      <div className="relative flex items-center justify-center rounded-full h-5 w-5 bg-blue-500 shadow-md">
+        <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-2 border-t-blue-200"></div>
+      </div>
+    </div>
+    <span>Loading...</span>
+  </button>
+) : (
+  <button
+    onClick={handleConfirmStory}
+    className="absolute bottom-4 left-4 right-4 text-white bg-blue-500 hover:bg-blue-600 rounded-full shadow-lg shadow-black/30 py-2 px-4"
+  >
+    Post Story
+  </button>
+)}
       </div>
     </div>
   </div>
 )}
+
+
+
+
 {showStory&& (
   <ViewStory  setShowStory={setShowStory} storyData={userStories} />
 )}
+  {/* {uploading && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">
+    <div className="relative w-16 h-16 rounded-full bg-white shadow-inner">
+      <div className="absolute inset-1 rounded-full bg-gray-200 blur-sm"></div>
+      <div className="relative flex items-center justify-center rounded-full h-14 w-14 bg-white shadow-lg">
+        <div className="animate-spin rounded-full h-8 w-8 border-4 border-gray-400 border-t-4 border-t-gray-600"></div>
+      </div>
+    </div>
+  </div>
+)} */}
   </div>
 
   

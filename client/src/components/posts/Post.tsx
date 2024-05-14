@@ -9,10 +9,14 @@ import {deletePost} from '../../utils/reducers/PostData'
 import {updatePost} from '../../utils/reducers/PostData'
 import { useNavigate } from 'react-router-dom';
 import Comment from './Comment';
-
+import { BsBookmarkFill, BsBookmark } from 'react-icons/bs';
 import axiosInstance from '../../axios/axios'
 import ReportPost from './ReportPost';
 import EditPost from './EditPost';
+import Slider, { Settings } from 'react-slick';
+import {setUserDetails} from '../../utils/reducers/userDetails'
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 const baseURL = axiosInstance.defaults.baseURL;
 
     interface PostProps {
@@ -21,21 +25,32 @@ const baseURL = axiosInstance.defaults.baseURL;
     
       const Post: React.FC<PostProps> = ({ post }) => {
    
-
+        const settings: Settings = {
+          dots: true,
+          infinite: true,
+          speed: 500,
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: true,
+          autoplaySpeed: 3000,
+        };
          const navigate = useNavigate()
 
   const dispatch = useDispatch();
-
+  const user = useSelector((state: any) => state.userDetails.user || '');
+  console.log(user,"this is -0")
+  const userId = user._id
         const [liked, setLiked] = useState<boolean>(false)
         const [showCommentModal, setShowCommentModal] = useState<boolean>(false);
         const [showReportModal,setShowReportModal]= useState<boolean>(false)
         const [ShowEditModal,setShowEditModal] =  useState<boolean>(false)
        const [deleteModal, setdeleteModal] =  useState<boolean>(false)
         const [showOptions, setShowOptions] = useState<boolean>(false);
+        const [isSavedPost , setisSavedPost] = useState<Boolean>( user && user.savedPost && user.savedPost.includes(post._id))
+     console.log(isSavedPost,"ju")
       const userData = useSelector((state: any) => state.userDetails.user||'');
        const UserId = userData._id  
         const date = new Date(post.createdAt);
-        const postData = useSelector((state : RootState)=> state.postData.posts)
 
         // Format the date as desired (e.g., "April 25, 2024, 8:01 PM")
         const formattedDate = date.toLocaleDateString('en-US', {
@@ -44,6 +59,8 @@ const baseURL = axiosInstance.defaults.baseURL;
           day: 'numeric',
          
         });
+       
+        // user && user.savedPost && user.savedPost.includes(post._id);
 
     //  console.log(post.userId)
         console.log("Formatted Date:", formattedDate);
@@ -80,15 +97,21 @@ const baseURL = axiosInstance.defaults.baseURL;
             setShowCommentModal(!showCommentModal);
           };
           const toggleReportModal = ()=>{
+            setShowOptions(!showOptions);
+
       setShowReportModal(!showReportModal)
 
           }
           const toogleEditPost = () => {
+            setShowOptions(!showOptions);
+
             setShowEditModal(!ShowEditModal)
 
           }
 
           const toogleDelete = () =>{
+            setShowOptions(!showOptions);
+
             setdeleteModal(!deleteModal)
           }
           
@@ -115,13 +138,55 @@ const baseURL = axiosInstance.defaults.baseURL;
             }
           };
 
+
+       const handleSavePost =  async () =>{
+
+        try{
+          const response = await axiosInstance.post('/posts/save', {
+            postId: post._id,
+            userId: userId
+          });
+          if(response.data.success === true){
+            setisSavedPost(!isSavedPost)
+            dispatch(setUserDetails(response.data.user))
+          }
+        }catch(error){
+          console.log(error)
+
+        }
+       }
+       
+       const handleUnSavePost = async () =>{
+
+        try{
+               console.log("eter to undave")
+          const response = await axiosInstance.post('/posts/Unsave', {
+            postId: post._id,
+            userId: userId
+          });
+          if(response.data.success === true){
+            setisSavedPost(!isSavedPost)
+       
+            dispatch(setUserDetails(response.data.user))
+
+          }
+
+        }catch{
+
+        }
+       }
+
+
+
+
+
     return (
         <div>
     <div className="border   max-w-xl mx-11  mt-8 p-4 bg-white shadow-md rounded-md">
         <div className="flex items-center justify-between">
             <div className="flex items-center">
-            <span className="relative flex h-10 w-15 shrink-0 overflow-hidden  mr-4 z-50">
-    <img src={post.userId?.profileimg||"/download.jpeg"} alt="Profile Image" className="w-10 h-10 rounded-full object-cover ml-2 z-50" />
+            <span className="relative flex h-10 w-15 shrink-0 overflow-hidden  mr-4 ">
+    <img src={post.userId?.profileimg||"/download.jpeg"} alt="Profile Image" className="w-10 h-10 rounded-full object-cover ml-2 -z-0" />
 </span>
             <div>
                 <h4
@@ -159,13 +224,13 @@ const baseURL = axiosInstance.defaults.baseURL;
     <button  
      onClick={toogleDelete}
      className="text-red-700
-      hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
+      text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
     >
       Delete Post
     </button>
     <button 
     onClick={toogleEditPost} 
-      className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+      className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
     >
       Edit Post
     </button>
@@ -173,7 +238,7 @@ const baseURL = axiosInstance.defaults.baseURL;
 ) : (
   <button 
     onClick={toggleReportModal}
-    className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+    className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
   >
     Report Post
   </button>
@@ -187,17 +252,38 @@ const baseURL = axiosInstance.defaults.baseURL;
            
             </div>
         </div>
-       {
-        post.postUrl && (  
-       <img
-            alt="Post content"
-            className="mt-4 object-cover w-full rounded-md"
-            height="400"
-        
-            src={post.postUrl}
-            style={{ aspectRatio: "200 / 200", objectFit: "cover" }}
+        {post.postUrl.length > 1 ? (
+  <Slider {...settings}>
+    {post.postUrl.map((url: any, index: number) => (
+      <div key={index}>
+        <img
+          src={url}
+          alt={`Post content ${index}`}
+          className="mt-4 object-cover w-full rounded-md"
+          height="400"
+          style={{ aspectRatio: '200 / 200', objectFit: 'cover' }}
         />
-    )  }
+      </div>
+    ))}
+  </Slider>
+) : (
+  <div>
+    {post.postUrl.map((url: any, index: number) => (
+      <div key={index}>
+        <img
+          src={url}
+          alt={`Post content ${index}`}
+          className="mt-4 object-cover w-full rounded-md"
+          height="400"
+          style={{ aspectRatio: '200 / 200', objectFit: 'cover' }}
+        />
+      </div>
+    ))}
+  </div>
+)}
+
+        
+
     
         <p className="mt-4 text-gray-800">
           {post.caption}
@@ -232,13 +318,37 @@ onClick={toggleCommentModal}
     >
       <GoCommentDiscussion size={24} />
     </button>
-  
+ 
+   
+   
 
             </div>
-          
-  
+        {
+          isSavedPost ?<button
+          onClick={handleUnSavePost}
+   
+   
+   
+         className={`flex items-center justify-center hover:bg-gray-300 transition-colors duration-200 rounded-full `}
+       >
+         <BsBookmarkFill  size={24} />
+       </button>:
+       
+
+
+<button
+          onClick={handleSavePost}
+   
+         className={`flex items-center justify-center hover:bg-gray-300 transition-colors duration-200 rounded-full `}
+       >
+         <BsBookmark  size={24} />
+       </button>
+        }
+            
+
 
         </div>
+    
         </div>
         {deleteModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
@@ -247,7 +357,8 @@ onClick={toggleCommentModal}
               <button
                 type="button"
                 className="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-                onClick={toggleOptions}
+                onClick={()=>            setdeleteModal(!deleteModal)}
+
               >
                 <svg
                   aria-hidden="true"
@@ -275,7 +386,11 @@ onClick={toggleCommentModal}
               <div className="flex justify-center items-center space-x-4">
                 <button
                   type="button"
-                  onClick={toggleOptions}
+                 
+                    onClick={()=>            setdeleteModal(!deleteModal)
+}
+
+
                   className="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-primary-300"
                 >
                   No, cancel

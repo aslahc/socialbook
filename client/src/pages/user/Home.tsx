@@ -13,6 +13,8 @@ import { IPost } from '../../types/types';
 import AddStory from '../../components/story/AddStory';
 import { setStory } from '../../utils/reducers/StoryData';
 import UserStory from '../../components/story/UserStory';
+import UserSuggetion from '../../components/Users/UserSuggetion';
+import AdminLogoCard from '../../components/layouts/AdminLogoCard';
 
 const baseURL = axiosInstance.defaults.baseURL;
 
@@ -26,14 +28,13 @@ function Home() {
   const storyData = Array.isArray(stories) ? stories.filter((story) => story.userId._id !== userId) : [];
 
 
-  console.log("from stoory datttettetet",storyData)
 
 
   const storiesContainerRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const cardWidth = 200;
-  const visibleStories = 4; // Number of stories to show at a time
-  const containerWidth = cardWidth * visibleStories;
+  const cardWidth = 160;  
+  // const visibleStories = 2; // Number of stories to show at a time
+  // const containerWidth = cardWidth * visibleStories;
 
   // Function to fetch posts
   const fetchPosts = async (): Promise<void> => {
@@ -104,86 +105,99 @@ function Home() {
   };
 
   return (
-    <div className="">
-      <div>
-        <div className="sticky top-0">
+    <div className="flex flex-col h-screen">
+    {/* Navbar Component */}
+    <div className="flex justify-between px-1 py-1">
+        {/* Admin Logo Card */}
+        {/* <div className="w-1/3">
+          <AdminLogoCard />
+        </div> */}
+
+        {/* Navbar */}
+        {/* <div className="w-9/12 fixed top-0 right-0 flex justify-end"> */}
           <Navbar />
+        {/* </div> */}
+      </div>
+  
+    {/* Main Content */}
+    <div className="flex flex-1 mt-4">
+      {/* Sidebar */}
+      <div className="sticky left-0 top-0 h-screen">
+        {/* NameCard Component */}
+      
+  
+        {/* SideNav Component */}
+        <div>
+          <SideNav />
         </div>
+      </div>
+  
+      {/* Main Content Area */}
+      <div className="flex-1 max-w-4xl ml-4">
+        {/* AddStory and UserStory Container */}
+        <div className="flex items-center mb-4 justify-between ">
+          {/* AddStory Component */}
+          <div className='mr-3'>
+          <AddStory />
 
-        <div className="mt-4 flex">
-          {/* Sidebar */}
-          <div className="sticky left-0 top-1 h-screen">
-            <div className="h-24">
-              <NameCard />
-            </div>
-            <div>
-              <SideNav />
-            </div>
           </div>
-
-          <div className="flex-1 max-w-4xl ml-4 ">
-            {/* AddStory, UserStory Container, and Friend Suggestion */}
-            <div className="flex items-center mb-4 gap-6 justify-between ">
-              <AddStory />
-             
-              {/* Container for User Stories with Horizontal Scroll */}
-              <div className="relative w-[800px] overflow-hidden">
-                <div
-                  className="flex"
-                  ref={storiesContainerRef}
-                  style={{
-                    width: `${storyData.length * cardWidth}px`,
-                    transition: 'transform 0.3s ease-in-out',
-                  }}
-                >
-                  {storyData &&
-                    storyData.map((story, index) => (
-                      <div
-                        key={story._id}
-                        className={`inline-flex`}
-                        style={{ width: `${cardWidth}px` }}
-                      >
-                        <UserStory story={story} />
-                      </div>
-                    ))}
-                </div>
-              </div>
-
-              {/* Scroll Buttons */}
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
-                onClick={handleScrollLeft}
-                disabled={currentSlide === 0}
-              >
-                {'<'}
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
-                onClick={handleScrollRight}
-                disabled={currentSlide >= storyData.length - 4}
-              >
-                {'>'}
-              </button>
-            </div>
-
-            {/* Create Post Component */}
-            <div className="mt-4">
-              <CreatePost />
-            </div>
-
-            {/* Display Posts */}
-            <div className="mt-4">
-              {postData &&
-                postData.map((post) => (
-                  <div key={post._id} className="mb-4">
-                    <Post post={post} />
+  
+          {/* Container for User Stories with Horizontal Scroll */}
+          <div className="relative w-[550px] overflow-x-auto">
+            <div
+              className="flex"
+              ref={storiesContainerRef}
+              style={{
+                width: `${storyData.length * cardWidth}px`,
+                transition: 'transform 0.3s ease-in-out',
+              }}
+            >
+              {/* User Stories Rendering */}
+              {storyData &&
+                storyData.map((story, index) => (
+                  <div
+                    key={story._id}
+                    className="inline-flex"
+                    style={{ width: `${cardWidth}px`, gap: '19px' }}
+                  >
+                    <UserStory story={story} />
                   </div>
                 ))}
             </div>
+  
+            {/* Horizontal Scrollbar */}
+            <div className="overflow-x-auto">
+              <div
+                className="scrollbar-track scrollbar-thumb-rounded scrollbar-thumb-gray-400 scrollbar-track-gray-200"
+                style={{ width: `${storyData.length * cardWidth}px` }}
+              />
+            </div>
           </div>
         </div>
+  
+        {/* Create Post Component */}
+        <div className="mt-4">
+          <CreatePost />
+        </div>
+  
+        {/* Display Posts */}
+        <div className="mt-4">
+          {postData &&
+            postData.map((post) => (
+              <div key={post._id} className="mb-4">
+                <Post post={post} />
+              </div>
+            ))}
+        </div>
+      </div>
+  
+      {/* UserSuggestion Component (Aligned to the Right) */}
+      <div className="hidden sm:block ml-auto">
+        <UserSuggetion userId={userId} />
       </div>
     </div>
+  </div>
+  
   );
 }
 

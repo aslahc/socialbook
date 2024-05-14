@@ -8,8 +8,8 @@ import User, { IUser } from '../models/user/user';
 export class StoryRepository {
     async SaveStory(storyImg: string, userId: string): Promise<Istory> {
         try {
-            const expireDate = new Date();
-            expireDate.setDate(expireDate.getDate() + 1); // Expire after 1 day (24 hours)
+          const expireDate = new Date();
+            expireDate.setMinutes(expireDate.getMinutes() + 5);// Expire after 1 day (24 hours)
     
             // Check if the user already has existing stories in the database
             let existingUser = await Story.findOne({ userId });
@@ -22,7 +22,9 @@ export class StoryRepository {
                     createOn: new Date(),
                     expireOn: expireDate
                 });
-                const savedStory = await existingUser.save();
+                const story = await existingUser.save();
+                const savedStory = await story.populate('userId')
+                console.log("sds created saved story")
                 return savedStory;
             } else {
                 // User does not exist, create a new user with the story
@@ -44,16 +46,27 @@ export class StoryRepository {
     }
 
     async removeExpiredStories(): Promise<void> {
-        try {
-            const currentDate = new Date();
-            await Story.deleteMany({ expireOn: { $lte: currentDate } });
-        } catch (error) {
-            console.error("Error:", (error as Error).message);
-            throw error;
-        }
-    }
+      try {
+          const currentDate = new Date();
+          await Story.deleteMany({ expireOn: { $lte: currentDate } });
+      } catch (error) {
+          console.error("Error:", (error as Error).message);
+          throw error;
+      }
+  }
 
-
+  startExpirationTask(intervalInMinutes: number = 1): void {
+      // Run removeExpiredStories every specified interval (in minutes)
+      setInterval(async () => {
+          try {
+              console.log(`Removing expired stories...`);
+              await this.removeExpiredStories();
+              console.log(`Expired stories removed successfully.`);
+          } catch (error) {
+              console.error("Error removing expired stories:", error);
+          }
+      }, intervalInMinutes * 60 * 1000); // Convert minutes to milliseconds
+  }
 
 
     
@@ -72,7 +85,7 @@ export class StoryRepository {
 }
 
 
-     async  deleteStory(userId: string, storyId: string, currentStory: string): Promise<void> {
+     async  deleteStory(userId: string, storyId: string, currentStory: string):  Promise<boolean> {
     try {
         // Find the Story document by userId
         const story = await Story.findOne({ userId: new Types.ObjectId(userId) });
@@ -93,7 +106,7 @@ export class StoryRepository {
          console.log("story deleted succesfully " )
         // Save the updated Story document
         await story.save();
-
+        return true;
         console.log('Story deleted successfully');
     } catch (error) {
         console.error('Error:', (error as Error).message);

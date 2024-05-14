@@ -10,10 +10,10 @@
             required: true
         },
         
-        postUrl: {
+        postUrl:[ {
             type: String,
             required: false,
-        },
+        }],
         caption:{
             type: String,
             required: false,

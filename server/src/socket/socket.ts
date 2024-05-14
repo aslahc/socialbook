@@ -8,7 +8,6 @@ const socketIo_Config = (io: any) => {
     io.emit("welcome", "Welcome to the server!"); // Emit a welcome message to the client upon connection
 
     socket.on("disconnect", () => {
-      // console.log("A client disconnected");
       removeUser(socket.id); // Remove disconnected user from the users array
       io.emit("getUsers", users); // Broadcast updated users array to all clients
     });
@@ -29,8 +28,9 @@ const socketIo_Config = (io: any) => {
 
     // Handle 'addUser' event
     socket.on("addUser", (userId: string) => {
+      console.log(1)
+      console.log(userId)
       addUser(userId, socket.id); // Add user to the users array
-      // console.log(users, "Updated users array");
       io.emit("getUsers", users); // Broadcast updated users array to all clients
     });
 
@@ -52,13 +52,9 @@ const socketIo_Config = (io: any) => {
         messageType?: string; // Add optional messageType
         file?: string; // Add optional file
       }) => {
-        console.log("Message sent by:", senderId);
-        console.log("Message received by:", receiverId);
-        console.log("timestam in soct",timestamp)
-        // console.log("Message:", text);
-        console.log("Message type:", messageType);
 
         const user = getUser(receiverId);
+        console.log("123",user)
         if (user) {
           // console.log("Receiver found:", user);
           io.to(user.socketId).emit("getMessage", {
@@ -69,19 +65,69 @@ const socketIo_Config = (io: any) => {
             file,
           });
         } else {
-          // console.log("Receiver not found for userId:", receiverId);
+          console.log("Receiver not found for userId:", receiverId);
           // Handle case where receiver is not found (optional)
         }
       }
     );
 
+    socket.on(
+      "sendNotification",
+      ({
+        postImage,
+        receiverId,
+        senderName,
+        message,
+      }: {
+        postImage: string;
+        receiverId: string;
+        senderName: string;
+        message:string;
+      }) => {
+        console.log(message);
+        console.log(2)
+
+        const user = getUser(receiverId);
+        console.log("321",user)
+        io.to(user?.socketId).emit("getNotifications", {
+          postImage,
+          senderName,
+          message,
+        });
+      }
+    );
+
+
+    socket.on(
+      "typing",
+      ({ senderId, receiverId }: { senderId: string; receiverId: string }) => {
+        console.log(senderId,"user and reciver",receiverId)
+
+        const user = getUser(receiverId);
+        if (user) {
+
+          io.to(user.socketId).emit("userTyping", { senderId });
+        }
+      }
+    );
+
+    // Listen for "stopTyping" event from client
+    socket.on(
+      "stopTyping",
+      ({ senderId, receiverId }: { senderId: string; receiverId: string }) => {
+        const user = getUser(receiverId);
+  
+        if (user) {
+          io.to(user.socketId).emit("userStopTyping", { senderId });
+        }
+      }
+    );
     socket.on("videoCallRequest", (data: any) => {
       const emitdata = {
         roomId: data.roomId,
         senderName:data.senderName,
         senderProfile:data.senderProfile
       };
-      console.log(emitdata)
       const user = getUser(data.recieverId);
       if(user){
         io.to(user.socketId).emit("videoCallResponse", emitdata );

@@ -2,15 +2,16 @@ import express from 'express';
 const  user_route = express()
 
 import { signUp ,verifyOtp ,verifyLogin ,fetchUsers,fetchUser,resendOtp, verifyemail
-    ,editprofile ,verifyEmailOtp,changepassword,googlelogin} from '../controllers/UserController';
+    ,editprofile ,verifyEmailOtp,changepassword,googlelogin ,followUser ,unfollowUser} from '../controllers/UserController';
 
 
 
-import { createPost ,fetchPosts ,addLike ,removeLike ,   deletePost ,editPost } from '../controllers/PostController'
+import { createPost ,fetchPosts ,addLike ,removeLike ,   deletePost ,editPost ,savePost ,Unsave} from '../controllers/PostController'
 
 import {reportPost} from '../controllers/ReportPost'
 import {postComment , getComment ,deleteComment} from '../controllers/commentController'
 import { createStory ,fetchStoryData ,deleteStory,watchStory  ,storyViews} from '../controllers/storyController';
+import {notifications} from '../controllers/notifications'
 
 import {saveMessage ,messages} from '../controllers/ChatController'
  
@@ -47,16 +48,16 @@ user_route.post("/createPost", createPost)
 user_route.get("/fetchPost",   fetchPosts)
 user_route.post('/posts/like/:id' ,addLike)
 user_route.delete('/posts/like/:id' , removeLike)
-user_route.delete('/deletepost/:postId', verifyToken , isBlock , deletePost)
-user_route.post('/reportPost', verifyToken,isBlock, reportPost )
-user_route.put('/editPost/:postId', verifyToken ,isBlock,  editPost)
+user_route.delete('/deletepost/:postId', deletePost)
+user_route.post('/reportPost', reportPost )
+user_route.put('/editPost/:postId',  editPost)
 
 
 
 //comment 
-user_route.post('/postComment', verifyToken ,isBlock,  postComment)
-user_route.get('/comment/:postId', verifyToken ,isBlock, getComment)
-user_route.delete('/deleteComment/:commentId',isBlock, verifyToken , deleteComment)
+user_route.post('/postComment',   postComment)
+user_route.get('/comment/:postId',  getComment)
+user_route.delete('/deleteComment/:commentId', deleteComment)
 
 
 
@@ -72,8 +73,7 @@ user_route.get('/stories/viewers',storyViews)
 
 // user_route.post('/chat',createChat)
 // user_route.get("/chat/:userId",userChats)
-// user_route.get('/find/:firstId/:secondId',findChat)
-
+// user_route.get('/find/:firstId/:secondId',findChat
 
 
 // message 
@@ -82,5 +82,20 @@ user_route.get('/stories/viewers',storyViews)
 // user_route.get('/message/:chatId',getMessages)
 
 user_route.post("/saveChat",saveMessage)
-user_route.get("/messages/:userId/:receiverId",messages)
+user_route.get("/messages/:userId/:receiverId",messages) 
+
+
+// freind management 
+
+user_route.post('/users/follow/:userId',followUser)
+user_route.post('/users/unfollow/:userId',unfollowUser)
+
+//save post 
+
+user_route.post('/posts/save',savePost)
+user_route.post('/posts/Unsave',Unsave)
+
+//notification
+
+user_route.get("/notifications/:userId",notifications)
 export default user_route;

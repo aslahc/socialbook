@@ -6,11 +6,23 @@
     import { toast } from 'sonner';
     import {updatePost} from '../../utils/reducers/PostData'
     // const baseURL = axiosInstance.defaults.baseURL;
-
+    import Slider, { Settings } from 'react-slick';
+    import 'slick-carousel/slick/slick.css';
+    import 'slick-carousel/slick/slick-theme.css';
     interface EditPostProps {
         postId: string;
         toogleEditPost: () => void;
     }
+
+    const settings: Settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3000,
+      };
 
     const EditPost: React.FC<EditPostProps> = ({ postId, toogleEditPost }) => {
         const [caption, setCaption] = useState<string>('');
@@ -69,14 +81,20 @@
                                     className="w-full px-4 py-2 rounded-3xl bg-gray-200 text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 shadow-inner"
                                 />
                             </div>
-                          {
-selectedPost?.postUrl &&(
-                          <img
-                                className="w-full h-auto object-contain rounded-2xl shadow-md"
-                                src={selectedPost?.postUrl}
-                                alt="Selected Post Photo"
-                            />
-                       ) }
+                            {
+  selectedPost?.postUrl && (
+    
+    selectedPost?.postUrl.map((url, index) => (
+      <img
+        key={index} // Adding a unique key for each image
+        className="w-full h-auto object-contain rounded-2xl shadow-md"
+        src={url}
+        alt="Selected Post Photo"
+      />
+    ))
+  )
+}
+
                             {/* Input box added below the image */}
                             {/* Button for next or close */}
                             <div className="flex justify-end mt-4">

@@ -12,8 +12,9 @@ export interface User {
     profileimg?: string;
     bannerImg?: string;
     phone: string; // New field
-    followers?: number;
-    following?: number;
+    followers?: string[];
+    following?: string[];
+    savedPost?:string[];
     isBlock?:boolean
     isAdmin?:boolean
   }
@@ -21,6 +22,8 @@ export interface User {
     messages?: { senderId: string; text: string }[];
   }
   export interface IPost {
+    height: any;
+    width: any;
     filter: any;
     _id: string; // Change '_id' to 'id' if your post IDs are named 'id'
     userId: {
@@ -30,7 +33,7 @@ export interface User {
     };
     likes:any[]
     createdAt: string;
-    postUrl: string;
+    postUrl: string[];
     caption: string;
 
   }
@@ -41,6 +44,7 @@ export interface User {
         username: string;
         profileimg: string;
     };
+    
     stories: {
         storyImg: string;
         views: string[];
@@ -58,7 +62,7 @@ export interface User {
     // user:User[];
   }
   export interface UserState {
-    user: User[];
+    user: User | null; 
     // user:User[];
   }
   

@@ -1,46 +1,38 @@
-import React, { ChangeEvent, useState, useRef, Suspense } from 'react';
-import { AiOutlineCamera } from 'react-icons/ai';
-import { useDispatch, useSelector } from 'react-redux';
-
+import React, { ChangeEvent, useRef, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import axiosInstance from '../../axios/axios'
+import { toast } from 'react-toastify';
+import { addPost } from '../../utils/reducers/PostData';
+import axiosInstance from '../../axios/axios';
 import Cropper from 'react-easy-crop';
-import PostData, {addPost} from '../../utils/reducers/PostData'
-import { toast } from "sonner";
-import { v4 as uuidv4 } from 'uuid';
+import { Carousel } from 'react-responsive-carousel';
 
-// const baseURL = axiosInstance.defaults.baseURL;
-const LazyLoadedImage = ({ imageUrl }: { imageUrl: string }) => {
-  return <img className="w-full h-auto object-contain" src={imageUrl} alt="Selected Post Photo" />;
-};
 const CreatePost = () => {
   const userData = useSelector((state: any) => state.userDetails.user || '');
-  const userId = userData._id
+  const userId = userData._id;
   interface FormInputs {
     caption: string;
     postUrl: string;
   }
   const dispatch = useDispatch();
 
-  const presetKey: string = 'cloudinaryimg'; 
+  const presetKey: string = 'cloudinaryimg';
   const cloudName: string = 'dy9ofwwjp';
-  
+
   const [postData, setPostData] = useState<FormInputs>({ caption: '', postUrl: '' });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File[]>([]);
   const [crop, setCrop] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState<number>(1);
   const [croppedArea, setCroppedArea] = useState<any>(null);
-//   const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [croppedImages, setCroppedImages] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [cropedImg, setCropImg] = useState(false);
-  
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setPostData({ ...postData, [name]: value });
   };
-  console.log(postData,".....00000")
-
-  const [image, setImage] = useState<string | undefined>(''); 
 
   const handlePhotoIconClick = () => {
     if (fileInputRef.current) {
@@ -50,99 +42,95 @@ const CreatePost = () => {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
-    
+
     if (fileList && fileList.length > 0) {
-      const file = fileList[0];
-      if (file.type.startsWith('image/')) {
-        
-      setSelectedFile(file);
-    //   setCroppedImage
-    //   setShowConfirmButton(true);
-    }else {
+      const filesArray: File[] = Array.from(fileList);
+    filesArray.filter(file =>     console.log(file.type)
+  )
+      // Filter to only include image files
+      const imageFiles: File[] = filesArray.filter(file => file.type.startsWith('image/')  ||  file.type.startsWith('video/') );
 
+      setSelectedFile(imageFiles);
+      setShowCropModal(true);
+    } else {
       toast.error("Please select an image file.");
-    } } 
+    }
   };
 
-  const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
-    setCroppedArea(croppedAreaPixels);
-  };
-
-  const handleCropChange = (crop: { x: number, y: number }) => {
+  const handleCropChange = (crop: { x: number, y: number }, index: number) => {
     setCrop(crop);
   };
-
-  const handleZoomChange = (zoom: number) => {
+  
+  const handleZoomChange = (zoom: number, index: number) => {
     setZoom(zoom);
   };
-  const handleCloseModal = async () =>{
-    setImage("")
-    setCropImg(false)
-  }
- 
+  
+  const onCropComplete = (croppedArea: any, croppedAreaPixels: any, index: number) => {
+    setCroppedArea(croppedAreaPixels);
+  };
+  
+  const handleCloseModal = () => {
+    setShowCropModal(false);
+    setSelectedFile([]);
+    setCroppedArea(null);
+    setCroppedImages([])
+  };
 
   const handleConfirmCrop = async () => {
     try {
-      const croppedImageBlob = await getCroppedImage(selectedFile!, croppedArea);
-      
-      const formDataFile = new FormData();
+      setUploading(true);
+      const croppedImagesArray: string[] = [];
 
-      // Check if selectedFile is not null before appending it to the FormData
-      if (selectedFile) {
+      for (const file of selectedFile) {
+        const croppedImageBlob = await getCroppedImage(file, croppedArea);
+        const formDataFile = new FormData();
+        console.log(croppedImageBlob)
         formDataFile.append('file', croppedImageBlob);
+        formDataFile.append('upload_preset', presetKey);
+        console.log("image sending to the cloudinary")
+        const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formDataFile);
+        console.log(response)
+        const imageUrl = response.data.secure_url;
+        croppedImagesArray.push(imageUrl);
+        setSelectedFile([])
       }
-      setSelectedFile(null);
-      formDataFile.append('upload_preset', presetKey);
-   
-      setCropImg(true)
-       console.log(formDataFile)
-      axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formDataFile)
-        .then(res => {
-         
-         
-          setImage(res.data.secure_url);
-          setPostData({ ...postData, postUrl: res.data.secure_url });
-        
-
-        })
-        .catch(err => console.log(err));
-      
-        // Move setCroppedImage(postUrl) inside the axios .then() block
-        // to ensure it runs after the image is uploaded
-        // and the postUrl is updated
-        // Also, postUrl should be res.data.secure_url
-        // instead of directly using postUrl variable
-        // which may not be updated yet.
-      
+       console.log("this is cropeed images array",croppedImagesArray)
+      setCroppedImages(croppedImagesArray);
+      setUploading(false);
+      setShowCropModal(false);
     } catch (error) {
-      console.error('Error cropping image:', error);
+      console.error('Error cropping and uploading images:', error);
+      setUploading(false);
     }
   };
-  const token = localStorage.getItem('token')
+
+  const token = localStorage.getItem('token');
   const handleCreatePostClick = async () => {
     try {
-      const response = await axiosInstance.post(`/createPost`, { ...postData, userId }, {
+      console.log("going to save the post ")
+      console.log(croppedImages)
+      const response = await axiosInstance.post(`/createPost`, { ...postData, userId, postUrl: croppedImages }, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         }
       });
-  
-      console.log('Response from server:', response.data);
+       console.log(response.data.postData)
+
       const newPost = response.data.postData;
+      console.log("going to dispatch the newPst")
       dispatch(addPost(newPost));
-      setCropImg(false);
       setPostData({ caption: '', postUrl: '' });
-      setSelectedFile(null);
+      setCroppedImages([]);
+      setSelectedFile([])
     } catch (error) {
       console.error('Error creating post:', error);
     }
   };
-  
 
 
   const closeModal = () => {
-    setSelectedFile(null);
+    setSelectedFile([]);
     // setShowConfirmButton(false);
   };
 
@@ -178,7 +166,13 @@ const CreatePost = () => {
       };
     });
   };
+  const handleNextImage = () => {
+    setCurrentImageIndex(prevIndex => (prevIndex + 1) % selectedFile.length);
+    setCrop({ x: 0, y: 0 }); // Reset crop position when changing images
+    setZoom(1); // Reset zoom level
+  };
 
+  
   return (
     <div>
 <div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl">
@@ -234,6 +228,7 @@ const CreatePost = () => {
       ref={fileInputRef}
       style={{ display: 'none' }}
       onChange={handleFileChange}
+      multiple
     />
     {postData.caption && (
       <button
@@ -262,110 +257,224 @@ const CreatePost = () => {
 </div>
 
 
-      {selectedFile && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">
-          <div className="w-[40rem] h-[40rem] relative">
-            <div className="bg-white rounded-lg p-4 shadow-md">
-              <Cropper
-                image={URL.createObjectURL(selectedFile)}
-                crop={crop}
-                zoom={zoom}
-                aspect={2 / 2}
-                onCropChange={handleCropChange}
-                onZoomChange={handleZoomChange}
-                onCropComplete={onCropComplete}
-              />
-              <div className='absolute top-5 right-0 m-4 z-10'>
-                <button onClick={closeModal} className="mr-2 bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md">Cancel</button>
-                <button onClick={handleConfirmCrop} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Crop</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+{selectedFile.length > 0 && (
+  <div key={currentImageIndex} className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">
+    <div className="w-[40rem] h-[40rem] relative">
+      <div className="bg-white rounded-lg p-4 shadow-md">
+        <Cropper
+          image={selectedFile[currentImageIndex] && URL.createObjectURL(selectedFile[currentImageIndex])}
+          crop={crop}
+          zoom={zoom}
+          aspect={2 / 2}
+          onCropChange={(crop) => handleCropChange(crop, currentImageIndex)}
+          onZoomChange={(zoom) => handleZoomChange(zoom, currentImageIndex)}
+          onCropComplete={(croppedArea, croppedAreaPixels) => onCropComplete(croppedArea, croppedAreaPixels, currentImageIndex)}
+        />
+        <div className='absolute top-5 right-0 m-4 z-10 flex items-center'>
+       <div className="flex justify-center space-x-4">
+        
+        {
+        selectedFile.length > 0 && (
+          <button
+          onClick={handleNextImage}
+          className="relative mr-4 flex items-center px-6 py-3 rounded-lg shadow-inner bg-white text-indigo-500 font-semibold"
+          style={{
+            boxShadow: "6px 6px 12px #c3c3c3,",
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+          Next Image
+        </button>
 
-     {cropedImg && (
-  <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-300 ease-in-out z-50">
-    <div className="flex items-center justify-center h-screen">
-      
-      <div className="bg-white rounded-lg shadow-md px-4 pt-6 pb-8 w-full max-w-md">
-        
-      <div className="mt-4">
-      <div className="flex items-center mb-4">
-    <input
-      type="text"
-      name="caption"
-      value={postData.caption}
-      onChange={handleInputChange}
-      placeholder="What's on your mind?"
-      className="border-0 bg-gray-100 rounded-3xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-    />
-  </div>
-        </div>
-        
-        {image && (
-      <Suspense fallback={<div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-50">
-      <div className="spinner"></div>
-    </div>}>
-      <LazyLoadedImage imageUrl={image} />
-    </Suspense>
-      )}
-        
-        {/* Input box added below the image */}
-    
-        
-        {/* Button for next or close */}
-        <div className="flex justify-end mt-4">
-        <button
-  onClick={handleCloseModal}
-  type="button"
-  className="focus:outline-none bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-md mr-2
-    shadow-md transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg flex items-center justify-center"
->
-  {/* Close (X) Icon */}
-  <svg
-    className="w-4 h-4 mr-1"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      d="M6 18L18 6M6 6l12 12"
-    />
-  </svg>
-  Close
-</button>
-
-          {postData.postUrl && (
+        )
+        }  
+       <div className="flex justify-center space-x-4">
   <button
-    onClick={handleCreatePostClick}
-    type="button"
-    className="bg-blue-500 rounded-3xl px-4 py-2 text-white font-medium flex items-center hover:bg-blue-600 transition-colors duration-200"
+    onClick={handleCloseModal}
+    className="relative flex items-center px-6 py-3 rounded-lg shadow-inner bg-white text-indigo-500 font-semibold"
+    style={{
+      boxShadow: "6px 6px 12px #c3c3c3, -6px -6px 12px #ffffff",
+    }}
   >
     <svg
-      className="w-4 h-4 mr-2"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      className="h-5 w-5 mr-2"
+      viewBox="0 0 20 20"
+      fill="currentColor"
     >
       <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+        fillRule="evenodd"
+        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+        clipRule="evenodd"
       />
     </svg>
-    <span>Post</span>
+    Close
   </button>
-)}
+
+  <button
+    onClick={handleConfirmCrop}
+    className="relative flex items-center px-6 py-3 rounded-lg shadow-inner bg-white text-indigo-500 font-semibold"
+    style={{
+      boxShadow: "6px 6px 12px #c3c3c3, -6px -6px 12px #ffffff",
+    }}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-5 w-5 mr-2"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path
+        fillRule="evenodd"
+        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+        clipRule="evenodd"
+      />
+    </svg>
+    Confirm Crop
+  </button>
+</div>
+</div>
 
         </div>
       </div>
+    </div>
+  </div>
+)}
+
+{croppedImages.length > 0 && (
+  <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity duration-300 ease-in-out z-50">
+    <div className="flex items-center justify-center h-screen">
+      <div className="bg-white rounded-lg shadow-md p-4 w-full max-w-md">
+        {/* Display a single cropped image */}
+        <img
+          src={croppedImages[currentImageIndex]}
+          className="w-full h-auto object-contain rounded-lg"
+          alt={`Cropped Image ${currentImageIndex}`}
+        />
+
+        {/* Caption input */}
+        <div className="flex items-center mb-4">
+          <input
+            type="text"
+            name="caption"
+            value={postData.caption}
+            onChange={handleInputChange}
+            placeholder="What's on your mind?"
+            className="border-0 bg-gray-100 rounded-3xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        {/* Buttons for navigation and posting */}
+        <div className="flex justify-between">
+        <div className="flex space-x-2">
+       {
+        
+        croppedImages.length > 1 && (
+
+          <><button
+                        onClick={() => setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? croppedImages.length - 1 : prevIndex - 1))}
+                        type="button"
+                        className="relative flex items-center px-4 py-2 rounded-lg shadow-inner bg-white text-indigo-500 font-semibold"
+                        style={{
+                          boxShadow: "6px 6px 12px #c3c3c3, -6px -6px 12px #ffffff",
+                        }}
+                      >
+                        <svg
+                          className="w-4 h-4 mr-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Previous
+                      </button><button
+                        onClick={() => setCurrentImageIndex((prevIndex) => (prevIndex === croppedImages.length - 1 ? 0 : prevIndex + 1))}
+                        type="button"
+                        className="relative flex items-center px-4 py-2 rounded-lg shadow-inner bg-white text-indigo-500 font-semibold"
+                        style={{
+                          boxShadow: "6px 6px 12px #c3c3c3, -6px -6px 12px #ffffff",
+                        }}
+                      >
+                          Next
+                          <svg
+                            className="w-4 h-4 ml-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button></>
+        )
+      }
+        </div>
+
+        <div className="flex space-x-2">
+          <button
+            onClick={handleCloseModal}
+            type="button"
+            className="relative flex items-center px-4 py-2 rounded-lg shadow-inner bg-white text-indigo-500 font-semibold"
+            style={{
+              boxShadow: "6px 6px 12px #c3c3c3, -6px -6px 12px #ffffff",
+            }}
+          >
+            <svg
+              className="w-4 h-4 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Close
+          </button>
+
+          {/* Post button */}
+          <button
+            onClick={handleCreatePostClick}
+            type="button"
+            className="relative flex items-center px-4 py-2 rounded-lg shadow-inner bg-indigo-500 text-white font-semibold"
+            style={{
+              boxShadow: "6px 6px 12px #c3c3c3, -6px -6px 12px #ffffff",
+            }}
+          >
+            <svg
+              className="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+            Post
+          </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{uploading && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">
+    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
     </div>
   </div>
 )}

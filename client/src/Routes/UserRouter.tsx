@@ -16,6 +16,9 @@ import UsersProfile from '../pages/user/UsersProfile'
 import Chat from '../pages/user/Chat';
 import Conversation from '../components/chat/Conversation';
 import VideoCall from '../components/chat/VideoCall';
+import Explore from '../pages/user/Explore';
+import SavedPost from '../pages/user/SavedPost';
+import Notification from '../pages/user/Notification';
 
 function UserRouter() {
  const navigate = useNavigate()
@@ -63,7 +66,7 @@ const isAdmin  = localStorage.getItem('admin')
 <Route 
   path='/verifyotp' 
   element={
-    isAdmin ? (
+    isAdmin ? ( 
       <Navigate to='/admin/dashboard' />
     ) : auth ? (
       <Navigate to='/home' />
@@ -89,6 +92,11 @@ const isAdmin  = localStorage.getItem('admin')
       <Route path='/user-Profile/:id' element={auth ? <UsersProfile /> : <Navigate to='/login' />} />
       <Route path='/chat' element={auth ? <Chat /> : <Navigate to='/login' />} />
       <Route path='/video-call/:roomId/:userId' element={auth ? <VideoCall /> : <Navigate to='/login' />}  />
+      <Route path='/explore' element={auth ? <Explore /> : <Navigate to='/login' />}  />
+      <Route path='/Collections' element={auth ? <SavedPost /> : <Navigate to='/login' />}  />
+      <Route path='/Notification' element={auth ? <Notification /> : <Navigate to='/login' />}  />
+
+
       
     </Routes>
   );

@@ -12,6 +12,8 @@ interface FileMessageProps {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showModal, setShowModal] = useState(false);
+ const [uploading, setUploading] = useState<boolean>(false);
+
   const presetKey: string = 'cloudinaryimg'; 
   const cloudName: string = 'dy9ofwwjp';
   // Function to handle SVG icon click
@@ -49,16 +51,17 @@ interface FileMessageProps {
         formData.append('file', selectedFile);
 
         formData.append('upload_preset', presetKey);
-        console.log(selectedFile)
-        console.log(formData)
+      setUploading(true);
+
         const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
           method: 'POST',
           body: formData,
         });
   
         if (response.ok) {
+      setUploading(false);
+
           const data = await response.json();
-          console.log('File uploaded to Cloudinary:', data.secure_url);
           const fileUrl = data.secure_url;
           let timestamp = new Date().getTime();
           const messageType = 'file';
@@ -128,12 +131,30 @@ interface FileMessageProps {
               >
                 Close
               </button>
+
+              {uploading  ? (
+  <button
+    type="button"
+    className="px-4 py-2 bg-indigo-500 text-white rounded-lg shadow-neumorphic-concave hover:shadow-neumorphic-convex transition-all duration-300"
+    disabled
+  >
+    <div className="relative w-6 h-6 mr-2">
+      <div className="absolute inset-0 rounded-full bg-blue-400 blur-sm"></div>
+      <div className="relative flex items-center justify-center rounded-full h-5 w-5 bg-blue-500 shadow-md">
+        <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-2 border-t-blue-200"></div>
+      </div>
+    </div>
+    <span></span>
+  </button>
+) : (
               <button
                 className="px-4 py-2 bg-indigo-500 text-white rounded-lg shadow-neumorphic-concave hover:shadow-neumorphic-convex transition-all duration-300"
                 onClick={handleSendFile}
               >
                 Send
               </button>
+)}
+
             </div>
           </div>
         </div>
