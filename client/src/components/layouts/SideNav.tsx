@@ -31,6 +31,13 @@ function SideNav() {
           <FiCompass />
           <span className="hidden md:inline ml-2">EXPLORE</span>
         </li>
+        <li
+         onClick={() => navigate('/reel')}
+
+         className="flex items-center justify-center py-2 md:py-4 text-indigo-500 hover:bg-gray-700 cursor-pointer md:w-full">
+          <FiCompass />
+          <span className="hidden md:inline ml-2">Reels</span>
+        </li>
         <li className="flex items-center justify-center py-2 md:py-4 text-indigo-500 hover:bg-gray-700 cursor-pointer md:w-full">
           <FiFolder />
           <span

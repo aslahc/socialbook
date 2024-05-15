@@ -8,12 +8,13 @@ const userRepository = new UserRepository();
 const postRepository = new PostRepository()
 export const createPost = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { caption, postUrl } = req.body;
+        console.log("enterd to create post ")
+        const { caption, postUrl ,type} = req.body;
         const userId = req.body.userId;
         console.log(postUrl)// array of cloudinary url 
-        
+        console.log(caption,userId,postUrl,"op")
         // Call the savePost method of the postRepository to save the new post
-        const newPost = await postRepository.savePost(caption, postUrl, userId);
+        const newPost = await postRepository.savePost(caption, postUrl, userId,type);
         
         // If the post is successfully saved, send a success response
         if (newPost) {

@@ -45,10 +45,9 @@ const CreatePost = () => {
 
     if (fileList && fileList.length > 0) {
       const filesArray: File[] = Array.from(fileList);
-    filesArray.filter(file =>     console.log(file.type)
-  )
+
       // Filter to only include image files
-      const imageFiles: File[] = filesArray.filter(file => file.type.startsWith('image/')  ||  file.type.startsWith('video/') );
+      const imageFiles: File[] = filesArray.filter(file => file.type.startsWith('image/'));
 
       setSelectedFile(imageFiles);
       setShowCropModal(true);
@@ -109,7 +108,9 @@ const CreatePost = () => {
     try {
       console.log("going to save the post ")
       console.log(croppedImages)
-      const response = await axiosInstance.post(`/createPost`, { ...postData, userId, postUrl: croppedImages }, {
+      const type = "image"
+
+      const response = await axiosInstance.post(`/createPost`, { ...postData, userId, postUrl: croppedImages,type }, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`

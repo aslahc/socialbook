@@ -15,6 +15,7 @@ import { setStory } from '../../utils/reducers/StoryData';
 import UserStory from '../../components/story/UserStory';
 import UserSuggetion from '../../components/Users/UserSuggetion';
 import AdminLogoCard from '../../components/layouts/AdminLogoCard';
+import CreateReel from '../../components/reel/CreateReel';
 
 const baseURL = axiosInstance.defaults.baseURL;
 
@@ -23,7 +24,8 @@ function Home() {
   const userData = useSelector((state: any) => state.userDetails.user || '');
   const userId = userData._id
 
-  const postData = useSelector((state: RootState) => state.postData.posts);
+  const posts = useSelector((state: RootState) => state.postData.posts);
+  const postData = posts.filter((post)=>post.type === 'image')
   const stories = useSelector((state: RootState) => state.StoryData.story || []);
   const storyData = Array.isArray(stories) ? stories.filter((story) => story.userId._id !== userId) : [];
 

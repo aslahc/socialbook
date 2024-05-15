@@ -19,6 +19,7 @@ import VideoCall from '../components/chat/VideoCall';
 import Explore from '../pages/user/Explore';
 import SavedPost from '../pages/user/SavedPost';
 import Notification from '../pages/user/Notification';
+import Reels from '../pages/user/Reels';
 
 function UserRouter() {
  const navigate = useNavigate()
@@ -93,6 +94,8 @@ const isAdmin  = localStorage.getItem('admin')
       <Route path='/chat' element={auth ? <Chat /> : <Navigate to='/login' />} />
       <Route path='/video-call/:roomId/:userId' element={auth ? <VideoCall /> : <Navigate to='/login' />}  />
       <Route path='/explore' element={auth ? <Explore /> : <Navigate to='/login' />}  />
+      <Route path='/reel' element={auth ? <Reels /> : <Navigate to='/login' />}  />
+
       <Route path='/Collections' element={auth ? <SavedPost /> : <Navigate to='/login' />}  />
       <Route path='/Notification' element={auth ? <Notification /> : <Navigate to='/login' />}  />
 

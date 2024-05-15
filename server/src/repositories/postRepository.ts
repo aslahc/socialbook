@@ -6,12 +6,13 @@ import { Types } from 'mongoose'
 
 export class PostRepository {
 
-        async     savePost(caption: string, postUrl: string, userId: string): Promise<PostInterface> {
+        async     savePost(caption: string, postUrl: string, userId: string,type:string): Promise<PostInterface> {
             try {
-        
+                console.log('enter to ssave post')
                 // Find the corresponding user document
                 const user = await User.findById(userId);
-        
+               console.log(user,"user ind")
+
                 if (!user) {
                     throw new Error('User not found');
                 }
@@ -20,10 +21,11 @@ export class PostRepository {
                 const newPost = new Post({
                     userId: user._id, // Assign the ObjectId of the user
                     caption: caption,
+                    type:type,
                     postUrl: postUrl,
                     createdOn: Date.now()
                 });
-        
+                 console.log("nwe post ok....")
                 // Save the new post to the database
                 const savedPost = await newPost.save();
         

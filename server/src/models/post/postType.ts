@@ -5,6 +5,7 @@ export interface PostInterface extends Document {
     userId: Types.ObjectId;
     postUrl: string[];
     caption: string;
+    type:String;
     createdOn: Date;
     likes: Types.ObjectId[];
     comments: Comment[];

@@ -35,6 +35,7 @@ export interface User {
     createdAt: string;
     postUrl: string[];
     caption: string;
+    type:string;
 
   }
   export interface Istory {
