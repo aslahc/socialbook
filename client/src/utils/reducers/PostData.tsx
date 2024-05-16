@@ -4,6 +4,7 @@ import { ActivityIcon } from "lucide-react";
 
 const initialState: PostState = {
   posts: [],
+  filteredPosts: [],
 };
 
 const postSlice = createSlice({

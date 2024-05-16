@@ -6,7 +6,7 @@ import { signUp ,verifyOtp ,verifyLogin ,fetchUsers,fetchUser,resendOtp, verifye
 
 
 
-import { createPost ,fetchPosts ,addLike ,removeLike ,   deletePost ,editPost ,savePost ,Unsave} from '../controllers/PostController'
+import { createPost ,fetchPosts ,addLike ,removeLike ,   deletePost ,editPost ,savePost ,Unsave ,createCategory, getPostsByCategory} from '../controllers/PostController'
 
 import {reportPost} from '../controllers/ReportPost'
 import {postComment , getComment ,deleteComment} from '../controllers/commentController'
@@ -94,8 +94,11 @@ user_route.post('/users/unfollow/:userId',unfollowUser)
 
 user_route.post('/posts/save',savePost)
 user_route.post('/posts/Unsave',Unsave)
-
+user_route.post('/createCategory',createCategory)
+user_route.get('/Savedposts/:userId/:categoryName', getPostsByCategory)
 //notification
 
 user_route.get("/notifications/:userId",notifications)
+
+
 export default user_route;

@@ -15,6 +15,7 @@ export interface User {
     followers?: string[];
     following?: string[];
     savedPost?:string[];
+    savePostCategory?:string[];
     isBlock?:boolean
     isAdmin?:boolean
   }
@@ -68,7 +69,9 @@ export interface User {
   }
   
   export interface PostState{
+    filteredPosts: any;
     posts:IPost[]
+    
   }
 
   export interface StoryState {

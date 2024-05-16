@@ -23,7 +23,37 @@ export class UserRepository {
             throw error;
         }
     }
+    async SaveCategory(userId: string, categoryName: string): Promise<IUser | null> {
+        try {
+            // Find the user by userId
+            const user = await User.findById(userId);
+    
+            if (!user) {
+                throw new Error('User not found');
+            }
+    
+            // Check if the category already exists in the savePostCategory array
+            if (user.savePostCategory.includes(categoryName)) {
+                console.error('Category already exists');
+                return user; // Return the user document as no change is made
+            }
+    
+            // Add the category to the savePostCategory array
+            user.savePostCategory.push(categoryName);
+    
+            // Save the updated user document
+            const updatedUser = await user.save();
+    
+            // Return the updated user document
 
+            return updatedUser;
+        } catch (error) {
+            console.error('Error saving category:', error);
+            throw error;
+        }
+    }
+    
+  
     async saveUser(userDetails: IUser): Promise<IUser> {
         try {
             const newUser = new User(userDetails);
@@ -156,22 +186,29 @@ export class UserRepository {
 
 
         // async savePostToUser
-        async savePostToUser(userId: string, postId: string): Promise<IUser | null> {
+     async  savePostToUser(userId: string, postId: string ,category:string): Promise<IUser | null> {
             try {
-                const user = await User.findById(userId);
+            
+        
+                // Update user document to add category and postId
+                const user = await User.findByIdAndUpdate(
+                    userId,
+                    {
+                        $addToSet: {
+                            savePostCategory: category,
+                            savedPost: { post: postId, category: category }
+                        }
+                    },
+                    { new: true } // Return the updated document
+                );
+        
                 if (!user) {
                     throw new Error('User not found');
-                  }
-              
-                  if (user.savedPost.includes(postId)) {
-                    throw new Error('Post already saved');
-                  }
-              
-                  user.savedPost.push(postId);
-                  return user.save();
+                }
+        
+                return user;
             } catch (error) {
-                console.error("Error:", (error as Error).message); 
-    
+                console.error("Error:", (error as Error).message);
                 throw error;
             }
         }
@@ -180,26 +217,45 @@ export class UserRepository {
                 const user = await User.findById(userId);
                 if (!user) {
                     throw new Error('User not found');
-                  }
-              
-                  const savedPostIndex = user.savedPost.findIndex(savedId => String(savedId) === String(postId));
-                  if (savedPostIndex === -1) {
-                      throw new Error('Post is not saved by this user');
-                  }
-                  
-                  // Remove the postId from the savedPost array
-                  user.savedPost.splice(savedPostIndex, 1); // Remove the element at savedPostIndex
-          
-                  // Save the updated user document
-                  const updatedUser = await user.save();
-
-                
-                  
-        return updatedUser;
+                }
+        
+                // Find the saved post by postId
+                const savedPostIndex = user.savedPost.findIndex(
+                    (saved) => String(saved.post) === String(postId)
+                );
+                if (savedPostIndex === -1) {
+                    throw new Error('Post is not saved by this user');
+                }
+        
+                // Remove the saved post from the array
+                user.savedPost.splice(savedPostIndex, 1);
+        
+                // Save the updated user document
+                const updatedUser = await user.save();
+        
+                return updatedUser;
             } catch (error) {
                 console.error("Error:", (error as Error).message); 
     
                 throw error;
             }
         }
+        async getSavedPost(userId: string, categoryName: string): Promise<any> {
+            try {
+              const user = await User.findById(userId).populate('savedPost');
+              console.log("user",user)
+              if (user) {
+                const filteredPosts = user.savedPost.filter(
+                  (post: any) => post.category === categoryName
+                );
+                console.log("filterd post",filteredPosts)
+                return filteredPosts;
+              } else {
+                console.log("User is not found");
+              }
+            } catch (error) {
+              console.error("Error:", (error as Error).message);
+            }
+          }
+      
 }

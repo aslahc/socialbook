@@ -16,7 +16,9 @@ export interface IUser extends Document {
     phone: string; // New field
     followers?: string[];
     following?: string[];
-    savedPost:string[];
+    savedPost: { post: Schema.Types.ObjectId; category: string }[];
+    savePostCategory: string[];
+
     isBlock?:boolean
     isAdmin?:boolean
 }
@@ -40,9 +42,12 @@ const userSchema = new Schema<IUser>({
     following: {
         type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
          default: [] },
-    savedPost: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Post',
+         savedPost: [{
+            post: { type: Schema.Types.ObjectId, ref: 'Post' },
+            category: { type: String } // Include the category name along with the post ID
+        }],
+    savePostCategory: [{
+        type: String,
         default: []
     }],
     isBlock:{type:Boolean,default:false},

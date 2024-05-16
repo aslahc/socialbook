@@ -1,6 +1,8 @@
 import { Request , Response ,  } from "express";
 import { PostRepository } from "../repositories/postRepository";
 import { UserRepository } from '../repositories/UserRepository';
+
+import user from "../models/user/user";
 const userRepository = new UserRepository();
 
 
@@ -147,23 +149,6 @@ export const googlelogin = async (req: Request, res: Response): Promise<void> =>
 
 
 
-export const savePost = async (req: Request, res: Response): Promise<void> => {
-    try {
-        console.log("enterin got the req body",req.body)
-    const {postId , userId} = req.body
-    const updatedUser = await userRepository.savePostToUser(userId, postId);
-   console.log(updatedUser)
-        
-    res.status(200).json({ success: true, message: 'Post saved successfully', user: updatedUser });
-
-        // Call the repository function to edit the post
-       
-    } catch (error) {
-
-        res.status(500).json({ success: false, error: 'Internal server error' });
-    }
-};
-
 
 
 export const Unsave = async (req: Request, res: Response): Promise<void> => {
@@ -176,6 +161,54 @@ export const Unsave = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({ success: true, message: 'Post saved successfully', user: updatedUser });
 
         // Call the repository function to edit the post
+       
+    } catch (error) {
+
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+};
+export const createCategory = async (req: Request, res: Response): Promise<void> => {
+    try {
+//        
+    const {userId, categoryName} = req.body
+    const userData = await userRepository.SaveCategory(userId,categoryName)
+
+
+    res.status(200).json({ success: true, message: 'create category successfully', userData});
+
+
+       
+    } catch (error) {
+
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+};
+
+export const savePost = async (req: Request, res: Response): Promise<void> => {
+    try {
+        console.log("enterin got the req body",req.body)
+    const {postId , userId ,category} = req.body
+    const updatedUser = await userRepository.savePostToUser(userId, postId ,category);
+        
+    res.status(200).json({ success: true, message: 'Post saved successfully', user: updatedUser });
+
+        // Call the repository function to edit the post
+       
+    } catch (error) {
+
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+};
+
+
+export const getPostsByCategory = async (req: Request, res: Response): Promise<void> => {
+    try {
+        console.log("enetering to get oost ")
+//        consoe.
+const { userId, categoryName } = req.params;
+const SavedPosts = await userRepository.getSavedPost(userId,categoryName)
+ 
+res.status(200).json({ success: true, posts: SavedPosts });
        
     } catch (error) {
 
