@@ -14,7 +14,7 @@ import axiosInstance from '../../axios/axios';
 import {setUserDetails} from '../../utils/reducers/userDetails'
 import useFollowUser from '../../utils/firendMange/firendManage'
  const baseURL = axiosInstance.defaults.baseURL;
-
+  
 
   function ProfileCard({ userData }: { userData: User }) {
     const { followUserAction, unfollowUserAction } = useFollowUser()

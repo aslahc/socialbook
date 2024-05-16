@@ -27,7 +27,6 @@ interface ViewStoryProps {
 
 function ViewStory({ setShowStory, storyData }: ViewStoryProps) {
 
-  console.log(storyData,"qwe")
   const [storyTime, setStoryTime] = useState(10); 
   const [currentUserIndex, setCurrentUserIndex] = useState(0);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);

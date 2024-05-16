@@ -190,7 +190,7 @@ const baseURL = axiosInstance.defaults.baseURL;
         alt="Profile"
         className="w-8 h-8 rounded-full object-cover mr-2"
       />
-      <span className="text-white font-semibold">{post.userId?.username}</span>
+      <span className="text-black font-semibold">{post.userId?.username}</span>
     </div>
   </div>
 
@@ -202,7 +202,16 @@ const baseURL = axiosInstance.defaults.baseURL;
         className="w-full h-full object-cover"
       ></video>
     </div>
-
+    <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 py-2">
+    <div className="flex items-center">
+      <img
+        src={post.userId?.profileimg || "/default-avatar.png"}
+        alt="Profile"
+        className="w-8 h-8 rounded-full object-cover mr-2"
+      />
+      <span className="text-white font-semibold">{post.userId?.username}</span>
+    </div>
+  </div>
     <div className="absolute top-0 right-0 flex flex-col items-center justify-center p-4">
       <button 
     onClick={handleLikeClick}
@@ -211,9 +220,9 @@ const baseURL = axiosInstance.defaults.baseURL;
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6"
-          fill="none"
+          fill={liked ? "red" : "none"}
+              stroke={liked ? "red" : "currentColor"}
           viewBox="0 0 24 24"
-          stroke="currentColor"
         >
           <path
             strokeLinecap="round"
@@ -242,7 +251,25 @@ onClick={toggleCommentModal}
           />
         </svg>
       </button>
-      {isSavedPost ? (
+      <button
+            onClick={toggleOptions}
+            className="text-white hover:text-gray-300 mt-4">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M6 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
+    />
+  </svg>
+</button>
+      {/* {isSavedPost ? (
         <button
           onClick={handleUnSavePost}
           className="text-white hover:text-gray-300"
@@ -276,25 +303,8 @@ onClick={toggleCommentModal}
             />
           </svg>
         </button>
-      )}
-    <button
-            onClick={toggleOptions}
-            className="text-white hover:text-gray-300 mt-4">
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M6 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
-    />
-  </svg>
-</button>
+      )} */}
+ 
 <div className='bg-transparent'>
             {showOptions && (
   <div className="options-dropdown absolute w-36 bg-transparent rounded-md border-transparent shadow-transparent overflow-hidden shadow-xl z-10">
@@ -307,12 +317,12 @@ onClick={toggleCommentModal}
     >
       Delete Post
     </button>
-    <button 
+    {/* <button 
     onClick={toogleEditPost} 
       className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
     >
       Edit Post
-    </button>
+    </button> */}
   </div>
 ) : (
   <button 

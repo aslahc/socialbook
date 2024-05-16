@@ -37,4 +37,15 @@ export class NotificationRepository {
       throw new Error(`Failed to fetch notifications: ${error}`);
     }
   }
+
+  async deleteNotification(notificationId: string): Promise<boolean> {
+    try {
+        await Notification.findByIdAndDelete(notificationId);
+
+        
+      return  true
+    } catch (error) {
+      throw new Error(`Failed to fetch notifications: ${error}`);
+    }
+  }
 }

@@ -15,6 +15,9 @@ import ReportPost from './ReportPost';
 import EditPost from './EditPost';
 import Slider, { Settings } from 'react-slick';
 import { setUserDetails } from '../../utils/reducers/userDetails'
+import useSocketIO from '../../utils/Notification/Notification'
+
+
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 const baseURL = axiosInstance.defaults.baseURL;
@@ -39,6 +42,8 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.userDetails.user || '');
   console.log(user, "this is -0")
+  const { sendNotification } = useSocketIO();
+
   const userId = user._id
   const [liked, setLiked] = useState<boolean>(false)
   const [showCommentModal, setShowCommentModal] = useState<boolean>(false);
@@ -83,13 +88,19 @@ const Post: React.FC<PostProps> = ({ post }) => {
           // Include any authentication token if required
           // 'Authorization': `Bearer ${accessToken}`
         },
-        body: JSON.stringify({ userId: UserId })
+        body: JSON.stringify({ userId: UserId ,PostOwner:post.userId._id })
       });
 
-      const responseData = await response.json()
+      const responseData = await response.json()  
       console.log(responseData)
       if (responseData.success === true) {
+        const senderName = 'John Doe'; // Replace with actual sender's name
+        const message = 'liked your post ';
+        const receiver: string = post.userId._id;
 
+
+        sendNotification({ receiverId: receiver, senderName, message, userData: UserId });
+         
         dispatch(updatePost(responseData.like));
         setLiked(!liked);
       } else {

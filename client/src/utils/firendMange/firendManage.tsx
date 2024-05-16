@@ -18,7 +18,7 @@
           dispatch(followingUser({ userId, followerId }));
           const senderName = 'John Doe'; // Replace with actual sender's name
           const message = 'started following you';
-          sendNotification({ receiverId: userId, senderName, message, user: followerId });
+          sendNotification({ receiverId: userId, senderName, message, userData: followerId });
         }
       } catch (error) {
         console.log('Failed to follow the user:', error);

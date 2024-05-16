@@ -21,5 +21,28 @@ export const notifications = async (req: Request, res: Response): Promise<void> 
       // Handle the error or send an appropriate response
     }
   }
+
+  
+export const dismmisNotification = async (req: Request, res: Response): Promise<void> => {
+
+
+  
+  try {
+    const notification = req.params.id
+    console.log("got delett notifciation",notification)
+
+      const notificationData =   await notificationRepository.deleteNotification(notification)
+      if(notificationData){
+    res.status(200).json({ succuss:true, message:"notification delete " });
+
+      }
+    // Additional logic or response handling here
+  } catch (error) {
+    console.error("Error:", (error as Error).message); 
+    res.status(500).json({ error: "Something went wrong" });
+
+    // Handle the error or send an appropriate response
+  }
+}
   
   

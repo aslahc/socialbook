@@ -1,9 +1,11 @@
 import { Request , Response ,  } from "express";
 import { PostRepository } from "../repositories/postRepository";
 import { UserRepository } from '../repositories/UserRepository';
+import {NotificationRepository} from '../repositories/Notifcation';
 
 import user from "../models/user/user";
 const userRepository = new UserRepository();
+const notificationRepository = new NotificationRepository()
 
 
 
@@ -49,6 +51,8 @@ export const addLike = async (req: Request, res: Response): Promise<void> => {
     try {
         const postId = req.params.id;
         const userId = req.body.userId 
+        const reciver = req.body.PostOwner;
+        
         if (!postId || !userId) {
             res.status(400).json({ success: false, error: 'Post ID and user ID are required' });
             return;
@@ -56,6 +60,8 @@ export const addLike = async (req: Request, res: Response): Promise<void> => {
 
         // Call the repository method to add the like to the post
         const like = await postRepository.addLike(postId, userId);
+             await notificationRepository.saveNotification(reciver,userId,'like')
+
         res.status(200).json({ success: true, message: 'Like added successfully', like });
 
     } catch (error) {

@@ -94,7 +94,7 @@ const CommentComponent: React.FC<{ postId: string }> = ({ postId }) => {
     }
   };
   return (
-    <div className="p-4 bg-gray-100 rounded-lg max-w-2xl shadow-inner dark:bg-gray-800 sm:p-8">
+    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-gray-100 rounded-lg min-w-60 max-w-6xl shadow-inner dark:bg-gray-800 sm:p-8">
       <div className="mb-4 flex">
         <input
           type="text"

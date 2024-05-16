@@ -8,36 +8,42 @@ import { RootState } from '../../utils/store/store';
 import Post from '../../components/posts/Post';
 
 function Explore() {
-  const posts = useSelector((state: RootState) => state.postData.posts);
-  const [shuffledPosts, setShuffledPosts] = useState<typeof posts>([]);
+  const postData = useSelector((state: RootState) => state.postData.posts);
+
+  // Filter out posts of type 'reels'
+  const filteredPosts = postData.filter(post => post.type !== 'reels' && (post.type === 'image' || post.type === 'text'));
+
+  // State to hold shuffled posts
+  const [shuffledPosts, setShuffledPosts] = useState<typeof filteredPosts>([]);
+
+  // Function to shuffle the posts array
+  function shuffleArray(array: any[]) {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+}
+
 
   useEffect(() => {
-    // Function to shuffle the posts array
-    const shuffleArray = (array: typeof posts) => {
-      const shuffledArray = [...array];
-      for (let i = shuffledArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-      }
-      return shuffledArray;
-    };
-
-    // Shuffle posts when the 'posts' array changes
-    if (posts.length > 0) {
-      const shuffled = shuffleArray(posts);
+    // Shuffle posts when the 'filteredPosts' array changes
+    if (filteredPosts.length > 0) {
+      const shuffled = shuffleArray(filteredPosts);
       setShuffledPosts(shuffled);
     }
-  }, [posts]); // Re-run the effect when 'posts' array changes
- 
+  }, []); // Re-run the effect when 'filteredPosts' array changes
+
   const [selectedPost, setSelectedPost] = useState<any>(null);
-  const handlePostClick = async (post:any)=>{
-    setSelectedPost(post)
-  }
+
+  const handlePostClick = async (post: any) => {
+    setSelectedPost(post);
+  };
+
   const handleCloseModal = () => {
     setSelectedPost(null); // Close the modal by resetting the selected post
   };
-
-
 
 
 
@@ -124,3 +130,7 @@ function Explore() {
 }
 
 export default Explore;
+function shuffleArray(filteredPosts: import("../../types/types").IPost[]) {
+  throw new Error('Function not implemented.');
+}
+

@@ -108,8 +108,7 @@ const CreatePost = () => {
     try {
       console.log("going to save the post ")
       console.log(croppedImages)
-      const type = "image"
-
+        const type = croppedImages?"image":"text"
       const response = await axiosInstance.post(`/createPost`, { ...postData, userId, postUrl: croppedImages,type }, {
         headers: {
           'Content-Type': 'application/json',

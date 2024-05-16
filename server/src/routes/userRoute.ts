@@ -11,7 +11,7 @@ import { createPost ,fetchPosts ,addLike ,removeLike ,   deletePost ,editPost ,s
 import {reportPost} from '../controllers/ReportPost'
 import {postComment , getComment ,deleteComment} from '../controllers/commentController'
 import { createStory ,fetchStoryData ,deleteStory,watchStory  ,storyViews} from '../controllers/storyController';
-import {notifications} from '../controllers/notifications'
+import {notifications , dismmisNotification} from '../controllers/notifications'
 
 import {saveMessage ,messages} from '../controllers/ChatController'
  
@@ -99,6 +99,6 @@ user_route.get('/Savedposts/:userId/:categoryName', getPostsByCategory)
 //notification
 
 user_route.get("/notifications/:userId",notifications)
-
+user_route.delete('/dismiss/:id',dismmisNotification)
 
 export default user_route;

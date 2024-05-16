@@ -54,7 +54,7 @@ const socketIo_Config = (io: any) => {
       }) => {
 
         const user = getUser(receiverId);
-        console.log("123",user)
+          console.log("123qwe")
         if (user) {
           // console.log("Receiver found:", user);
           io.to(user.socketId).emit("getMessage", {
@@ -78,21 +78,25 @@ const socketIo_Config = (io: any) => {
         receiverId,
         senderName,
         message,
+        userData,
       }: {
         postImage: string;
         receiverId: string;
         senderName: string;
         message:string;
+        userData:string;
       }) => {
         console.log(message);
         console.log(2)
 
         const user = getUser(receiverId);
-        console.log("321",user)
+        console.log("321we11111",)
         io.to(user?.socketId).emit("getNotifications", {
           postImage,
           senderName,
           message,
+          receiverId,
+          userData,
         });
       }
     );
