@@ -1,6 +1,7 @@
 import { WriteError } from 'mongodb';
 import User, { IUser } from '../models/user/user';
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 
 export class UserRepository {
     async emailExists(email: string): Promise<boolean> {
@@ -253,6 +254,46 @@ export class UserRepository {
               } else {
                 console.log("User is not found");
               }
+            } catch (error) {
+              console.error("Error:", (error as Error).message);
+            }
+          }
+
+          async UserSuggestions(userId: string): Promise<any> {
+            try {
+                const suggestions = await User.aggregate([
+                    { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'followers',
+                            foreignField: '_id',
+                            as: 'userFollowers'
+                        }
+                    },
+                    { $unwind: '$userFollowers' },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'userFollowers.followers',
+                            foreignField: '_id',
+                            as: 'suggestedUsers'
+                        }
+                    },
+                    { $unwind: '$suggestedUsers' },
+                    { $match: { 'suggestedUsers._id': { $ne: new mongoose.Types.ObjectId(userId) } } },
+                    {
+                        $group: {
+                            _id: '$suggestedUsers._id',
+                            username: { $first: '$suggestedUsers.username' },
+                            email: { $first: '$suggestedUsers.email' },
+                            profileimg: { $first: '$suggestedUsers.profileimg' }
+                        }
+                    },
+                    { $limit: 6 }
+                ]);
+                console.log("got suggested userrr",suggestions)
+                return suggestions
             } catch (error) {
               console.error("Error:", (error as Error).message);
             }

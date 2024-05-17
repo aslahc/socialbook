@@ -11,6 +11,7 @@ const CreateReel: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const presetKey: string = 'cloudinaryimg'; 
   const cloudName: string = 'dy9ofwwjp';
+  const [uploading, setUploading] = useState<boolean>(false);
 
   const userData = useSelector((state: any) => state.userDetails.user || '');
   const userId = userData._id;
@@ -41,6 +42,7 @@ const CreateReel: React.FC = () => {
         const formDataFile = new FormData();
         formDataFile.append('file', selectedVideo);
         formDataFile.append('upload_preset', presetKey);
+      setUploading(true);
         
         const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/video/upload`, {
           method: 'POST',
@@ -50,6 +52,7 @@ const CreateReel: React.FC = () => {
         console.log('Posting reel with selected video:', selectedVideo);
         const data = await response.json();
         const reelUrl = data.secure_url;
+        setUploading(false);
 
         if (reelUrl) {
           const type = "reel";
@@ -135,6 +138,13 @@ const CreateReel: React.FC = () => {
           </div>
         </div>
       )}
+      {uploading && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">
+    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+    </div>
+  </div>
+)}
     </div>
   );
 };

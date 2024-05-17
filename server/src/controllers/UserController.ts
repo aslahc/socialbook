@@ -462,3 +462,13 @@ export const unfollowUser = async (req: Request, res: Response): Promise<void> =
   }
 }
 
+export const UserSuggestions = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId } = req.params;
+      const suggestions = await userRepository.UserSuggestions(userId);
+      res.status(200).json({success:true ,suggestions })
+  } catch (error) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+}
+

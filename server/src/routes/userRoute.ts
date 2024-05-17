@@ -2,7 +2,7 @@ import express from 'express';
 const  user_route = express()
 
 import { signUp ,verifyOtp ,verifyLogin ,fetchUsers,fetchUser,resendOtp, verifyemail
-    ,editprofile ,verifyEmailOtp,changepassword,googlelogin ,followUser ,unfollowUser} from '../controllers/UserController';
+    ,editprofile ,verifyEmailOtp,changepassword,googlelogin ,followUser ,unfollowUser ,UserSuggestions} from '../controllers/UserController';
 
 
 
@@ -100,5 +100,9 @@ user_route.get('/Savedposts/:userId/:categoryName', getPostsByCategory)
 
 user_route.get("/notifications/:userId",notifications)
 user_route.delete('/dismiss/:id',dismmisNotification)
+
+
+// user suggetion 
+user_route.get("/suggestions/:userId",UserSuggestions)
 
 export default user_route;
