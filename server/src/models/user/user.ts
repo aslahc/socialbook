@@ -18,7 +18,6 @@ export interface IUser extends Document {
     following?: string[];
     savedPost: { post: Schema.Types.ObjectId; category: string }[];
     savePostCategory: string[];
-
     isBlock?:boolean
     isAdmin?:boolean
 }

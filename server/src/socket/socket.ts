@@ -1,3 +1,5 @@
+import { Server } from "socket.io";
+
 const socketIo_Config = (io: any) => {
   let users: { userId: string; socketId: string }[] = [];
 
@@ -28,8 +30,8 @@ const socketIo_Config = (io: any) => {
 
     // Handle 'addUser' event
     socket.on("addUser", (userId: string) => {
-      console.log(1)
-      console.log(userId)
+      console.log(1);
+      console.log(userId);
       addUser(userId, socket.id); // Add user to the users array
       io.emit("getUsers", users); // Broadcast updated users array to all clients
     });
@@ -48,13 +50,11 @@ const socketIo_Config = (io: any) => {
         senderId: string;
         receiverId: string;
         text: string;
-        timestamp:number;
+        timestamp: number;
         messageType?: string; // Add optional messageType
         file?: string; // Add optional file
       }) => {
-
         const user = getUser(receiverId);
-          console.log("123qwe")
         if (user) {
           // console.log("Receiver found:", user);
           io.to(user.socketId).emit("getMessage", {
@@ -83,14 +83,13 @@ const socketIo_Config = (io: any) => {
         postImage: string;
         receiverId: string;
         senderName: string;
-        message:string;
-        userData:string;
+        message: string;
+        userData: string;
       }) => {
         console.log(message);
-        console.log(2)
+        console.log(2);
 
         const user = getUser(receiverId);
-        console.log("321we11111",)
         io.to(user?.socketId).emit("getNotifications", {
           postImage,
           senderName,
@@ -101,15 +100,13 @@ const socketIo_Config = (io: any) => {
       }
     );
 
-
     socket.on(
       "typing",
       ({ senderId, receiverId }: { senderId: string; receiverId: string }) => {
-        console.log(senderId,"user and reciver",receiverId)
+        console.log(senderId, "user and reciver", receiverId);
 
         const user = getUser(receiverId);
         if (user) {
-
           io.to(user.socketId).emit("userTyping", { senderId });
         }
       }
@@ -120,7 +117,7 @@ const socketIo_Config = (io: any) => {
       "stopTyping",
       ({ senderId, receiverId }: { senderId: string; receiverId: string }) => {
         const user = getUser(receiverId);
-  
+
         if (user) {
           io.to(user.socketId).emit("userStopTyping", { senderId });
         }
@@ -129,16 +126,14 @@ const socketIo_Config = (io: any) => {
     socket.on("videoCallRequest", (data: any) => {
       const emitdata = {
         roomId: data.roomId,
-        senderName:data.senderName,
-        senderProfile:data.senderProfile
+        senderName: data.senderName,
+        senderProfile: data.senderProfile,
       };
       const user = getUser(data.recieverId);
-      if(user){
-        io.to(user.socketId).emit("videoCallResponse", emitdata );
+      if (user) {
+        io.to(user.socketId).emit("videoCallResponse", emitdata);
       }
     });
-
-
   });
 };
 

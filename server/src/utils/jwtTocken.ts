@@ -11,7 +11,7 @@ export const generateToken = (userId:any,role:string)=>{
         userId:stringUserId,
         role
     }
-    const token = jwt.sign(payload,process.env.JWT_SECRET as string,{ expiresIn: '5h' });
+    const token = jwt.sign(payload,process.env.JWT_SECRET!,{ expiresIn: '5h' });
     console.log(token)
   
     return token;

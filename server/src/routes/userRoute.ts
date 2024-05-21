@@ -6,10 +6,10 @@ import { signUp ,verifyOtp ,verifyLogin ,fetchUsers,fetchUser,resendOtp, verifye
 
 
 
-import { createPost ,fetchPosts ,addLike ,removeLike ,   deletePost ,editPost ,savePost ,Unsave ,createCategory, getPostsByCategory} from '../controllers/PostController'
+import { createPost ,fetchPosts ,addLike ,removeLike ,   deletePost ,editPost ,savePost ,Unsave ,createCategory, getPostsByCategory ,} from '../controllers/PostController'
 
 import {reportPost} from '../controllers/ReportPost'
-import {postComment , getComment ,deleteComment} from '../controllers/commentController'
+import {postComment , getComment ,deleteComment,replayComment} from '../controllers/commentController'
 import { createStory ,fetchStoryData ,deleteStory,watchStory  ,storyViews} from '../controllers/storyController';
 import {notifications , dismmisNotification} from '../controllers/notifications'
 
@@ -58,7 +58,7 @@ user_route.put('/editPost/:postId',  editPost)
 user_route.post('/postComment',   postComment)
 user_route.get('/comment/:postId',  getComment)
 user_route.delete('/deleteComment/:commentId', deleteComment)
-
+user_route.post('/replayComment',replayComment)
 
 
 // story route 

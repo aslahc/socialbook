@@ -72,3 +72,21 @@ export const postComment = async (req: Request, res: Response): Promise<void> =>
     }
     
 }
+
+export  const replayComment = async(req:Request, res: Response) : Promise<void> =>{
+     
+    try{
+        const { newReply, commentId } = req.body;
+
+        const replySaved = await  commentRepository.saveReplayComment(newReply,commentId)
+         console.log("replay comment saved successfully ")
+        res.status(200).json({success:true ,message:"replay comment succuss ",replySaved})
+
+    }catch(error){
+        console.error("Error:", (error as Error).message); 
+
+        res.status(500).json({ success: false, error: 'Failed to fetch comments' });
+
+    }
+    
+}

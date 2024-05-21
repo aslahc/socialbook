@@ -20,6 +20,7 @@ import useSocketIO from '../../utils/Notification/Notification'
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import LikedUserList from './LikedUserLIst';
 const baseURL = axiosInstance.defaults.baseURL;
 
 interface PostProps {
@@ -53,6 +54,8 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const [isSavedPost, setIsSavedPost] = useState<boolean>(false);
   const [showCategory, setShowCategoryModal] = useState<boolean>(false)
+  const [showLikedUser, SetshowLikedUser] = useState<boolean>(false)
+
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const userData = useSelector((state: any) => state.userDetails.user || '');
   const UserId = userData._id
@@ -206,7 +209,9 @@ const Post: React.FC<PostProps> = ({ post }) => {
     }
   }
 
-
+   const handleLikedUserList= async () =>{
+    SetshowLikedUser(!showLikedUser)
+   }
 
   //  const <Save></Save>
 
@@ -338,7 +343,9 @@ const Post: React.FC<PostProps> = ({ post }) => {
             >
               <path d="M12 21.943l-1.413-1.304C5.396 16.3 2 13.225 2 9.5 2 6.42 4.42 4 7.5 4c1.582 0 3.065.916 4.5 2.5C13.435 4.916 14.918 4 16.5 4c3.08 0 5.5 2.42 5.5 5.5 0 3.725-3.396 6.8-8.587 11.139L12 21.943z"></path>
             </svg>
-            <p>{post.likes.length}  likes  </p>
+            <p
+            onClick={handleLikedUserList}  className='hover-cursor'
+            >{post.likes.length}  likes  </p>
 
 
             <button
@@ -442,6 +449,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
       {showCommentModal && <Comment postId={post._id} />}
       {showReportModal && <ReportPost postId={post._id} toggleReportModal={toggleReportModal} />}
       {ShowEditModal && <EditPost postId={post._id} toogleEditPost={toogleEditPost} />}
+      {showLikedUser && <LikedUserList handleLikedUserList={handleLikedUserList}  Like={post.likes}/>}
       {showCategory && (
   <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50">
     <div className="max-w-md w-full mx-auto rounded-lg shadow-lg">
@@ -511,7 +519,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
     </div>
   </div>
 )}
-
+     
     </div>
 
   )

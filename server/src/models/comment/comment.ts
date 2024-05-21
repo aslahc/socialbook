@@ -4,7 +4,7 @@ import {ReplyCommentInterface , CommentInterface }from './commentType'
 
 const ReplyCommentSchema = new Schema<ReplyCommentInterface>({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  replyComment: { type: String, required: true },
+  comment: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
 });
 
@@ -28,8 +28,8 @@ const CommentSchema = new Schema<CommentInterface>({
         type: Date,
         default: Date.now
         
-    }
-    // replyComments: [ReplyCommentSchema]
+    },
+    replyComments: [ReplyCommentSchema]
  
   },{timestamps:true});
   
