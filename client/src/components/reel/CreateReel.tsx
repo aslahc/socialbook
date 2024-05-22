@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, useRef } from 'react';
 import axiosInstance from '../../axios/axios'
 import { useDispatch, useSelector } from 'react-redux';
 import { addPost } from '../../utils/reducers/PostData';
+import { toast } from "sonner";
 
 const CreateReel: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -19,11 +20,23 @@ const CreateReel: React.FC = () => {
   const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedVideo(file);
-      setShowModal(true);
+      const videoElement = document.createElement('video');
+      videoElement.preload = 'metadata';
+
+      videoElement.onloadedmetadata = () => {
+        window.URL.revokeObjectURL(videoElement.src);
+        if (videoElement.duration > 30) {
+          toast.error('Please select a video that is 30 seconds or shorter.');
+          setSelectedVideo(null);
+        } else {
+          setSelectedVideo(file);
+          setShowModal(true);
+        }
+      };
+
+      videoElement.src = URL.createObjectURL(file);
     }
   };
-
   const handleCloseModal = () => {
     setSelectedVideo(null);
     setShowModal(false);

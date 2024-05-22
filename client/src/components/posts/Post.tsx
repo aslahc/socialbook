@@ -446,7 +446,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
         </div>
       )}
 
-      {showCommentModal && <Comment postId={post._id} />}
+      {showCommentModal && <Comment postId={post._id} toggleCommentModal={toggleCommentModal} />}
       {showReportModal && <ReportPost postId={post._id} toggleReportModal={toggleReportModal} />}
       {ShowEditModal && <EditPost postId={post._id} toogleEditPost={toogleEditPost} />}
       {showLikedUser && <LikedUserList handleLikedUserList={handleLikedUserList}  Like={post.likes}/>}

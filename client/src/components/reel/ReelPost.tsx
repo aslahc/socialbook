@@ -400,7 +400,7 @@ onClick={toggleCommentModal}
         </div>
       )}
         
-        {showCommentModal && <Comment postId={post._id} />}
+        {showCommentModal && <Comment postId={post._id} toggleCommentModal={toggleCommentModal} />}
         {showReportModal && <ReportPost postId={post._id}  toggleReportModal={toggleReportModal} /> }
         {ShowEditModal && <EditPost  postId={post._id}  toogleEditPost={toogleEditPost} />}
         </div>

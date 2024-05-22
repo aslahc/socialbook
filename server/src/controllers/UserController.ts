@@ -1,12 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import nodemailer from 'nodemailer';
 import { UserRepository } from '../repositories/UserRepository';
-import {NotificationRepository} from '../repositories/Notifcation';
+import { NotificationRepository } from '../repositories/Notifcation';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken"
+
 dotenv.config();
 import { generateToken } from '../utils/jwtTocken'
-
+import { generateRefreshToken } from '../utils/jwtTocken'
 declare module 'express-session' {
   interface Session {
     userDetails?: {
@@ -66,7 +68,7 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
 
     // Additional logic or response handling here
   } catch (error) {
-    console.error("Error:", (error as Error).message); 
+    console.error("Error:", (error as Error).message);
     res.status(500).json({ error: "Something went wrong" });
 
     // Handle the error or send an appropriate response
@@ -133,15 +135,15 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
 
     if (user) {
 
-      const token = generateToken(user.id , 'user');
+      const token = generateToken(user.id, 'user');
 
-      
+
       res.status(200).json({ success: true, message: "User registered successfully", userData: user, token });
     } else {
       res.status(404).json({ success: false, message: "User not found after registration" });
     }
   } catch (error) {
-    console.error("Error:", (error as Error).message); 
+    console.error("Error:", (error as Error).message);
     res.status(500).json({ error: "Something went wrong" });
   }
 }
@@ -157,27 +159,24 @@ export const verifyLogin = async (req: Request, res: Response): Promise<void> =>
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
-    } 
+    }
 
     const passwordMatch = await userRepository.comparePasswords(password, user.password);
     if (!passwordMatch) {
       res.status(401).json({ error: "Incorrect password" });
       return;
     }
-    if(user.isAdmin){
-      var token = generateToken(user.id,"admin"); // Assuming generateToken function is defined correctly
+    const role = user.isAdmin ? "admin" : "user";
+    const token = generateToken(user.id, role);
+    const refreshToken = generateRefreshToken(user.id);
 
-    }else{
-      var token = generateToken(user.id,"user"); // Assuming generateToken function is defined correctly
-
-    }
     const { password: _, ...userData } = user; // Remove password before sending user data in response
 
     console.log("User logged in successfully:", username);
-    res.status(200).json({ success: true, message: "User logged in successfully", token, user: userData });
+    res.status(200).json({ success: true, message: "User logged in successfully", token, refreshToken, user: userData });
 
   } catch (error) {
-    console.error("Error:", (error as Error).message); 
+    console.error("Error:", (error as Error).message);
     res.status(500).json({ error: "Something went wrong" });
 
   }
@@ -189,41 +188,41 @@ export const googlelogin = async (req: Request, res: Response): Promise<any> => 
 
     // Check if the email already exists in the database
     const user = await userRepository.findbyemail(email);
-   console.log(user)
-    if(user){
-
-    
-
-
-
-    // Assuming the user is new and needs to be registered
-    
-
-    // Generate token for the new user
-    const token = generateToken(user._id, "user"); // Assuming generateToken function is defined correctly
-
-    // res.status(200).json({ success: true, message: "User logged in successfully", token, user: user });
-  }else{
-    const password = generatePassword();
-    const hashsedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      username: username,
-      email: email,
-      password: hashsedPassword,
-      phone: "0987665"
-    });
-
-    const savedUser = await userRepository.saveUser(newUser);
-    console.log("new user creatd with google ")
-    const user = await userRepository.findByUserDetails(newUser.username);
-    console.log(user,"in gooele")
+    console.log(user)
     if (user) {
-      const token = generateToken(user.id , 'user');
-      res.status(200).json({ success: true, message: "User registered successfully", userData: user, token });
+
+
+
+
+
+      // Assuming the user is new and needs to be registered
+
+
+      // Generate token for the new user
+      const token = generateToken(user._id, "user"); // Assuming generateToken function is defined correctly
+
+      // res.status(200).json({ success: true, message: "User logged in successfully", token, user: user });
     } else {
-      res.status(404).json({ success: false, message: "User not found after registration" });
+      const password = generatePassword();
+      const hashsedPassword = await bcrypt.hash(password, 10);
+      const newUser = new User({
+        username: username,
+        email: email,
+        password: hashsedPassword,
+        phone: "0987665"
+      });
+
+      const savedUser = await userRepository.saveUser(newUser);
+      console.log("new user creatd with google ")
+      const user = await userRepository.findByUserDetails(newUser.username);
+      console.log(user, "in gooele")
+      if (user) {
+        const token = generateToken(user.id, 'user');
+        res.status(200).json({ success: true, message: "User registered successfully", userData: user, token });
+      } else {
+        res.status(404).json({ success: false, message: "User not found after registration" });
+      }
     }
-  }
 
   } catch (error) {
     console.error("Error:", (error as Error).message);
@@ -243,7 +242,7 @@ export const fetchUsers = async (req: Request, res: Response): Promise<void> => 
   try {
 
     const users = await userRepository.findUsers()
-  
+
 
     res.status(200).json({ success: true, message: "User signup  successfully", usersData: users });
 
@@ -258,8 +257,8 @@ export const fetchUser = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json({ success: true, message: "User signup  successfully", usersData: users });
 
-  } catch(error) {
-    console.error("Error:", (error as Error).message); 
+  } catch (error) {
+    console.error("Error:", (error as Error).message);
     res.status(500).json({ error: "Something went wrong" });
   }
 }
@@ -278,8 +277,8 @@ export const editprofile = async (req: Request, res: Response): Promise<void> =>
 
     res.status(200).json({ success: true, message: "profile updated succes fully ", userData: updatedData })
 
-  } catch(error) {
-    console.error("Error:", (error as Error).message); 
+  } catch (error) {
+    console.error("Error:", (error as Error).message);
     res.status(500).json({ error: "Something went wrong" });
   }
 }
@@ -297,8 +296,8 @@ export const block = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({ message: "User blocked successfully" });
 
 
-  } catch(error) {
-    console.error("Error:", (error as Error).message); 
+  } catch (error) {
+    console.error("Error:", (error as Error).message);
     res.status(500).json({ error: "Something went wrong" });
   }
 }
@@ -329,7 +328,7 @@ export const verifyemail = async (req: Request, res: Response): Promise<void> =>
   }
   catch (error) {
 
-    console.error("Error:", (error as Error).message); 
+    console.error("Error:", (error as Error).message);
     res.status(500).json({ error: "Something went wrong" });
 
   }
@@ -362,7 +361,7 @@ export const verifyEmailOtp = async (req: Request, res: Response): Promise<void>
 
   }
   catch (error) {
-    console.error("Error:", (error as Error).message); 
+    console.error("Error:", (error as Error).message);
     res.status(500).json({ error: "Something went wrong" });
 
   }
@@ -387,7 +386,7 @@ export const changepassword = async (req: Request, res: Response): Promise<void>
     // Call the changepassword function with the new password and email
     const user = await userRepository.changepassword(hashedPassword, email);
 
-                         if (user) {
+    if (user) {
       // If user is found and password is updated successfully
       res.status(200).json({ success: true, message: "Password changed successfully" });
     } else {
@@ -396,7 +395,7 @@ export const changepassword = async (req: Request, res: Response): Promise<void>
     }
   } catch (error) {
     //   Catch any errors that occur during the process
-    console.error("Error:", (error as Error).message); 
+    console.error("Error:", (error as Error).message);
     res.status(500).json({ error: "Something went wrong" });
   }
 }
@@ -415,7 +414,7 @@ export const resendOtp = async (req: Request, res: Response): Promise<void> => {
 
   } catch (error) {
     // Catch any errors that occur during the process
-    console.error("Error:", (error as Error).message); 
+    console.error("Error:", (error as Error).message);
     res.status(500).json({ error: "Something went wrong" });
   }
 }
@@ -424,18 +423,18 @@ export const resendOtp = async (req: Request, res: Response): Promise<void> => {
 // followUser 
 export const followUser = async (req: Request, res: Response): Promise<void> => {
   try {
-  //  const 
-  console.log("Entering tp thie",req.body)
-  const {userId} = req.params;
-  const {followerId} = req.body
-  await User.findByIdAndUpdate(followerId, { $push: { following: userId } });
+    //  const 
+    console.log("Entering tp thie", req.body)
+    const { userId } = req.params;
+    const { followerId } = req.body
+    await User.findByIdAndUpdate(followerId, { $push: { following: userId } });
 
-  // Update user's followers list
-  await User.findByIdAndUpdate(userId, { $push: { followers: followerId } });
-  console.log("going to save notification")
-  await notificationRepository.saveNotification(userId,followerId,'follow')
+    // Update user's followers list
+    await User.findByIdAndUpdate(userId, { $push: { followers: followerId } });
+    console.log("going to save notification")
+    await notificationRepository.saveNotification(userId, followerId, 'follow')
 
-  res.status(200).json({ success:true , message: 'User followed successfully' });
+    res.status(200).json({ success: true, message: 'User followed successfully' });
 
 
   } catch (error) {
@@ -445,13 +444,13 @@ export const followUser = async (req: Request, res: Response): Promise<void> => 
 
 export const unfollowUser = async (req: Request, res: Response): Promise<void> => {
   try {
-  //  const 
-  console.log("Entering tp thie",req.body)
-  const {userId} = req.params;
-  const {followerId} = req.body
-  await User.findByIdAndUpdate(followerId, { $pull: { following: userId } });
+    //  const 
+    console.log("Entering tp thie", req.body)
+    const { userId } = req.params;
+    const { followerId } = req.body
+    await User.findByIdAndUpdate(followerId, { $pull: { following: userId } });
 
- 
+
     await User.findByIdAndUpdate(userId, { $pull: { followers: followerId } });
 
     res.status(200).json({ message: 'User unfollowed successfully' });
@@ -465,10 +464,38 @@ export const unfollowUser = async (req: Request, res: Response): Promise<void> =
 export const UserSuggestions = async (req: Request, res: Response): Promise<void> => {
   try {
     const { userId } = req.params;
-      const suggestions = await userRepository.UserSuggestions(userId);
-      res.status(200).json({success:true ,suggestions })
+    const suggestions = await userRepository.UserSuggestions(userId);
+    res.status(200).json({ success: true, suggestions })
   } catch (error) {
     res.status(500).json({ error: "Something went wrong" });
   }
 }
+
+export const refreshToken = async (req: Request, res: Response): Promise<void> => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    res.status(401).json({ error: "No token provided" });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as { userId: string };
+    const user = await userRepository.findById(decoded.userId);
+
+    if (!user) {
+      res.status(401).json({ error: "Invalid token" });
+      return;
+    }
+
+    const role = user.isAdmin ? "admin" : "user";
+    const newAccessToken = generateToken(user.id, role);
+    const newRefreshToken = generateRefreshToken(user.id);
+
+    res.status(200).json({ token: newAccessToken, refreshToken: newRefreshToken });
+  } catch (error) {
+    console.error("Error:", (error as Error).message);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+};
 

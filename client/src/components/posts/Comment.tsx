@@ -25,9 +25,10 @@ interface Comment {
 
 interface CommentComponentProps {
   postId: string;
+  toggleCommentModal: () => void;
 }
 
-const CommentComponent: React.FC<CommentComponentProps> = ({ postId }) => {
+    const CommentComponent: React.FC<CommentComponentProps> = ({ postId ,toggleCommentModal }) => {
   const [commentInput, setCommentInput] = useState<string>('');
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyInput, setReplyInput] = useState<{ [key: string]: string }>({});
@@ -36,7 +37,20 @@ const CommentComponent: React.FC<CommentComponentProps> = ({ postId }) => {
 
   const userData = useSelector((state: any) => state.userDetails.user || {});
   const userId = userData._id;
+  const fetchComments = async () => {
+    try {
+      const response = await axiosInstance.get(`/comment/${postId}`);
+      const { data } = response;
 
+      if (data.comments) {
+        setComments(data.comments);
+      } else {
+        console.error('No comments found.');
+      }
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
   const handleReplyComment = (commentId: string) => {
     setReplyInput({ [commentId]: '' });
     setReplyingToComment(commentId);
@@ -59,14 +73,18 @@ const CommentComponent: React.FC<CommentComponentProps> = ({ postId }) => {
         const { data } = response;
 
         if (data.success) {
-          const savedReply: ReplyComment = data.replySaved;
-          setComments((prevComments) =>
-            prevComments.map((comment) =>
-              comment._id === replyingToComment
-                ? { ...comment, replyComments: [...comment.replyComments, savedReply] }
-                : comment
-            )
-          );
+          console.log("display to save comment",data.replySaved)
+          // const savedReply: ReplyComment = data.replySaved;
+          // setComments((prevComments) =>
+          //   prevComments.map((comment) =>
+          //     comment._id === replyingToComment
+          //       ? { ...comment, replyComments: [...comment.replyComments, savedReply] }
+          //       : comment
+          //   )
+          // );
+
+    fetchComments();
+
           setReplyInput({});
           setReplyingToComment(null);
         } else {
@@ -84,20 +102,7 @@ const CommentComponent: React.FC<CommentComponentProps> = ({ postId }) => {
   };
 
   useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const response = await axiosInstance.get(`/comment/${postId}`);
-        const { data } = response;
-
-        if (data.comments) {
-          setComments(data.comments);
-        } else {
-          console.error('No comments found.');
-        }
-      } catch (error) {
-        console.error('Error fetching comments:', error);
-      }
-    };
+  
 
     fetchComments();
   }, [postId]);
@@ -156,6 +161,27 @@ const CommentComponent: React.FC<CommentComponentProps> = ({ postId }) => {
 
   return (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-gray-100 rounded-lg min-w-96 max-w-6xl shadow-inner dark:bg-gray-800 sm:p-8">
+          <button
+            onClick={toggleCommentModal}
+            className="absolute top-2 right-2 text-gray-500 hover:text-red-500 focus:outline-none transition-colors duration-200"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+
+      
       <div className="mb-4 flex">
         <input
           type="text"
