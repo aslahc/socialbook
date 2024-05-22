@@ -120,3 +120,27 @@
 .rounded-lg {
   border-radius: 1rem;
 }
+/* In your CSS file (e.g., Graph.css) */
+.graph-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 8px 8px 15px #e0e7ff, -8px -8px 15px #ffffff;
+}
+
+.filter-select {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  box-shadow: inset 5px 5px 10px #e0e7ff, inset -5px -5px 10px #ffffff;
+  background-color: #f7fafc;
+  color: #6366f1;
+}
+
+.canvas-container {
+  border-radius: 15px;
+  box-shadow: inset 5px 5px 10px #e0e7ff, inset -5px -5px 10px #ffffff;
+  background-color: #f7fafc;
+}

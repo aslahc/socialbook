@@ -12,14 +12,16 @@ export interface IUser extends Document {
     dob?: string;
     profileimg?: string;
     bannerImg?: string;
-    profession?:string;
+    profession?: string;
     phone: string; // New field
     followers?: string[];
     following?: string[];
     savedPost: { post: Schema.Types.ObjectId; category: string }[];
     savePostCategory: string[];
-    isBlock?:boolean
-    isAdmin?:boolean
+    isBlock?: boolean
+    isAdmin?: boolean
+    createdOn: Date;
+
 }
 
 // Define user schema
@@ -33,23 +35,29 @@ const userSchema = new Schema<IUser>({
     dob: { type: String },
     profileimg: { type: String },
     bannerImg: { type: String },
-    profession:{type:String,},
+    profession: { type: String, },
     phone: { type: String, required: false }, // New field with required configuration
     followers: {
         type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-        default: [] },
+        default: []
+    },
     following: {
         type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-         default: [] },
-         savedPost: [{
-            post: { type: Schema.Types.ObjectId, ref: 'Post' },
-            category: { type: String } // Include the category name along with the post ID
-        }],
+        default: []
+    },
+    savedPost: [{
+        post: { type: Schema.Types.ObjectId, ref: 'Post' },
+        category: { type: String } // Include the category name along with the post ID
+    }],
     savePostCategory: [{
         type: String,
         default: []
     }],
-    isBlock:{type:Boolean,default:false},
+    isBlock: { type: Boolean, default: false },
+    createdOn: {
+        type: Date,
+        default: Date.now
+    },
     isAdmin: { type: Boolean, default: false },
 
 });
