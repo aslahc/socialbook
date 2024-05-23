@@ -23,19 +23,20 @@ export const saveMessage = async (
     }
 
     await messageRepository.create(
-      conversation._id || null,
+      conversation._id ? conversation._id.toString() : null,
       _id,
       messageText,
       reciver,
       timestamp,
       messageType
     );
-    const ConversationId = conversation._id ?? null;
-
+    const conversationId = conversation._id
+      ? conversation._id.toString()
+      : null;
     res.status(200).json({
       success: true,
       message: "Message saved successfully",
-      ConversationId,
+      conversationId,
     });
   } catch (error) {
     res.status(500).json({ success: false, error: "Failed to save message" });
