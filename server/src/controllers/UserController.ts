@@ -147,6 +147,7 @@ export const verifyLogin = async (
     console.log(username, password);
 
     const user = await userRepository.findByUsername(username);
+    console.log(user);
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
