@@ -1,20 +1,22 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../utils/store/store';
-import { User } from '../../types/types';
+import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../utils/store/store";
+import { User } from "../../types/types";
 
 interface ChatListProps {
   onUserSelect: (user: User) => void; // Callback function for user selection
 }
 
 function ChatList({ onUserSelect }: ChatListProps) {
-  const userData = useSelector((state: any) => state.userDetails.user || '');
+  const userData = useSelector((state: any) => state.userDetails.user || "");
   const userId = userData._id;
   const usersData = useSelector((state: RootState) => state.users.users);
   const users = usersData.filter((user) => user._id !== userId);
 
   return (
-    <div className="bg-gray-100 py-4 min-h-screen max-h-screen overflow-y-auto  custom-scroller"> {/* Add a fixed height and overflow-y: auto */}
+    <div className="bg-gray-100 py-4 min-h-screen max-h-screen overflow-y-auto  custom-scroller">
+      {" "}
+      {/* Add a fixed height and overflow-y: auto */}
       {users.map((user) => (
         <div
           key={user._id}
@@ -24,7 +26,7 @@ function ChatList({ onUserSelect }: ChatListProps) {
           <div className="w-1/4 flex justify-center">
             <div className="relative">
               <img
-                src={user.profileimg || 'https://via.placeholder.com/150'}
+                src={user.profileimg || "https://via.placeholder.com/150"}
                 className="object-cover h-16 w-16 rounded-full"
                 alt=""
               />

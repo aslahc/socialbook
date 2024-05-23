@@ -1,55 +1,58 @@
-import React, { useRef, ChangeEvent, useState } from 'react';
-import axios from 'axios';
-import axiosInstance from '../../axios/axios'
-import {  useParams } from "react-router-dom";
-import { Link, useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useRef, ChangeEvent, useState } from "react";
+import axios from "axios";
+import axiosInstance from "../../axios/axios";
+import { useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { setUserDetails } from '../../utils/reducers/userDetails';
+import { setUserDetails } from "../../utils/reducers/userDetails";
 import { toast } from "sonner";
-
-
 
 // const baseURL = axiosInstance.defaults.baseURL;
 interface FormInputs {
-  firstName: string,
-  lastName: string,
-  email: string,
-  profession: string,
-  bio: string,
-  imageUrl: string 
-  bannerUrl:string
+  firstName: string;
+  lastName: string;
+  email: string;
+  profession: string;
+  bio: string;
+  imageUrl: string;
+  bannerUrl: string;
 }
 function EditProfile() {
-const dispatch = useDispatch();
-const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { id } = useParams();
-  const presetKey: string = 'cloudinaryimg'; 
-  const cloudName: string = 'dy9ofwwjp'; 
+  const presetKey: string = "cloudinaryimg";
+  const cloudName: string = "dy9ofwwjp";
 
   const fileInputRefProfile = useRef<HTMLInputElement>(null);
   const fileInputRefBanner = useRef<HTMLInputElement>(null);
 
-
-    const userData = useSelector((state: any) => state.userDetails.user||'');
-    console.log(userData._id)
-  console.log(userData)
+  const userData = useSelector((state: any) => state.userDetails.user || "");
+  console.log(userData._id);
+  console.log(userData);
   const [formData, setFormData] = useState<FormInputs>({
-    firstName: userData.fname || '',
-    lastName: userData.lname || '',
-    email: userData.email || '',
-    profession: userData.profession || '',
-    bio: userData.bio || '',
-    imageUrl: userData.profileimg || '', 
-    bannerUrl: userData.bannerImg || ''
+    firstName: userData.fname || "",
+    lastName: userData.lname || "",
+    email: userData.email || "",
+    profession: userData.profession || "",
+    bio: userData.bio || "",
+    imageUrl: userData.profileimg || "",
+    bannerUrl: userData.bannerImg || "",
   });
 
-  const [image, setImage] = useState<string | undefined>(userData.profileimg || '', ); 
-  const [bannerImage, setBannerImage] = useState<string | undefined>(userData.bannerImg || '');
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const [image, setImage] = useState<string | undefined>(
+    userData.profileimg || ""
+  );
+  const [bannerImage, setBannerImage] = useState<string | undefined>(
+    userData.bannerImg || ""
+  );
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -59,7 +62,7 @@ const navigate = useNavigate();
       fileInputRefProfile.current.click();
     }
   };
-  
+
   const handleButtonClickBanner = () => {
     if (fileInputRefBanner.current) {
       fileInputRefBanner.current.click();
@@ -67,78 +70,88 @@ const navigate = useNavigate();
   };
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith("image/")) {
       const formDataFile = new FormData();
       const uniqueFilename = `${uuidv4()}_${file.name}`; // Generate unique filename with UUID
-      formDataFile.append('file', file, uniqueFilename); // Append file with unique filename
-      formDataFile.append('upload_preset', presetKey);
-  
-      axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formDataFile)
-        .then(res => {
+      formDataFile.append("file", file, uniqueFilename); // Append file with unique filename
+      formDataFile.append("upload_preset", presetKey);
+
+      axios
+        .post(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          formDataFile
+        )
+        .then((res) => {
           setImage(res.data.secure_url);
           setFormData({ ...formData, imageUrl: res.data.secure_url });
           console.log("--", res.data.secure_url);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           toast.error("Failed to upload image. Please try again.");
         });
-  
-      console.log('Selected file:', file);
+
+      console.log("Selected file:", file);
     } else {
       toast.error("Please select another image.");
     }
   };
-  
+
   const handleBannerFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith("image/")) {
       const formDataFile = new FormData();
       const uniqueFilename = `${uuidv4()}_${file.name}`; // Generate unique filename with UUID
-      formDataFile.append('file', file, uniqueFilename);
-      formDataFile.append('upload_preset', presetKey); // Use the presetKey for uploading to Cloudinary
-  
-      axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formDataFile)
-        .then(res => {
+      formDataFile.append("file", file, uniqueFilename);
+      formDataFile.append("upload_preset", presetKey); // Use the presetKey for uploading to Cloudinary
+
+      axios
+        .post(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          formDataFile
+        )
+        .then((res) => {
           setBannerImage(res.data.secure_url);
           setFormData({ ...formData, bannerUrl: res.data.secure_url }); // Update bannerUrl in formData
           console.log("--", res.data.secure_url);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           toast.error("Failed to upload image. Please try again.");
         });
-  
-      console.log('Selected file:', file);
+
+      console.log("Selected file:", file);
     } else {
       toast.error("Please select another image.");
     }
   };
-  
-  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("this is the data iam passing ", formData);
 
     try {
-      const response = await axiosInstance.post(`/editprofile/${id}`, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-   
+      const response = await axiosInstance.post(
+        `/editprofile/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       if (response.data.success) {
         console.log(response.data);
         const userData = response.data.userData;
         console.log(userData);
-    dispatch(setUserDetails(userData));
-    navigate(`/profile/${userData._id}`)  
-
+        dispatch(setUserDetails(userData));
+        navigate(`/profile/${userData._id}`);
       } else {
-        console.error('Failed to update profile:', response.data.error);
+        console.error("Failed to update profile:", response.data.error);
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
     }
   };
 
@@ -147,40 +160,48 @@ const navigate = useNavigate();
       <aside className="hidden py-4 md:w-1/3 lg:w-1/4 md:block">
         <div className="sticky flex flex-col gap-2 p-4 text-sm border-r border-indigo-100 top-12">
           <h2 className="pl-3 mb-4 text-2xl font-semibold">Settings</h2>
-          <a href="#" className="flex items-center px-3 py-2.5 font-bold bg-white text-indigo-900 border rounded-full">
+          <a
+            href="#"
+            className="flex items-center px-3 py-2.5 font-bold bg-white text-indigo-900 border rounded-full"
+          >
             Public Profile
           </a>
-          <a href="#" className="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full">
+          <a
+            href="#"
+            className="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full"
+          >
             Account Settings
-          </a> 
+          </a>
         </div>
       </aside>
       <main className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
-      <div className="relative h-48">
-      <img
-         className="h-full w-full object-cover absolute top-0 left-0"
-        src={bannerImage || '/Hero-Banner-Placeholder-Dark-1024x480.png' }
-        alt="Banner image"
-      />
-      <input
-        ref={fileInputRefBanner}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleBannerFileChange}
-      />
-      <button
-        type="button"
-        className="absolute top-2 right-2 px-3 py-1 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
-        onClick={handleButtonClickBanner}
-      >
-        Change Banner
-      </button>
-    </div>
+        <div className="relative h-48">
+          <img
+            className="h-full w-full object-cover absolute top-0 left-0"
+            src={bannerImage || "/Hero-Banner-Placeholder-Dark-1024x480.png"}
+            alt="Banner image"
+          />
+          <input
+            ref={fileInputRefBanner}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleBannerFileChange}
+          />
+          <button
+            type="button"
+            className="absolute top-2 right-2 px-3 py-1 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
+            onClick={handleButtonClickBanner}
+          >
+            Change Banner
+          </button>
+        </div>
         <div className="p-2 md:p-4">
           <form onSubmit={handleSubmit}>
             <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
-              <h2 className="pl-6 text-2xl font-bold sm:text-xl">Public Profile</h2>
+              <h2 className="pl-6 text-2xl font-bold sm:text-xl">
+                Public Profile
+              </h2>
               <div className="grid max-w-2xl mx-auto mt-8">
                 <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
                   <img
@@ -214,7 +235,10 @@ const navigate = useNavigate();
                 <div className="items-center mt-8 sm:mt-14 text-[#202142]">
                   <div className="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6">
                     <div className="w-full">
-                      <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">
+                      <label
+                        htmlFor="first_name"
+                        className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                      >
                         Your first name
                       </label>
                       <input
@@ -225,11 +249,13 @@ const navigate = useNavigate();
                         onChange={handleInputChange}
                         className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                         placeholder="Your first name"
-                       
                       />
                     </div>
                     <div className="w-full">
-                      <label htmlFor="last_name" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">
+                      <label
+                        htmlFor="last_name"
+                        className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                      >
                         Your last name
                       </label>
                       <input
@@ -240,7 +266,6 @@ const navigate = useNavigate();
                         onChange={handleInputChange}
                         className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                         placeholder="Your last name"
-                        
                       />
                     </div>
                   </div>
@@ -260,7 +285,10 @@ const navigate = useNavigate();
                     /> */}
                   </div>
                   <div className="mb-2 sm:mb-6">
-                    <label htmlFor="profession" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">
+                    <label
+                      htmlFor="profession"
+                      className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    >
                       Profession
                     </label>
                     <input
@@ -274,7 +302,10 @@ const navigate = useNavigate();
                     />
                   </div>
                   <div className="mb-6">
-                    <label htmlFor="message" className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white">
+                    <label
+                      htmlFor="message"
+                      className="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    >
                       Bio
                     </label>
                     <textarea

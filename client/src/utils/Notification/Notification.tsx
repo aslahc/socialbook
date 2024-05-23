@@ -1,7 +1,7 @@
 // useSocketIO.tsx
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import io, { Socket } from 'socket.io-client';
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import io, { Socket } from "socket.io-client";
 
 interface Notification {
   postImage: string;
@@ -22,14 +22,16 @@ interface NotificationWithUserData extends Notification {
 
 const useSocketIO = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [notifications, setNotifications] = useState<NotificationWithUserData[]>([]);
-  const userData = useSelector((state: any) => state.userDetails.user || '');
+  const [notifications, setNotifications] = useState<
+    NotificationWithUserData[]
+  >([]);
+  const userData = useSelector((state: any) => state.userDetails.user || "");
   const userId = userData._id;
 
   useEffect(() => {
-    const newSocket: Socket = io('http://localhost:4000');
-    newSocket.on('connect', () => {
-      newSocket.emit('addUser', userId);
+    const newSocket: Socket = io("http://localhost:4000");
+    newSocket.on("connect", () => {
+      newSocket.emit("addUser", userId);
     });
     setSocket(newSocket);
 
@@ -50,30 +52,44 @@ const useSocketIO = () => {
     userData: string;
   }): void => {
     if (socket) {
-      socket.emit('sendNotification', { receiverId, senderName, message, userData });
-    }
-  };  
-
-  const getNotification = () => {
-    if (socket) {
-      socket.on('getNotifications', ({ postImage, senderName, message, receiverId, userData }) => {
-        setNotifications((prevNotifications) => [
-          ...prevNotifications,
-          {
-            postImage,
-            senderName,
-            message,
-            receiverId,
-            userData,
-            type: 'notification',
-            sourceId: { username: '', profileimg: '' },
-          } as NotificationWithUserData,
-        ]);
+      socket.emit("sendNotification", {
+        receiverId,
+        senderName,
+        message,
+        userData,
       });
     }
   };
 
-  return { socket, sendNotification, getNotification, notifications, setNotifications };
+  const getNotification = () => {
+    if (socket) {
+      socket.on(
+        "getNotifications",
+        ({ postImage, senderName, message, receiverId, userData }) => {
+          setNotifications((prevNotifications) => [
+            ...prevNotifications,
+            {
+              postImage,
+              senderName,
+              message,
+              receiverId,
+              userData,
+              type: "notification",
+              sourceId: { username: "", profileimg: "" },
+            } as NotificationWithUserData,
+          ]);
+        }
+      );
+    }
+  };
+
+  return {
+    socket,
+    sendNotification,
+    getNotification,
+    notifications,
+    setNotifications,
+  };
 };
 
 export default useSocketIO;

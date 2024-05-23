@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function ConfirmDelete() {
-  return (
-    <div>ConfirmDelete</div>
-  )
+  return <div>ConfirmDelete</div>;
 }
 
-export default ConfirmDelete
+export default ConfirmDelete;

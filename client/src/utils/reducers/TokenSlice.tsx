@@ -8,12 +8,12 @@ const tokenSlice = createSlice({
   reducers: {
     addToken: (state: any, action: any) => {
       if (action.payload) {
-        console.log(action.payload,"action.payload");
+        console.log(action.payload, "action.payload");
         return { ...state, token: action.payload };
       }
     },
     clearToken: (state: any) => {
-        state.token = "";
+      state.token = "";
     },
   },
 });

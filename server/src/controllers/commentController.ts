@@ -8,51 +8,49 @@ export const postComment = async (req: Request, res: Response): Promise<void> =>
     try {
         // Extract comment data from request body
 
-        const { newComment,postId } = req.body;
-              const userId = newComment.userId
-              const comment = newComment.comment        
+        const { newComment, postId } = req.body;
+        const userId = newComment.userId
+        const comment = newComment.comment
         // Create comment data object
-      
+
         // Save comment data to database
-        
-        const commentSaved = await commentRepository.saveComment(userId,comment,postId);
+
+        const commentSaved = await commentRepository.saveComment(userId, comment, postId);
 
         if (commentSaved) {
-            res.status(200).json({ success: true, message: "Comment saved successfully" ,commentSaved});
+            res.status(200).json({ success: true, message: "Comment saved successfully", commentSaved });
         } else {
             res.status(500).json({ success: false, error: "Failed to save comment" });
         }
     } catch (error) {
-        console.error("Error:", (error as Error).message); 
 
         res.status(500).json({ success: false, error: "Internal server error" });
     }
 };
 
 
- export  const getComment = async(req:Request, res: Response) : Promise<void> =>{
-     
-    try{
+export const getComment = async (req: Request, res: Response): Promise<void> => {
 
-        const {postId } = req.params
+    try {
+
+        const { postId } = req.params
 
         const comments = await commentRepository.fetchComment(postId)
         res.status(200).json({ success: true, comments })
 
-    }catch(error){
-        console.error("Error:", (error as Error).message); 
+    } catch (error) {
 
         res.status(500).json({ success: false, error: 'Failed to fetch comments' });
 
     }
-    
- }
 
- 
+}
 
- export  const deleteComment = async(req:Request, res: Response) : Promise<void> =>{
-     
-    try{
+
+
+export const deleteComment = async (req: Request, res: Response): Promise<void> => {
+
+    try {
 
         const { commentId } = req.params;
 
@@ -64,29 +62,26 @@ export const postComment = async (req: Request, res: Response): Promise<void> =>
             res.status(404).json({ success: false, message: 'Comment not found' });
         }
 
-    }catch(error){
-        console.error("Error:", (error as Error).message); 
+    } catch (error) {
 
         res.status(500).json({ success: false, error: 'Failed to fetch comments' });
 
     }
-    
+
 }
 
-export  const replayComment = async(req:Request, res: Response) : Promise<void> =>{
-     
-    try{
+export const replayComment = async (req: Request, res: Response): Promise<void> => {
+
+    try {
         const { newReply, commentId } = req.body;
 
-        const replySaved = await  commentRepository.saveReplayComment(newReply,commentId)
-         console.log("replay comment saved successfully ")
-        res.status(200).json({success:true ,message:"replay comment succuss ",replySaved})
+        const replySaved = await commentRepository.saveReplayComment(newReply, commentId)
+        res.status(200).json({ success: true, message: "replay comment succuss ", replySaved })
 
-    }catch(error){
-        console.error("Error:", (error as Error).message); 
+    } catch (error) {
 
         res.status(500).json({ success: false, error: 'Failed to fetch comments' });
 
     }
-    
+
 }

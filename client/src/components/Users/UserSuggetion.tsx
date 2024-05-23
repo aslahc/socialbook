@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import useFollowUser from '../../utils/firendMange/firendManage';
-import axiosInstance from '../../axios/axios';
-import { User } from '../../types/types';
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import useFollowUser from "../../utils/firendMange/firendManage";
+import axiosInstance from "../../axios/axios";
+import { User } from "../../types/types";
 
 interface UserSuggestionProps {
   userId: string;
@@ -19,15 +19,15 @@ const UserSuggestion: React.FC<UserSuggestionProps> = ({ userId }) => {
     const fetchSuggestedUsers = async () => {
       try {
         const response = await axiosInstance.get(`/suggestions/${userId}`);
-          console.log("responese from backend",response)
+        console.log("responese from backend", response);
         if (Array.isArray(response.data.suggestions)) {
           setSuggestedUsers(response.data.suggestions);
         } else {
-          console.error('API response is not an array:', response.data);
+          console.error("API response is not an array:", response.data);
           setSuggestedUsers([]);
         }
       } catch (error) {
-        console.error('Failed to fetch suggested users:', error);
+        console.error("Failed to fetch suggested users:", error);
       }
     };
 
@@ -39,7 +39,7 @@ const UserSuggestion: React.FC<UserSuggestionProps> = ({ userId }) => {
     try {
       await followUserAction(Id, userId);
     } catch (error) {
-      console.log('Failed to follow the user:', error);
+      console.log("Failed to follow the user:", error);
     }
   };
 
@@ -72,7 +72,7 @@ const UserSuggestion: React.FC<UserSuggestionProps> = ({ userId }) => {
                     <div className="flex-shrink-0">
                       <img
                         className="w-8 h-8 rounded-full neumorphism"
-                        src={user.profileimg || '/download.jpeg'}
+                        src={user.profileimg || "/download.jpeg"}
                         alt={`${user.username} avatar`}
                       />
                     </div>

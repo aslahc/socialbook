@@ -1,24 +1,30 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import axiosInstance from '../../axios/axios';
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import axiosInstance from "../../axios/axios";
 
 // const baseURL = axiosInstance.defaults.baseURL;
 
-function ReportPost({ postId, toggleReportModal }: { postId: string; toggleReportModal: () => void }) {
-  const [selectedOption, setSelectedOption] = useState<string>('');
+function ReportPost({
+  postId,
+  toggleReportModal,
+}: {
+  postId: string;
+  toggleReportModal: () => void;
+}) {
+  const [selectedOption, setSelectedOption] = useState<string>("");
   const [confirmReport, setConfirmReport] = useState<boolean>(false);
 
   const reportOptions = [
-    'Its spam',
-    'Intellectual property violation',
-    'Nudity or sexual activity',
-    'Hate speech or symbols',
-    'Violence or dangerous organizations',
-    'Sale of illegal or regulated goods'
+    "Its spam",
+    "Intellectual property violation",
+    "Nudity or sexual activity",
+    "Hate speech or symbols",
+    "Violence or dangerous organizations",
+    "Sale of illegal or regulated goods",
   ];
 
-  const userData = useSelector((state: any) => state.userDetails.user || '');
+  const userData = useSelector((state: any) => state.userDetails.user || "");
   const userId = userData._id;
 
   const handleReportReason = (option: string) => {
@@ -28,32 +34,32 @@ function ReportPost({ postId, toggleReportModal }: { postId: string; toggleRepor
 
   const handleConfirmReport = async () => {
     try {
-      console.log(selectedOption,";;slfsdiofsduf")
+      console.log(selectedOption, ";;slfsdiofsduf");
       const response = await axiosInstance.post(`/reportPost`, {
         postId,
         userId,
-        reason: selectedOption
+        reason: selectedOption,
       });
 
       const { data } = response;
 
       if (data.success) {
-        console.log('Post reported successfully.');
+        console.log("Post reported successfully.");
       } else {
-        console.error('Failed to report post.');
+        console.error("Failed to report post.");
       }
     } catch (error) {
-      console.error('Error reporting post:', error);
+      console.error("Error reporting post:", error);
     }
 
     setConfirmReport(false); // Hide the confirmation modal after reporting
-    setSelectedOption(''); // Reset selected option
+    setSelectedOption(""); // Reset selected option
     toggleReportModal(); // Close the report modal
   };
 
   const handleCancelReport = () => {
     setConfirmReport(false); // Hide the confirmation modal
-    setSelectedOption(''); // Reset selected option
+    setSelectedOption(""); // Reset selected option
   };
 
   return (
@@ -63,7 +69,10 @@ function ReportPost({ postId, toggleReportModal }: { postId: string; toggleRepor
         <div className="bg-gray-800 rounded-lg p-6 max-w-md">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-white text-xl font-bold">Report</h2>
-            <button onClick={toggleReportModal} className="text-gray-300 hover:text-white">
+            <button
+              onClick={toggleReportModal}
+              className="text-gray-300 hover:text-white"
+            >
               X
             </button>
           </div>
@@ -71,7 +80,10 @@ function ReportPost({ postId, toggleReportModal }: { postId: string; toggleRepor
           <ul className="space-y-5">
             {reportOptions.map((option, index) => (
               <li key={index} className="flex items-center">
-                <button onClick={() => handleReportReason(option)} className="text-gray-300 hover:text-white flex-grow">
+                <button
+                  onClick={() => handleReportReason(option)}
+                  className="text-gray-300 hover:text-white flex-grow"
+                >
                   {option}
                 </button>
                 <span className="text-gray-500 mr-2">&#62;</span>
@@ -106,8 +118,10 @@ function ReportPost({ postId, toggleReportModal }: { postId: string; toggleRepor
                 </svg>
                 <span className="sr-only">Close modal</span>
               </button>
-            
-              <p className="mb-4 text-gray-500">Are you sure you want to report this post?</p>
+
+              <p className="mb-4 text-gray-500">
+                Are you sure you want to report this post?
+              </p>
               <div className="flex justify-center items-center space-x-4">
                 <button
                   type="button"

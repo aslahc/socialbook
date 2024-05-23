@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface FileMessageProps {
   fileUrl: string;
@@ -6,24 +6,24 @@ interface FileMessageProps {
 }
 
 const FileChat: React.FC<FileMessageProps> = ({ fileUrl, fileName }) => {
-  const [fileSize, setFileSize] = useState<string>('Calculating...');
+  const [fileSize, setFileSize] = useState<string>("Calculating...");
 
   useEffect(() => {
     const fetchFileSize = async () => {
       try {
-        const response = await fetch(fileUrl, { method: 'HEAD' });
-        const contentLength = response.headers.get('content-length');
+        const response = await fetch(fileUrl, { method: "HEAD" });
+        const contentLength = response.headers.get("content-length");
 
         if (contentLength) {
           const fileSizeInBytes = parseInt(contentLength, 10);
           const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2); // Convert bytes to MB with 2 decimal places
           setFileSize(`${fileSizeInMB} MB`);
         } else {
-          setFileSize('Unknown');
+          setFileSize("Unknown");
         }
       } catch (error) {
-        console.error('Error fetching file size:', error);
-        setFileSize('Unknown');
+        console.error("Error fetching file size:", error);
+        setFileSize("Unknown");
       }
     };
 
@@ -69,7 +69,9 @@ const FileChat: React.FC<FileMessageProps> = ({ fileUrl, fileName }) => {
           >
             {fileName}
           </a>
-          <span className="text-sm text-gray-500">{fileSize} • {fileName.split('.').pop()?.toUpperCase()}</span>
+          <span className="text-sm text-gray-500">
+            {fileSize} • {fileName.split(".").pop()?.toUpperCase()}
+          </span>
         </div>
       </div>
     </div>

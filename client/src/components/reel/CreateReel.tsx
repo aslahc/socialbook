@@ -1,32 +1,32 @@
-import React, { useState, ChangeEvent, useRef } from 'react';
-import axiosInstance from '../../axios/axios'
-import { useDispatch, useSelector } from 'react-redux';
-import { addPost } from '../../utils/reducers/PostData';
+import React, { useState, ChangeEvent, useRef } from "react";
+import axiosInstance from "../../axios/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { addPost } from "../../utils/reducers/PostData";
 import { toast } from "sonner";
 
 const CreateReel: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
-  
+
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const presetKey: string = 'cloudinaryimg'; 
-  const cloudName: string = 'dy9ofwwjp';
+  const presetKey: string = "cloudinaryimg";
+  const cloudName: string = "dy9ofwwjp";
   const [uploading, setUploading] = useState<boolean>(false);
 
-  const userData = useSelector((state: any) => state.userDetails.user || '');
+  const userData = useSelector((state: any) => state.userDetails.user || "");
   const userId = userData._id;
 
   const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const videoElement = document.createElement('video');
-      videoElement.preload = 'metadata';
+      const videoElement = document.createElement("video");
+      videoElement.preload = "metadata";
 
       videoElement.onloadedmetadata = () => {
         window.URL.revokeObjectURL(videoElement.src);
         if (videoElement.duration > 30) {
-          toast.error('Please select a video that is 30 seconds or shorter.');
+          toast.error("Please select a video that is 30 seconds or shorter.");
           setSelectedVideo(null);
         } else {
           setSelectedVideo(file);
@@ -44,7 +44,7 @@ const CreateReel: React.FC = () => {
 
   const handleVideoChangeModal = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
       fileInputRef.current.click();
     }
   };
@@ -53,27 +53,34 @@ const CreateReel: React.FC = () => {
     try {
       if (selectedVideo) {
         const formDataFile = new FormData();
-        formDataFile.append('file', selectedVideo);
-        formDataFile.append('upload_preset', presetKey);
-      setUploading(true);
-        
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/video/upload`, {
-          method: 'POST',
-          body: formDataFile,
-        });
+        formDataFile.append("file", selectedVideo);
+        formDataFile.append("upload_preset", presetKey);
+        setUploading(true);
 
-        console.log('Posting reel with selected video:', selectedVideo);
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`,
+          {
+            method: "POST",
+            body: formDataFile,
+          }
+        );
+
+        console.log("Posting reel with selected video:", selectedVideo);
         const data = await response.json();
         const reelUrl = data.secure_url;
         setUploading(false);
 
         if (reelUrl) {
           const type = "reel";
-          const response = await axiosInstance.post(`/createPost`, { userId, postUrl: reelUrl, type }, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
+          const response = await axiosInstance.post(
+            `/createPost`,
+            { userId, postUrl: reelUrl, type },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
           const newPost = response.data.postData;
           dispatch(addPost(newPost));
@@ -81,7 +88,7 @@ const CreateReel: React.FC = () => {
       }
       setShowModal(false);
     } catch (error) {
-      console.error('Error posting reel:', error);
+      console.error("Error posting reel:", error);
     }
   };
 
@@ -91,12 +98,12 @@ const CreateReel: React.FC = () => {
 
   return (
     <div>
-      <input 
-        type="file" 
-        accept="video/*" 
-        onChange={handleVideoChange} 
-        className="hidden" 
-        ref={fileInputRef} 
+      <input
+        type="file"
+        accept="video/*"
+        onChange={handleVideoChange}
+        className="hidden"
+        ref={fileInputRef}
       />
       <button
         onClick={handleClickCreateReel}
@@ -124,7 +131,10 @@ const CreateReel: React.FC = () => {
           <div className="relative bg-white rounded-2xl shadow-lg">
             <div className="neumorphism-container p-8">
               <video className="w-full rounded-xl h-[600px]" controls>
-                <source src={URL.createObjectURL(selectedVideo)} type={selectedVideo.type || ''} />
+                <source
+                  src={URL.createObjectURL(selectedVideo)}
+                  type={selectedVideo.type || ""}
+                />
                 Your browser does not support the video tag.
               </video>
               <div className="mt-6 flex justify-center space-x-4">
@@ -152,12 +162,12 @@ const CreateReel: React.FC = () => {
         </div>
       )}
       {uploading && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">
-    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-    </div>
-  </div>
-)}
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg">
+          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

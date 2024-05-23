@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function ImagesChat() {
-  return (
-    <div>ImagesChat</div>
-  )
+  return <div>ImagesChat</div>;
 }
 
-export default ImagesChat
+export default ImagesChat;

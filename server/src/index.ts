@@ -58,8 +58,8 @@ const io: Server = new Server(4000, {
 // Configure Socket.IO
 socketIo_Config(io);
 // Routes
-app.use("/admin", adminRoute);
-app.use("/", userRoute);
+app.use("/api/admin", adminRoute);
+app.use("/api/", userRoute);
 
 // Error Handler Middleware (placed after all other middleware and routes)
 

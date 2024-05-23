@@ -20,7 +20,6 @@ export class CommentRepository {
       // Return the saved comment data
       return savedComment;
     } catch (error) {
-      console.error("Error:", (error as Error).message);
       throw error;
     }
   }
@@ -35,7 +34,6 @@ export class CommentRepository {
       // Return the array of comments
       return comments;
     } catch (error) {
-      console.error("Error:", (error as Error).message);
 
       throw error;
     }

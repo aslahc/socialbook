@@ -1,13 +1,12 @@
-import React from 'react'
-import AdminUsermanagement from '../../components/Users/AdminEditUser'
+import React from "react";
+import AdminUsermanagement from "../../components/Users/AdminEditUser";
 
 function AdminEditUser() {
   return (
     <div>
-
-        <AdminUsermanagement />
+      <AdminUsermanagement />
     </div>
-  )
+  );
 }
 
-export default AdminEditUser
+export default AdminEditUser;

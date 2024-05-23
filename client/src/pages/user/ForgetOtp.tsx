@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import axios from 'axios'; // Import Axios
-import { useLocation, useNavigate ,} from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios"; // Import Axios
+import { useLocation, useNavigate } from "react-router-dom";
 // import { setUser } from '../../utils/reducers/userData';
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 
-import {setUserDetails} from '../../utils/reducers/userDetails'
-import axiosInstance from '../../axios/axios'
+import { setUserDetails } from "../../utils/reducers/userDetails";
+import axiosInstance from "../../axios/axios";
 const baseURL = axiosInstance.defaults.baseURL;
 
 interface OtpInputs {
@@ -21,15 +21,15 @@ function ForgetOtp() {
   const dispatch = useDispatch();
 
   const location = useLocation();
-    const { email } = location.state;
-//   const location = useLocation();
-//     const { userData } = location.state;
-    // console.log(userData,"dsd")
+  const { email } = location.state;
+  //   const location = useLocation();
+  //     const { userData } = location.state;
+  // console.log(userData,"dsd")
   const [otpInputs, setOtpInputs] = useState<OtpInputs>({
-    otp1: '',
-    otp2: '',
-    otp3: '',
-    otp4: '',
+    otp1: "",
+    otp2: "",
+    otp3: "",
+    otp4: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,43 +45,40 @@ function ForgetOtp() {
     const { otp1, otp2, otp3, otp4 } = otpInputs;
     const otp = otp1 + otp2 + otp3 + otp4;
     try {
-
-        console.log("otp...",otp)
+      console.log("otp...", otp);
       const response = await fetch(`${baseURL}/verifyEmailOtp`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-             
-              otp: otp,
-          }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          otp: otp,
+        }),
       });
-  
+
       const responseData = await response.json();
-     console.log(response)
+      console.log(response);
       if (response.ok) {
-          if (responseData.success) {
-           
-              navigate('/changepassword',{ state: { email } });
-          } else {
-              throw new Error(responseData.error || "Unknown error");
-          }
+        if (responseData.success) {
+          navigate("/changepassword", { state: { email } });
+        } else {
+          throw new Error(responseData.error || "Unknown error");
+        }
       } else {
-          if (responseData.error) {
-              toast.error(responseData.error);
-          } else {
-              const errorMessage = responseData.message || 'Failed to verify OTP';
-              toast.error(errorMessage);
-          }
+        if (responseData.error) {
+          toast.error(responseData.error);
+        } else {
+          const errorMessage = responseData.message || "Failed to verify OTP";
+          toast.error(errorMessage);
+        }
       }
-  } catch (error: any) {
-      const errorMessage = error.message || "An error occurred while verifying OTP. Please try again later.";
+    } catch (error: any) {
+      const errorMessage =
+        error.message ||
+        "An error occurred while verifying OTP. Please try again later.";
       toast.error(errorMessage);
-      console.error('Error verifying OTP:', error);
-  }
-  
-    
+      console.error("Error verifying OTP:", error);
+    }
   };
 
   return (
@@ -123,7 +120,12 @@ function ForgetOtp() {
               </button>
               <div className="flex items-center justify-center text-sm font-medium space-x-1 text-gray-500">
                 <p>Didn't receive code?</p>
-                <a className="text-blue-600" href="/" target="_blank" rel="noopener noreferrer">
+                <a
+                  className="text-blue-600"
+                  href="/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Resend
                 </a>
               </div>

@@ -1,31 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from '../../components/layouts/NavBar';
-import NameCard from '../../components/layouts/NameCard';
-import SideNav from '../../components/layouts/SideNav';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../utils/store/store';
-import Post from '../../components/posts/Post';
+import React, { useState, useEffect } from "react";
+import Navbar from "../../components/layouts/NavBar";
+import NameCard from "../../components/layouts/NameCard";
+import SideNav from "../../components/layouts/SideNav";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../utils/store/store";
+import Post from "../../components/posts/Post";
 
 function Explore() {
   const postData = useSelector((state: RootState) => state.postData.posts);
 
   // Filter out posts of type 'reels'
-  const filteredPosts = postData.filter(post => post.type !== 'reels' && (post.type === 'image' || post.type === 'text'));
+  const filteredPosts = postData.filter(
+    (post) =>
+      post.type !== "reels" && (post.type === "image" || post.type === "text")
+  );
 
   // State to hold shuffled posts
   const [shuffledPosts, setShuffledPosts] = useState<typeof filteredPosts>([]);
 
   // Function to shuffle the posts array
   function shuffleArray(array: any[]) {
-  const shuffledArray = [...array];
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    const shuffledArray = [...array];
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [
+        shuffledArray[j],
+        shuffledArray[i],
+      ];
+    }
+    return shuffledArray;
   }
-  return shuffledArray;
-}
-
 
   useEffect(() => {
     // Shuffle posts when the 'filteredPosts' array changes
@@ -44,8 +49,6 @@ function Explore() {
   const handleCloseModal = () => {
     setSelectedPost(null); // Close the modal by resetting the selected post
   };
-
-
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -81,8 +84,7 @@ function Explore() {
               <Masonry>
                 {shuffledPosts.map((post: any, index: number) => (
                   <div key={index} className="neumorphism">
-
-                   {post.postUrl[0] ? (
+                    {post.postUrl[0] ? (
                       <img
                         src={post.postUrl[0]}
                         alt="Post"
@@ -91,11 +93,13 @@ function Explore() {
                       />
                     ) : (
                       <div
-                      className="p-4 bg-slate-50   rounded-lg cursor-pointer"
-                      onClick={() => handlePostClick(post)}
-                    >
-                      <p className="text-gray-800 font-medium">{post.caption}</p>
-                    </div>
+                        className="p-4 bg-slate-50   rounded-lg cursor-pointer"
+                        onClick={() => handlePostClick(post)}
+                      >
+                        <p className="text-gray-800 font-medium">
+                          {post.caption}
+                        </p>
+                      </div>
                     )}
                   </div>
                 ))}
@@ -104,33 +108,28 @@ function Explore() {
           </div>
         </div>
       </div>
-      {selectedPost  && (
-       <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-   <div className="relative p-4 w-full max-w-xl">
-   <div className="relative  bg-white rounded-lg shadow sm:p-5">
-          {/* Close Button */}
-          <button
-            type="button"
-            className="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 rounded-full p-2"
-            onClick={handleCloseModal}
-          >
-            &times;
-          </button>
-        <Post post={selectedPost} />
+      {selectedPost && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+          <div className="relative p-4 w-full max-w-xl">
+            <div className="relative  bg-white rounded-lg shadow sm:p-5">
+              {/* Close Button */}
+              <button
+                type="button"
+                className="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 rounded-full p-2"
+                onClick={handleCloseModal}
+              >
+                &times;
+              </button>
+              <Post post={selectedPost} />
+            </div>
+          </div>
         </div>
-        </div>
-        </div>
-
-
-      )
-      
-      }
+      )}
     </div>
   );
 }
 
 export default Explore;
 function shuffleArray(filteredPosts: import("../../types/types").IPost[]) {
-  throw new Error('Function not implemented.');
+  throw new Error("Function not implemented.");
 }
-

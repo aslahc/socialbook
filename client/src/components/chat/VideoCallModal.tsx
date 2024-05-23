@@ -1,7 +1,7 @@
-import { Video, X, } from 'lucide-react';
-import React,{useEffect,useState} from 'react';
+import { Video, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from '../../utils/store/store'
+import { RootState } from "../../utils/store/store";
 interface VideoCallModalProps {
   show: boolean;
   onHide: () => void;
@@ -12,7 +12,7 @@ interface VideoCallModalProps {
     profile: string;
   };
 }
-const Ringtone = '/digital_ringer.mp3'
+const Ringtone = "/digital_ringer.mp3";
 
 const VideoCallModal: React.FC<VideoCallModalProps> = ({
   show,
@@ -21,7 +21,6 @@ const VideoCallModal: React.FC<VideoCallModalProps> = ({
   onReject,
   caller,
 }) => {
-
   const users = useSelector((state: RootState) => state.users.users);
 
   // Find the user with the matching ID

@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate ,} from 'react-router-dom';
-import axiosInstance from '../../axios/axios'
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axiosInstance from "../../axios/axios";
 const baseURL = axiosInstance.defaults.baseURL;
 function Changepass() {
-    const navigate = useNavigate()
-    const location = useLocation();
-    const { email } = location.state;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { email } = location.state;
   const [formData, setFormData] = useState({
-    password: '',
-    confirmPassword: '',
+    password: "",
+    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({
-    password: '',
-    confirmPassword: '',
+    password: "",
+    confirmPassword: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,52 +22,53 @@ function Changepass() {
   };
   const handleVerify = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     // Password strength regex validation (at least 8 characters including at least one uppercase letter, one lowercase letter, one number, and one special character)
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
     // Reset errors
-    setErrors({ password: '', confirmPassword: '' });
-  
+    setErrors({ password: "", confirmPassword: "" });
+
     // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
-      setErrors({ ...errors, confirmPassword: 'Passwords do not match' });
+      setErrors({ ...errors, confirmPassword: "Passwords do not match" });
       return;
     }
-  
+
     // Check if password meets strength requirements
     if (!strongPasswordRegex.test(formData.password)) {
       setErrors({
         ...errors,
         password:
-          'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+          "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character",
       });
       return;
     }
-  
+
     try {
       // Send new password to the backend
       const response = await fetch(`${baseURL}/changepassword`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           // Include any additional headers if needed
         },
-        body: JSON.stringify({ password: formData.password ,email}),
+        body: JSON.stringify({ password: formData.password, email }),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to update password');
+        throw new Error("Failed to update password");
       }
-      navigate('/login')
+      navigate("/login");
       // If password update is successful, you can proceed with your logic
-      console.log('Password updated successfully.............');
+      console.log("Password updated successfully.............");
     } catch (error) {
-      console.error('Error updating password:', error);
+      console.error("Error updating password:", error);
       // Handle error appropriately, such as displaying a message to the user
     }
   };
-  
+
   return (
     <div>
       <div className="flex flex-col md:flex-row h-screen">
@@ -85,7 +86,10 @@ function Changepass() {
             </div>
             <form className="mt-8" onSubmit={handleVerify}>
               <div className="flex flex-col max-w-xs mx-auto">
-                <label htmlFor="password-input" className="block mb-2 text-sm font-medium text-gray-900">
+                <label
+                  htmlFor="password-input"
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                >
                   Password
                 </label>
                 <input
@@ -96,11 +100,16 @@ function Changepass() {
                   onChange={handleInputChange}
                   placeholder="Enter your password"
                   className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
-                    errors.password ? 'border-red-500' : 'dark:red-gray-800'
+                    errors.password ? "border-red-500" : "dark:red-gray-800"
                   } dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                 />
-                {errors.password && <span className="text-red-500">{errors.password}</span>}
-                <label htmlFor="confirm-input" className="block mb-2 text-sm font-medium text-gray-900">
+                {errors.password && (
+                  <span className="text-red-500">{errors.password}</span>
+                )}
+                <label
+                  htmlFor="confirm-input"
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                >
                   Confirm Password
                 </label>
                 <input
@@ -111,20 +120,23 @@ function Changepass() {
                   onChange={handleInputChange}
                   placeholder="Confirm your password"
                   className={`bg-gray-300 border border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
-                    errors.confirmPassword ? 'border-red-500' : 'dark:red-gray-800'
+                    errors.confirmPassword
+                      ? "border-red-500"
+                      : "dark:red-gray-800"
                   } dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                 />
-                {errors.confirmPassword && <span className="text-red-500">{errors.confirmPassword}</span>}
+                {errors.confirmPassword && (
+                  <span className="text-red-500">{errors.confirmPassword}</span>
+                )}
               </div>
               <div className="flex flex-col mt-8 space-y-5">
                 <button
                   className="w-full py-5 bg-indigo-400 text-white text-sm rounded-xl shadow-sm focus:outline-none"
-                //   disabled={!!errors.password || !!errors.confirmPassword}
+                  //   disabled={!!errors.password || !!errors.confirmPassword}
                 >
-                Confirm
+                  Confirm
                 </button>
-                
-                             </div>
+              </div>
             </form>
           </div>
         </div>

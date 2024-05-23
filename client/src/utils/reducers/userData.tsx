@@ -6,15 +6,18 @@ const initialState: UsersState = {
 };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     setUsers: (state, action: PayloadAction<User[]>) => {
       state.users = action.payload;
     },
-    followUser: (state, action: PayloadAction<{ userId: string, followerId: string }>) => {
+    followUser: (
+      state,
+      action: PayloadAction<{ userId: string; followerId: string }>
+    ) => {
       const { userId, followerId } = action.payload;
-      const userToFollow = state.users.find(user => user._id === userId);
+      const userToFollow = state.users.find((user) => user._id === userId);
       if (userToFollow) {
         // Add followerId to the followers array of the user
         if (!userToFollow.followers) {
@@ -23,19 +26,23 @@ const userSlice = createSlice({
         userToFollow.followers.push(followerId);
       }
     },
-    unfollowUser: (state, action: PayloadAction<{ userId: string, followerId: string }>) => {
+    unfollowUser: (
+      state,
+      action: PayloadAction<{ userId: string; followerId: string }>
+    ) => {
       const { userId, followerId } = action.payload;
-      const userToUnfollow = state.users.find(user => user._id === userId);
+      const userToUnfollow = state.users.find((user) => user._id === userId);
       if (userToUnfollow) {
         // Remove followerId from the followers array of the user
         if (userToUnfollow.followers) {
-          userToUnfollow.followers = userToUnfollow.followers.filter(id => id !== followerId);
+          userToUnfollow.followers = userToUnfollow.followers.filter(
+            (id) => id !== followerId
+          );
         }
       }
     },
-
   },
 });
 
-export const { setUsers ,followUser ,unfollowUser} = userSlice.actions;
+export const { setUsers, followUser, unfollowUser } = userSlice.actions;
 export default userSlice.reducer;

@@ -14,7 +14,6 @@ export class NotificationRepository {
 
       // Save the notification to the database
       const savedNotification = await newNotification.save();
-      console.log("Notification saved successfully");
 
       return savedNotification;
     } catch (error) {
@@ -29,8 +28,7 @@ export class NotificationRepository {
 
       // Use find to retrieve notifications where receiverId matches userId
       const notifications = await Notification.find({ receiverId: objectId }).populate('sourceId');
-      
-      console.log("Fetched notifications:", notifications);
+
 
       return notifications;
     } catch (error) {
@@ -40,10 +38,10 @@ export class NotificationRepository {
 
   async deleteNotification(notificationId: string): Promise<boolean> {
     try {
-        await Notification.findByIdAndDelete(notificationId);
+      await Notification.findByIdAndDelete(notificationId);
 
-        
-      return  true
+
+      return true
     } catch (error) {
       throw new Error(`Failed to fetch notifications: ${error}`);
     }

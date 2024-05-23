@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import ViewStory from './ViewStory';
+import React, { useState } from "react";
+import ViewStory from "./ViewStory";
 
 interface Istory {
   _id: string;
@@ -29,11 +29,12 @@ function UserStory({ story }: UserStoryProps) {
       <div
         className="relative bg-white rounded-lg shadow-md overflow-hidden"
         style={{
-          maxWidth: '150px',
-          maxHeight: '200px',
-          width: '150px',
-          height: '200px',
-          boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.2), -5px -5px 10px rgba(255, 255, 255, 0.5)',
+          maxWidth: "150px",
+          maxHeight: "200px",
+          width: "150px",
+          height: "200px",
+          boxShadow:
+            "5px 5px 10px rgba(0, 0, 0, 0.2), -5px -5px 10px rgba(255, 255, 255, 0.5)",
         }}
       >
         <img
@@ -44,9 +45,13 @@ function UserStory({ story }: UserStoryProps) {
           alt=""
           className="w-full h-full object-cover"
         />
-        <span className="absolute bottom-4 left-4 text-indigo-400 font-medium">{story.userId.username}</span>
+        <span className="absolute bottom-4 left-4 text-indigo-400 font-medium">
+          {story.userId.username}
+        </span>
       </div>
-      {showStory && <ViewStory setShowStory={setShowStory} storyData={[story]} />}
+      {showStory && (
+        <ViewStory setShowStory={setShowStory} storyData={[story]} />
+      )}
     </div>
   );
 }

@@ -1,18 +1,18 @@
-import React, { useState, useEffect, FormEvent } from 'react';
-import SideNav from '../../components/layouts/SideNav';
-import NameCard from '../../components/layouts/NameCard';
-import Navbar from '../../components/layouts/NavBar';
-import axiosInstance from '../../axios/axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserDetails } from '../../utils/reducers/userDetails';
-import Post from '../../components/posts/Post';
-import { RootState } from '../../utils/store/store';
-import { IPost } from '../../types/types';
+import React, { useState, useEffect, FormEvent } from "react";
+import SideNav from "../../components/layouts/SideNav";
+import NameCard from "../../components/layouts/NameCard";
+import Navbar from "../../components/layouts/NavBar";
+import axiosInstance from "../../axios/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserDetails } from "../../utils/reducers/userDetails";
+import Post from "../../components/posts/Post";
+import { RootState } from "../../utils/store/store";
+import { IPost } from "../../types/types";
 
 interface UserState {
   userDetails: {
     user: {
-      savePostCategory: string[] | undefined; 
+      savePostCategory: string[] | undefined;
       _id: string;
     };
   };
@@ -31,22 +31,26 @@ const SavedPost: React.FC = () => {
   const userData = useSelector((state: UserState) => state.userDetails.user);
   const userId = userData._id;
   const [createModal, setCreateModal] = useState<boolean>(false);
-  const [categoryName, setCategoryName] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [categoryName, setCategoryName] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [filteredPosts, setFilteredPosts] = useState<any>([]);
-console.log(filteredPosts,"q")
+  console.log(filteredPosts, "q");
   const posts = useSelector((state: RootState) => state.postData.posts);
 
   const fetchPostsByCategory = async (category: string) => {
     try {
-      const response = await axiosInstance.get(`/Savedposts/${userId}/${category}`);
-      console.log("res from j",response)
+      const response = await axiosInstance.get(
+        `/Savedposts/${userId}/${category}`
+      );
+      console.log("res from j", response);
       const fetchedPosts = response.data.posts;
-      console.log("fet",fetchedPosts)
-      const filteredPostsData = posts.filter(post => fetchedPosts.some((fp: { post: string; }) => fp.post === post._id));
+      console.log("fet", fetchedPosts);
+      const filteredPostsData = posts.filter((post) =>
+        fetchedPosts.some((fp: { post: string }) => fp.post === post._id)
+      );
       setFilteredPosts(filteredPostsData);
     } catch (error) {
-      console.error('Error fetching posts by category:', error);
+      console.error("Error fetching posts by category:", error);
     }
   };
 
@@ -58,19 +62,23 @@ console.log(filteredPosts,"q")
         return;
       }
 
-      const response = await axiosInstance.post(`/createCategory`, { userId, categoryName }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axiosInstance.post(
+        `/createCategory`,
+        { userId, categoryName },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response) {
         dispatch(setUserDetails(response.data.userData));
         setCreateModal(false);
-        setCategoryName('');
+        setCategoryName("");
       }
     } catch (error) {
-      console.error('Error creating category:', error);
+      console.error("Error creating category:", error);
     }
   };
 
@@ -105,37 +113,47 @@ console.log(filteredPosts,"q")
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-3xl font-bold">Collections</h1>
               <div className="relative">
-              {userData.savePostCategory && userData.savePostCategory.length > 0 ? (
-  <select
-    value={selectedCategory}
-    onChange={(e) => setSelectedCategory(e.target.value)}
-    className="appearance-none rounded-md bg-gray-200 py-2 px-4 pr-8 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-  >
-    <option value="">Select Category</option>
-    {userData.savePostCategory.map((category: string) => (
-      <option key={category} value={category}>
-        {category}
-      </option>
-    ))}
-  </select>
-) : (
-  <p>No categories available</p>
-)}
+                {userData.savePostCategory &&
+                userData.savePostCategory.length > 0 ? (
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="appearance-none rounded-md bg-gray-200 py-2 px-4 pr-8 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Category</option>
+                    {userData.savePostCategory.map((category: string) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p>No categories available</p>
+                )}
 
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                  <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <svg
+                    className="h-4 w-4 fill-current"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
                     <path d="M14.707 7.293a1 1 0 0 0-1.414 0L10 10.586 6.707 7.293a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 0-1.414z" />
                   </svg>
                 </div>
               </div>
             </div>
 
-            <button onClick={() => setCreateModal(true)} className="bg-indigo-700 text-white px-4 py-2 rounded shadow-md">
+            <button
+              onClick={() => setCreateModal(true)}
+              className="bg-indigo-700 text-white px-4 py-2 rounded shadow-md"
+            >
               Create category
             </button>
 
             <div className="mt-4">
-              <h2 className="text-2xl font-semibold">Posts in {selectedCategory}</h2>
+              <h2 className="text-2xl font-semibold">
+                Posts in {selectedCategory}
+              </h2>
               {filteredPosts.length > 0 ? (
                 filteredPosts.map((post: IPost) => (
                   <div key={post._id} className="mb-4">
@@ -165,7 +183,9 @@ console.log(filteredPosts,"q")
           <div className="relative p-4 w-full max-w-md">
             <div className="relative bg-white rounded-lg shadow">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
-                <h3 className="text-lg font-semibold text-gray-900">Create New Category</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Create New Category
+                </h3>
                 <button
                   onClick={() => setCreateModal(false)}
                   className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
@@ -191,7 +211,10 @@ console.log(filteredPosts,"q")
               <form className="p-4 md:p-5" onSubmit={handleCreateCategory}>
                 <div className="grid gap-4 mb-4">
                   <div>
-                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+                    <label
+                      htmlFor="name"
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
                       Name
                     </label>
                     <input

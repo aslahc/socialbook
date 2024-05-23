@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../axios/axios';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../axios/axios";
+import { useSelector } from "react-redux";
 
 interface User {
   _id: string;
@@ -28,12 +28,19 @@ interface CommentComponentProps {
   toggleCommentModal: () => void;
 }
 
-    const CommentComponent: React.FC<CommentComponentProps> = ({ postId ,toggleCommentModal }) => {
-  const [commentInput, setCommentInput] = useState<string>('');
+const CommentComponent: React.FC<CommentComponentProps> = ({
+  postId,
+  toggleCommentModal,
+}) => {
+  const [commentInput, setCommentInput] = useState<string>("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyInput, setReplyInput] = useState<{ [key: string]: string }>({});
-  const [replyingToComment, setReplyingToComment] = useState<string | null>(null);
-  const [visibleReplies, setVisibleReplies] = useState<{ [key: string]: boolean }>({});
+  const [replyingToComment, setReplyingToComment] = useState<string | null>(
+    null
+  );
+  const [visibleReplies, setVisibleReplies] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   const userData = useSelector((state: any) => state.userDetails.user || {});
   const userId = userData._id;
@@ -45,19 +52,19 @@ interface CommentComponentProps {
       if (data.comments) {
         setComments(data.comments);
       } else {
-        console.error('No comments found.');
+        console.error("No comments found.");
       }
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      console.error("Error fetching comments:", error);
     }
   };
   const handleReplyComment = (commentId: string) => {
-    setReplyInput({ [commentId]: '' });
+    setReplyInput({ [commentId]: "" });
     setReplyingToComment(commentId);
   };
 
   const handleReplySubmit = async () => {
-    if (replyInput[replyingToComment || ''].trim() && replyingToComment) {
+    if (replyInput[replyingToComment || ""].trim() && replyingToComment) {
       const newReply: Partial<ReplyComment> = {
         userId: userData,
         comment: replyInput[replyingToComment],
@@ -65,7 +72,7 @@ interface CommentComponentProps {
       };
 
       try {
-        const response = await axiosInstance.post('/replayComment', {
+        const response = await axiosInstance.post("/replayComment", {
           newReply,
           commentId: replyingToComment,
         });
@@ -73,7 +80,7 @@ interface CommentComponentProps {
         const { data } = response;
 
         if (data.success) {
-          console.log("display to save comment",data.replySaved)
+          console.log("display to save comment", data.replySaved);
           // const savedReply: ReplyComment = data.replySaved;
           // setComments((prevComments) =>
           //   prevComments.map((comment) =>
@@ -83,15 +90,15 @@ interface CommentComponentProps {
           //   )
           // );
 
-    fetchComments();
+          fetchComments();
 
           setReplyInput({});
           setReplyingToComment(null);
         } else {
-          console.error('Error: Reply was not saved successfully');
+          console.error("Error: Reply was not saved successfully");
         }
       } catch (error) {
-        console.error('Error occurred while saving reply:', error);
+        console.error("Error occurred while saving reply:", error);
       }
     }
   };
@@ -102,13 +109,11 @@ interface CommentComponentProps {
   };
 
   useEffect(() => {
-  
-
     fetchComments();
   }, [postId]);
 
   const handleCommentSubmit = async () => {
-    if (commentInput.trim() !== '') {
+    if (commentInput.trim() !== "") {
       const newComment: Partial<Comment> = {
         userId: userData,
         comment: commentInput,
@@ -116,7 +121,7 @@ interface CommentComponentProps {
       };
 
       try {
-        const response = await axiosInstance.post('/postComment', {
+        const response = await axiosInstance.post("/postComment", {
           newComment,
           postId,
         });
@@ -126,29 +131,33 @@ interface CommentComponentProps {
         if (data.success) {
           const savedComment: Comment = data.commentSaved;
           setComments([...comments, savedComment]);
-          setCommentInput('');
+          setCommentInput("");
         } else {
-          console.error('Error: Comment was not saved successfully');
+          console.error("Error: Comment was not saved successfully");
         }
       } catch (error) {
-        console.error('Error occurred while saving comment:', error);
+        console.error("Error occurred while saving comment:", error);
       }
     }
   };
 
   const handleDeleteComment = async (commentId: string) => {
     try {
-      const response = await axiosInstance.delete(`/deleteComment/${commentId}`);
+      const response = await axiosInstance.delete(
+        `/deleteComment/${commentId}`
+      );
       const { data } = response;
 
       if (data.success) {
-        const updatedComments = comments.filter((comment) => comment._id !== commentId);
+        const updatedComments = comments.filter(
+          (comment) => comment._id !== commentId
+        );
         setComments(updatedComments);
       } else {
-        console.error('Error: Comment deletion failed');
+        console.error("Error: Comment deletion failed");
       }
     } catch (error) {
-      console.error('Error deleting comment:', error);
+      console.error("Error deleting comment:", error);
     }
   };
 
@@ -161,27 +170,26 @@ interface CommentComponentProps {
 
   return (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 bg-gray-100 rounded-lg min-w-96 max-w-6xl shadow-inner dark:bg-gray-800 sm:p-8">
-          <button
-            onClick={toggleCommentModal}
-            className="absolute top-2 right-2 text-gray-500 hover:text-red-500 focus:outline-none transition-colors duration-200"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+      <button
+        onClick={toggleCommentModal}
+        className="absolute top-2 right-2 text-gray-500 hover:text-red-500 focus:outline-none transition-colors duration-200"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
 
-      
       <div className="mb-4 flex">
         <input
           type="text"
@@ -282,7 +290,7 @@ interface CommentComponentProps {
                 onClick={() => toggleReplies(comment._id)}
                 className="text-blue-500 hover:text-blue-700 focus:outline-none transition-colors duration-200 mt-2"
               >
-                {visibleReplies[comment._id] ? 'Hide Replies' : 'View Replies'}
+                {visibleReplies[comment._id] ? "Hide Replies" : "View Replies"}
               </button>
             )}
             {visibleReplies[comment._id] && (
@@ -323,7 +331,9 @@ interface CommentComponentProps {
                 type="text"
                 placeholder="Add a reply..."
                 value={replyInput[replyingToComment]}
-                onChange={(e) => setReplyInput({ [replyingToComment]: e.target.value })}
+                onChange={(e) =>
+                  setReplyInput({ [replyingToComment]: e.target.value })
+                }
                 className="w-full px-3 py-2 placeholder-gray-500 bg-gray-100 rounded-lg shadow-inner dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 transition-all duration-200"
               />
               <button

@@ -10,7 +10,6 @@ export class UserRepository {
             const user = await User.findOne({ email });
             return !!user;
         } catch (error) {
-            console.error("Error checking email existence:", error);
             throw error;
         }
     }
@@ -20,7 +19,6 @@ export class UserRepository {
             const user = await User.findOne({ username });
             return !!user;
         } catch (error) {
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -50,7 +48,6 @@ export class UserRepository {
 
             return updatedUser;
         } catch (error) {
-            console.error('Error saving category:', error);
             throw error;
         }
     }
@@ -62,7 +59,6 @@ export class UserRepository {
             await newUser.save();
             return newUser.toObject();
         } catch (error) {
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -73,7 +69,6 @@ export class UserRepository {
             const user = await User.findOne({ username });
             return user;
         } catch (error) {
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -84,7 +79,6 @@ export class UserRepository {
             const user = await User.findById(UserId);
             return user;
         } catch (error) {
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -96,7 +90,6 @@ export class UserRepository {
             const user = await User.findOne({ email });
             return user;
         } catch (error) {
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -107,7 +100,6 @@ export class UserRepository {
             const user = await User.findOne({ username });
             return user;
         } catch (error) {
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -118,7 +110,6 @@ export class UserRepository {
             const match = await bcrypt.compare(candidatePassword, hashedPassword);
             return match;
         } catch (error) {
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -129,7 +120,6 @@ export class UserRepository {
             const users = await User.find();
             return users;
         } catch (error) {
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -153,7 +143,6 @@ export class UserRepository {
             const updatedUser = await user.save();
             return updatedUser.toObject();
         } catch (error) {
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -170,7 +159,6 @@ export class UserRepository {
             const updatedUser = await user.save();
             return updatedUser;
         } catch (error) {
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -194,7 +182,6 @@ export class UserRepository {
             return updatedUser;
         } catch (error) {
             // Catch any errors that occur during the process
-            console.error("Error:", (error as Error).message);
 
             throw error;
         }
@@ -224,7 +211,6 @@ export class UserRepository {
 
             return user;
         } catch (error) {
-            console.error("Error:", (error as Error).message);
             throw error;
         }
     }
@@ -259,15 +245,12 @@ export class UserRepository {
     async getSavedPost(userId: string, categoryName: string): Promise<any> {
         try {
             const user = await User.findById(userId).populate('savedPost');
-            console.log("user", user)
             if (user) {
                 const filteredPosts = user.savedPost.filter(
                     (post: any) => post.category === categoryName
                 );
-                console.log("filterd post", filteredPosts)
                 return filteredPosts;
             } else {
-                console.log("User is not found");
             }
         } catch (error) {
             console.error("Error:", (error as Error).message);
@@ -307,7 +290,6 @@ export class UserRepository {
                 },
                 { $limit: 6 }
             ]);
-            console.log("got suggested userrr", suggestions)
             return suggestions
         } catch (error) {
             console.error("Error:", (error as Error).message);

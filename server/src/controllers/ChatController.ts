@@ -14,8 +14,6 @@ export const saveMessage = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log("enter to save chat controller ");
-    console.log(req.body);
     const { _id, messageText, reciver, timestamp, messageType } = req.body;
 
     let conversation = await ConversationRepository.findOneByMember(_id);
@@ -40,7 +38,6 @@ export const saveMessage = async (
       ConversationId,
     });
   } catch (error) {
-    console.error("Error saving message:", error);
     res.status(500).json({ success: false, error: "Failed to save message" });
   }
 };
@@ -74,12 +71,8 @@ export const messages = async (req: Request, res: Response): Promise<void> => {
       reciver: userId,
       // Filter by sender (receiver)
     });
-    //  console.log(sentMessages,"send message")
-    //  console.log("=========================================================")
-    //  console.log(receivedMessages,"redceeeedvvd")
     res.status(200).json({ success: true, sentMessages, receivedMessages });
   } catch (error) {
-    console.error("Error fetching messages:", error);
     res.status(500).json({ success: false, error: "Failed to fetch messages" });
   }
 };

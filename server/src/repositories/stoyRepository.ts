@@ -23,7 +23,6 @@ export class StoryRepository {
         });
         const story = await existingUser.save();
         const savedStory = await story.populate("userId");
-        console.log("sds created saved story");
         return savedStory;
       } else {
         // User does not exist, create a new user with the story
@@ -41,7 +40,6 @@ export class StoryRepository {
         return newStory;
       }
     } catch (error) {
-      console.error("Error saving story:");
       throw error;
     }
   }
@@ -51,7 +49,6 @@ export class StoryRepository {
       const currentDate = new Date();
       await Story.deleteMany({ expireOn: { $lte: currentDate } });
     } catch (error) {
-      console.error("Error:", (error as Error).message);
       throw error;
     }
   }
@@ -60,11 +57,8 @@ export class StoryRepository {
     // Run removeExpiredStories every specified interval (in minutes)
     setInterval(async () => {
       try {
-        console.log(`Removing expired stories...`);
         await this.removeExpiredStories();
-        console.log(`Expired stories removed successfully.`);
       } catch (error) {
-        console.error("Error removing expired stories:", error);
       }
     }, intervalInMinutes * 60 * 1000); // Convert minutes to milliseconds
   }
@@ -75,7 +69,6 @@ export class StoryRepository {
 
       return storyData;
     } catch (error) {
-      console.error("Error:", (error as Error).message);
       throw error;
     }
   }
@@ -104,13 +97,10 @@ export class StoryRepository {
 
       // Remove the story from the stories array
       story.stories.splice(storyIndex, 1);
-      console.log("story deleted succesfully ");
       // Save the updated Story document
       await story.save();
       return true;
-      console.log("Story deleted successfully");
     } catch (error) {
-      console.error("Error:", (error as Error).message);
       throw error;
     }
   }
@@ -120,15 +110,12 @@ export class StoryRepository {
       const story = await Story.findOne({ "stories.storyImg": storyImg });
       if (story) {
         // If a story is found, you can access it here
-        console.log("Found Story:", story);
         return story;
       } else {
         // Story not found
-        console.log("Story not found for image:", storyImg);
         return null;
       }
     } catch (error) {
-      console.error("Error finding story by image:", (error as Error).message);
       throw error;
     }
   }
@@ -140,7 +127,6 @@ export class StoryRepository {
         { $push: { "stories.$.views": userId } }
       );
     } catch (error) {
-      console.error("Error adding view to story:", (error as Error).message);
       throw error;
     }
   }
@@ -150,7 +136,6 @@ export class StoryRepository {
       const story = await Story.findOne({ "stories.storyImg": storyImg });
       return story;
     } catch (error) {
-      console.error("Error:", (error as Error).message);
       throw error;
     }
   }
@@ -162,21 +147,17 @@ export class StoryRepository {
           try {
             const user = await User.findById(userId);
             if (user) {
-              console.log("Username:", user.username); // Log the username
               return { userId, user };
             } else {
-              console.log("User not found for userId:", userId);
               return { userId };
             }
           } catch (error) {
-            console.error("Error populating views:", (error as Error).message);
             throw error;
           }
         })
       );
       return populatedViews;
     } catch (error) {
-      console.error("Error:", (error as Error).message);
       throw error;
     }
   }
