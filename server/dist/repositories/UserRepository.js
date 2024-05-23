@@ -45,11 +45,11 @@ class UserRepository {
                 // Find the user by userId
                 const user = yield user_1.default.findById(userId);
                 if (!user) {
-                    throw new Error('User not found');
+                    throw new Error("User not found");
                 }
                 // Check if the category already exists in the savePostCategory array
                 if (user.savePostCategory.includes(categoryName)) {
-                    console.error('Category already exists');
+                    console.error("Category already exists");
                     return user; // Return the user document as no change is made
                 }
                 // Add the category to the savePostCategory array
@@ -79,7 +79,10 @@ class UserRepository {
     findByUsername(username) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log("enteer ttt");
+                console.log("enter to repp");
                 const user = yield user_1.default.findOne({ username });
+                console.log(user, "uy");
                 return user;
             }
             catch (error) {
@@ -147,7 +150,7 @@ class UserRepository {
             try {
                 const user = yield user_1.default.findById(userId);
                 if (!user) {
-                    throw new Error('User not found');
+                    throw new Error("User not found");
                 }
                 user.fname = data.firstName;
                 user.lname = data.lastName;
@@ -208,12 +211,12 @@ class UserRepository {
                 const user = yield user_1.default.findByIdAndUpdate(userId, {
                     $addToSet: {
                         savePostCategory: category,
-                        savedPost: { post: postId, category: category }
-                    }
+                        savedPost: { post: postId, category: category },
+                    },
                 }, { new: true } // Return the updated document
                 );
                 if (!user) {
-                    throw new Error('User not found');
+                    throw new Error("User not found");
                 }
                 return user;
             }
@@ -227,12 +230,12 @@ class UserRepository {
             try {
                 const user = yield user_1.default.findById(userId);
                 if (!user) {
-                    throw new Error('User not found');
+                    throw new Error("User not found");
                 }
                 // Find the saved post by postId
                 const savedPostIndex = user.savedPost.findIndex((saved) => String(saved.post) === String(postId));
                 if (savedPostIndex === -1) {
-                    throw new Error('Post is not saved by this user');
+                    throw new Error("Post is not saved by this user");
                 }
                 // Remove the saved post from the array
                 user.savedPost.splice(savedPostIndex, 1);
@@ -249,7 +252,7 @@ class UserRepository {
     getSavedPost(userId, categoryName) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield user_1.default.findById(userId).populate('savedPost');
+                const user = yield user_1.default.findById(userId).populate("savedPost");
                 if (user) {
                     const filteredPosts = user.savedPost.filter((post) => post.category === categoryName);
                     return filteredPosts;
@@ -269,32 +272,36 @@ class UserRepository {
                     { $match: { _id: new mongoose_1.default.Types.ObjectId(userId) } },
                     {
                         $lookup: {
-                            from: 'users',
-                            localField: 'followers',
-                            foreignField: '_id',
-                            as: 'userFollowers'
-                        }
+                            from: "users",
+                            localField: "followers",
+                            foreignField: "_id",
+                            as: "userFollowers",
+                        },
                     },
-                    { $unwind: '$userFollowers' },
+                    { $unwind: "$userFollowers" },
                     {
                         $lookup: {
-                            from: 'users',
-                            localField: 'userFollowers.followers',
-                            foreignField: '_id',
-                            as: 'suggestedUsers'
-                        }
+                            from: "users",
+                            localField: "userFollowers.followers",
+                            foreignField: "_id",
+                            as: "suggestedUsers",
+                        },
                     },
-                    { $unwind: '$suggestedUsers' },
-                    { $match: { 'suggestedUsers._id': { $ne: new mongoose_1.default.Types.ObjectId(userId) } } },
+                    { $unwind: "$suggestedUsers" },
+                    {
+                        $match: {
+                            "suggestedUsers._id": { $ne: new mongoose_1.default.Types.ObjectId(userId) },
+                        },
+                    },
                     {
                         $group: {
-                            _id: '$suggestedUsers._id',
-                            username: { $first: '$suggestedUsers.username' },
-                            email: { $first: '$suggestedUsers.email' },
-                            profileimg: { $first: '$suggestedUsers.profileimg' }
-                        }
+                            _id: "$suggestedUsers._id",
+                            username: { $first: "$suggestedUsers.username" },
+                            email: { $first: "$suggestedUsers.email" },
+                            profileimg: { $first: "$suggestedUsers.profileimg" },
+                        },
                     },
-                    { $limit: 6 }
+                    { $limit: 6 },
                 ]);
                 return suggestions;
             }

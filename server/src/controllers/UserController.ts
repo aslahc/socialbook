@@ -145,7 +145,7 @@ export const verifyLogin = async (
   try {
     const { username, password } = req.body;
     console.log(username, password);
-
+    console.log("goint to repo");
     const user = await userRepository.findByUsername(username);
     console.log(user);
     if (!user) {

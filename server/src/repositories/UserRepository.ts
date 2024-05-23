@@ -65,6 +65,7 @@ export class UserRepository {
 
   async findByUsername(username: string): Promise<IUser | null> {
     try {
+      console.log("enteer ttt");
       console.log("enter to repp");
       const user = await User.findOne({ username });
       console.log(user, "uy");
