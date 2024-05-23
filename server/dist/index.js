@@ -24,7 +24,7 @@ app.use((0, express_session_1.default)({
 }));
 // Middleware
 app.use((0, cors_1.default)({
-    origin: "http://localhost:3000",
+    origin: "https://aslah.online",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 }));
@@ -32,8 +32,8 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, cookie_parser_1.default)());
 const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(4000, {
-    cors: { origin: "http://localhost:3000" },
+const io = new socket_io_1.Server(8000, {
+    cors: { origin: "https://aslah.online" },
 });
 // Configure Socket.IO
 (0, socket_1.default)(io);

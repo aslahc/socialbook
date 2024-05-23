@@ -29,7 +29,7 @@ const useSocketIO = () => {
   const userId = userData._id;
 
   useEffect(() => {
-    const newSocket: Socket = io("http://localhost:4000");
+    const newSocket: Socket = io("https://aslah.online");
     newSocket.on("connect", () => {
       newSocket.emit("addUser", userId);
     });

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://127.0.0.1:8000/api"; // Set your base URL here
+const baseURL = "https://aslah.online/api"; // Set your base URL here
 const axiosInstance = axios.create({ baseURL });
 
 // Add a request interceptor to include the JWT token in the headers
