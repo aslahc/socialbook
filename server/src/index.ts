@@ -12,6 +12,7 @@ import { errorHandler } from "./middleware/Errorhandling";
 import socketIo_Config from "./socket/socket";
 import { Server, Socket } from "socket.io";
 import http from "http";
+import database from "./config/database";
 dotenv.config();
 
 const app = express();
@@ -63,7 +64,7 @@ app.use("/api/", userRoute);
 
 // Error Handler Middleware (placed after all other middleware and routes)
 
-connectToMongoDB()
+database()
   .then(() => {
     console.log("Connected to MongoDB");
 
