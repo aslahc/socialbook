@@ -32,7 +32,7 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, cookie_parser_1.default)());
 const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(8000, {
+const io = new socket_io_1.Server(4000, {
     cors: { origin: "https://www.aslah.online" },
 });
 // Configure Socket.IO
