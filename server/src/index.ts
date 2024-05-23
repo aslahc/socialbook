@@ -52,7 +52,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const server = http.createServer(app);
-const io: Server = new Server(4000, {
+const io: Server = new Server(8000, {
   cors: { origin: "http://localhost:3000" },
 });
 
