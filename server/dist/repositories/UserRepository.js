@@ -82,6 +82,7 @@ class UserRepository {
                 console.log("enteer ttt");
                 console.log("enter to repp");
                 const user = yield user_1.default.findOne({ username });
+                console.log("didngt ege");
                 console.log(user, "uy");
                 return user;
             }

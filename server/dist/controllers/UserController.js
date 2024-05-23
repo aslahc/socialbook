@@ -142,6 +142,7 @@ const verifyLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         console.log("goint to repo");
         const user = yield userRepository.findByUsername(username);
         console.log(user);
+        console.log("!23");
         if (!user) {
             res.status(404).json({ error: "User not found" });
             return;
