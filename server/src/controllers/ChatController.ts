@@ -23,7 +23,7 @@ export const saveMessage = async (
     }
 
     await messageRepository.create(
-      conversation._id,
+      conversation._id!,
       _id,
       messageText,
       reciver,
