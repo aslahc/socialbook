@@ -20,14 +20,15 @@ const MessageRepository_1 = require("../repositories/MessageRepository");
 const ConversationRepository = new conversationRepo_1.conversationRepo();
 const messageRepository = new MessageRepository_1.MessageRepository();
 const saveMessage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const { _id, messageText, reciver, timestamp, messageType } = req.body;
         let conversation = yield ConversationRepository.findOneByMember(_id);
         if (!conversation) {
             conversation = yield ConversationRepository.create([_id]);
         }
-        yield messageRepository.create(conversation._id, _id, messageText, reciver, timestamp, messageType);
-        const ConversationId = conversation._id;
+        yield messageRepository.create(conversation._id || null, _id, messageText, reciver, timestamp, messageType);
+        const ConversationId = (_a = conversation._id) !== null && _a !== void 0 ? _a : null;
         res.status(200).json({
             success: true,
             message: "Message saved successfully",

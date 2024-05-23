@@ -23,15 +23,15 @@ export const saveMessage = async (
     }
 
     await messageRepository.create(
-      conversation._id!,
+      conversation._id || null,
       _id,
       messageText,
       reciver,
       timestamp,
       messageType
     );
+    const ConversationId = conversation._id ?? null;
 
-    const ConversationId = conversation._id;
     res.status(200).json({
       success: true,
       message: "Message saved successfully",
