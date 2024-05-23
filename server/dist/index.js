@@ -24,7 +24,7 @@ app.use((0, express_session_1.default)({
 }));
 // Middleware
 app.use((0, cors_1.default)({
-    origin: "https://www.aslah.online",
+    origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 }));
@@ -33,7 +33,7 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, cookie_parser_1.default)());
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(4000, {
-    cors: { origin: "https://www.aslah.online" },
+    cors: { origin: "*" },
 });
 // Configure Socket.IO
 (0, socket_1.default)(io);
