@@ -44,7 +44,7 @@ function Chat() {
   const [videoCallJoinRoomId, setVideoCallJoinRoomId] = useState("");
 
   useEffect(() => {
-    socket.current = io("https://aslah.online");
+    socket.current = io("https://www.aslah.online");
 
     socket.current.on("connect", () => {
       console.log("connected the socket hot");
