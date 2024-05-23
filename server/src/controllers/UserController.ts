@@ -144,6 +144,7 @@ export const verifyLogin = async (
 ): Promise<void> => {
   try {
     const { username, password } = req.body;
+    console.log(username, password);
 
     const user = await userRepository.findByUsername(username);
     if (!user) {

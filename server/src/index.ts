@@ -40,7 +40,7 @@ declare module "express-session" {
 
 app.use(
   cors({
-    origin: "https://www.aslah.online",
+    origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
@@ -53,7 +53,7 @@ app.use(cookieParser());
 
 const server = http.createServer(app);
 const io: Server = new Server(4000, {
-  cors: { origin: "https://www.aslah.online" },
+  cors: { origin: "*" },
 });
 
 // Configure Socket.IO

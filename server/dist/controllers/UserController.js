@@ -138,6 +138,7 @@ exports.verifyOtp = verifyOtp;
 const verifyLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, password } = req.body;
+        console.log(username, password);
         const user = yield userRepository.findByUsername(username);
         if (!user) {
             res.status(404).json({ error: "User not found" });
