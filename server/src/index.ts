@@ -13,8 +13,9 @@ import socketIo_Config from "./socket/socket";
 import { Server, Socket } from "socket.io";
 import http from "http";
 import database from "./config/database";
-dotenv.config();
+require("dotenv").config();
 
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 

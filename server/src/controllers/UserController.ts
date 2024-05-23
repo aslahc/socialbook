@@ -192,6 +192,7 @@ export const googlelogin = async (
       // Assuming the user is new and needs to be registered
 
       // Generate token for the new user
+      console.log("generage");
       const token = generateToken(user._id, "user"); // Assuming generateToken function is defined correctly
 
       // res.status(200).json({ success: true, message: "User logged in successfully", token, user: user });

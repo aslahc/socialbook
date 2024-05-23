@@ -20,6 +20,7 @@ const url = "mongodb://aslahcholasseri:8zjovjFZOawzwqBD@ac-312hnlu-shard-00-00.q
 const connectToMongoDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(process.env.MONGODB_URL || url);
+        console.log(url, "mm ");
         console.log(process.env.MONGODB_URL, "ff");
         console.log("connected to mongoDB ++");
     }

@@ -8,6 +8,7 @@ const url =
 const connectToMongoDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URL || url);
+    console.log(url, "mm ");
     console.log(process.env.MONGODB_URL, "ff");
     console.log("connected to mongoDB ++");
   } catch (error) {

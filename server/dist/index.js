@@ -14,6 +14,7 @@ const socket_1 = __importDefault(require("./socket/socket"));
 const socket_io_1 = require("socket.io");
 const http_1 = __importDefault(require("http"));
 const database_1 = __importDefault(require("./config/database"));
+require("dotenv").config();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 8000;
