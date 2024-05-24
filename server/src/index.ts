@@ -41,7 +41,7 @@ declare module "express-session" {
 
 app.use(
   cors({
-    origin: "https://aslah.online",
+    origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
