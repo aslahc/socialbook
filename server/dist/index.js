@@ -25,7 +25,7 @@ app.use((0, express_session_1.default)({
 }));
 // Middleware
 app.use((0, cors_1.default)({
-    origin: "*",
+    origin: "https://aslah.online",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 }));
