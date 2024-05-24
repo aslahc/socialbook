@@ -20,7 +20,7 @@ function Navbar() {
 
   // Function to filter users based on search query
   const filteredUsers = usersData.filter((user) =>
-    user.username.toLowerCase().includes(searchQuery.toLowerCase())
+    user.username.includes(searchQuery.toLowerCase())
   );
   console.log(filteredUsers, "filterd usre");
 
