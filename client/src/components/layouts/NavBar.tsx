@@ -19,9 +19,14 @@ function Navbar() {
   const usersData = useSelector((state: RootState) => state.users.users);
 
   // Function to filter users based on search query
-  const filteredUsers = usersData.filter((user) =>
-    user.username.includes(searchQuery.toLowerCase())
-  );
+  const filteredUsers = usersData.filter((user) => {
+    return (
+      user &&
+      typeof user.username === "string" &&
+      typeof searchQuery === "string" &&
+      user.username.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
   console.log(filteredUsers, "filterd usre");
 
   // Function to handle search input change
