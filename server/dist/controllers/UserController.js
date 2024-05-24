@@ -73,6 +73,7 @@ let otpVal;
 const emailVerification = (email) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         otpVal = Math.floor(Math.random() * 10000).toString();
+        console.log(otpVal);
         const transporter = nodemailer_1.default.createTransport({
             host: "smtp.gmail.com",
             port: 587,
