@@ -12,15 +12,24 @@ export const generateToken = (userId: any, role: string) => {
     role,
   };
   console.log("eneterd to jwt secret");
-  const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: "5h" });
+  const token = jwt.sign(
+    payload,
+    process.env.JWT_SECRET! || "nwL19kn732imVwEFvu2/fZOdX8ZUy5tP97zvUEK9hXQ=",
+    { expiresIn: "5h" }
+  );
   console.log(token);
 
   return token;
 };
 export const generateRefreshToken = (userId: any) => {
   const payload = { userId: userId.toString() };
-  const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
-    expiresIn: "7d",
-  }); // Refresh token with 7 days expiry
+  const refreshToken = jwt.sign(
+    payload,
+    process.env.REFRESH_TOKEN_SECRET! ||
+      "nwL19kn732imVwEFvu2/fZOdX8ZUy5tP97zvUEK9hXQ=",
+    {
+      expiresIn: "7d",
+    }
+  ); // Refresh token with 7 days expiry
   return refreshToken;
 };
