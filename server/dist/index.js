@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const express_session_1 = __importDefault(require("express-session"));
+const dotenv_1 = __importDefault(require("dotenv"));
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const adminRoute_1 = __importDefault(require("./routes/adminRoute"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
@@ -13,8 +14,7 @@ const socket_1 = __importDefault(require("./socket/socket"));
 const socket_io_1 = require("socket.io");
 const http_1 = __importDefault(require("http"));
 const database_1 = __importDefault(require("./config/database"));
-require("dotenv").config();
-// dotenv.config();
+dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 8000;
 app.use((0, express_session_1.default)({
