@@ -11,6 +11,7 @@ const generateToken = (userId, role) => {
         userId: stringUserId,
         role,
     };
+    console.log("eneterd to jwt secret");
     const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, { expiresIn: "5h" });
     console.log(token);
     return token;
