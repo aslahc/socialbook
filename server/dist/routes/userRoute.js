@@ -12,7 +12,6 @@ const commentController_1 = require("../controllers/commentController");
 const storyController_1 = require("../controllers/storyController");
 const notifications_1 = require("../controllers/notifications");
 const ChatController_1 = require("../controllers/ChatController");
-const protectRoute_1 = require("../middleware/protectRoute");
 //signup and otp functionality
 user_route.post("/signup", UserController_1.signUp);
 user_route.post("/otpverify", UserController_1.verifyOtp);
@@ -23,10 +22,10 @@ user_route.post("/resendOtp", UserController_1.resendOtp);
 user_route.post("/verifyemail", UserController_1.verifyemail);
 user_route.post("/google-login", UserController_1.googlelogin);
 // fetch data
-user_route.get("/fetchData", protectRoute_1.verifyToken, UserController_1.fetchUsers);
-user_route.get("/fetchUserData", protectRoute_1.verifyToken, UserController_1.fetchUser);
+user_route.get("/fetchData", UserController_1.fetchUsers);
+user_route.get("/fetchUserData", UserController_1.fetchUser);
 // edit profile
-user_route.post("/editprofile/:userId", protectRoute_1.verifyToken, UserController_1.editprofile);
+user_route.post("/editprofile/:userId", UserController_1.editprofile);
 // posts
 user_route.post("/createPost", PostController_1.createPost);
 user_route.get("/fetchPost", PostController_1.fetchPosts);

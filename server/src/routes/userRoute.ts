@@ -2,57 +2,56 @@ import express from "express";
 const user_route = express();
 
 import {
-    signUp,
-    verifyOtp,
-    verifyLogin,
-    fetchUsers,
-    fetchUser,
-    resendOtp,
-    verifyemail,
-    editprofile,
-    verifyEmailOtp,
-    changepassword,
-    googlelogin,
-    followUser,
-    unfollowUser,
-    UserSuggestions,
-    refreshToken,
+  signUp,
+  verifyOtp,
+  verifyLogin,
+  fetchUsers,
+  fetchUser,
+  resendOtp,
+  verifyemail,
+  editprofile,
+  verifyEmailOtp,
+  changepassword,
+  googlelogin,
+  followUser,
+  unfollowUser,
+  UserSuggestions,
+  refreshToken,
 } from "../controllers/UserController";
 
 import {
-    createPost,
-    fetchPosts,
-    addLike,
-    removeLike,
-    deletePost,
-    editPost,
-    savePost,
-    Unsave,
-    createCategory,
-    getPostsByCategory,
+  createPost,
+  fetchPosts,
+  addLike,
+  removeLike,
+  deletePost,
+  editPost,
+  savePost,
+  Unsave,
+  createCategory,
+  getPostsByCategory,
 } from "../controllers/PostController";
 
 import { reportPost } from "../controllers/ReportPost";
 import {
-    postComment,
-    getComment,
-    deleteComment,
-    replayComment,
+  postComment,
+  getComment,
+  deleteComment,
+  replayComment,
 } from "../controllers/commentController";
 import {
-    createStory,
-    fetchStoryData,
-    deleteStory,
-    watchStory,
-    storyViews,
+  createStory,
+  fetchStoryData,
+  deleteStory,
+  watchStory,
+  storyViews,
 } from "../controllers/storyController";
 import {
-    notifications,
-    dismmisNotification,
+  notifications,
+  dismmisNotification,
 } from "../controllers/notifications";
 
 import { saveMessage, messages } from "../controllers/ChatController";
-
 
 import { verifyToken, authorizeRole } from "../middleware/protectRoute";
 import { isBlock } from "../middleware/IsBlock";
@@ -71,11 +70,11 @@ user_route.post("/verifyemail", verifyemail);
 user_route.post("/google-login", googlelogin);
 
 // fetch data
-user_route.get("/fetchData", verifyToken, fetchUsers);
-user_route.get("/fetchUserData", verifyToken, fetchUser);
+user_route.get("/fetchData", fetchUsers);
+user_route.get("/fetchUserData", fetchUser);
 
 // edit profile
-user_route.post("/editprofile/:userId", verifyToken, editprofile);
+user_route.post("/editprofile/:userId", editprofile);
 
 // posts
 user_route.post("/createPost", createPost);
@@ -98,7 +97,6 @@ user_route.get("/fetchStoryData", fetchStoryData);
 user_route.delete("/deleteStory/:id", deleteStory);
 user_route.post("/watchStory", watchStory);
 user_route.get("/stories/viewers", storyViews);
-
 
 //chat route
 user_route.post("/saveChat", saveMessage);
