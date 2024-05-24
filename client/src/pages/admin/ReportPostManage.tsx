@@ -5,6 +5,7 @@ import NameCard from "../../components/layouts/NameCard";
 import AdminSIdeBar from "../../components/layouts/AdminSIdeBar";
 import AdminNavbar from "../../components/layouts/AdminNavbar";
 import AdminManageReport from "../../components/posts/AdminManageReport";
+import AdminLogoCard from "../../components/layouts/AdminLogoCard";
 
 const baseURL = axiosInstance.defaults.baseURL;
 
@@ -15,7 +16,7 @@ function ReportPostManage() {
         <div className="w-64">
           <div className="">
             {/* Include the NameCard component */}
-            <NameCard />
+            <AdminLogoCard />
           </div>
 
           <div className="mt-4">

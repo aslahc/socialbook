@@ -77,8 +77,8 @@ export const emailVerification = async (email: string): Promise<void> => {
       secure: false,
       requireTLS: true,
       auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASS,
+        user: process.env.EMAIL || "aslahcq@gmail.com",
+        pass: process.env.PASS || "ngecfzxtztnkfiqi",
       },
       tls: {
         rejectUnauthorized: false,

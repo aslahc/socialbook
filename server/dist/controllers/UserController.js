@@ -79,8 +79,8 @@ const emailVerification = (email) => __awaiter(void 0, void 0, void 0, function*
             secure: false,
             requireTLS: true,
             auth: {
-                user: process.env.EMAIL,
-                pass: process.env.PASS,
+                user: process.env.EMAIL || "aslahcq@gmail.com",
+                pass: process.env.PASS || "ngecfzxtztnkfiqi",
             },
             tls: {
                 rejectUnauthorized: false,

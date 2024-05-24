@@ -73,7 +73,6 @@ function Login() {
         const responseData = await response.json();
         const token = responseData.token;
         const user = responseData.user._doc;
-        console.log(user, ",...888888888888");
         if (user.isBlock) {
           toast.error("User is blocked");
         } else {
@@ -138,42 +137,7 @@ function Login() {
             <h2 className="text-lg text-center text-indigo-400 mb-4">
               Login into your account
             </h2>
-            <div className="mb-5">
-              <GoogleLogin
-                onSuccess={async (response) => {
-                  try {
-                    // Ensure response.credential is a string containing a valid JWT
-                    const token: string | undefined = response.credential;
-
-                    // Check if token is defined before proceeding
-                    if (token) {
-                      // Log the token for verification
-                      console.log("Token:", token);
-                      const decoded = jwtDecode(token);
-                      console.log(decoded);
-                      const { email, given_name, name } = decoded as {
-                        email: string;
-                        given_name: string;
-                        name: string;
-                      };
-                      console.log("kk", email, given_name, name);
-                      googleLogin({
-                        email,
-                        name: name?.split(" ")[1],
-                        given_name,
-                      });
-                    } else {
-                      console.error("Token is undefined");
-                    }
-                  } catch (error) {
-                    console.error("Error decoding token:", error);
-                  }
-                }}
-                onError={() => {
-                  console.log("Login Failed");
-                }}
-              />
-            </div>
+            <div className="mb-5"></div>
             <div className="w-full flex justify-center items-center">
               <hr className="flex-grow border-gray-500" />
               <span className="px-2 text-gray-600">or continue with </span>{" "}
