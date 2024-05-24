@@ -45,7 +45,7 @@ app.use(
     credentials: true,
   })
 );
-
+console.log("entering to server");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

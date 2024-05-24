@@ -28,6 +28,7 @@ app.use((0, cors_1.default)({
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
 }));
+console.log("entering to server");
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, cookie_parser_1.default)());
