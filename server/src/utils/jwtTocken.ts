@@ -12,6 +12,7 @@ export const generateToken = (userId: any, role: string) => {
     role,
   };
   console.log("eneterd to jwt secret");
+  console.log(process.env.JWT_SECRET, "sss......................");
   const token = jwt.sign(
     payload,
     process.env.JWT_SECRET! || "nwL19kn732imVwEFvu2/fZOdX8ZUy5tP97zvUEK9hXQ=",
