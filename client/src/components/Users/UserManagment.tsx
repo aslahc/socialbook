@@ -75,12 +75,12 @@ function UserManagment() {
               <th className="px-6 py-3 text-left text-sm font-semibold text-black">
                 phone
               </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-black">
+              {/* <th className="px-6 py-3 text-left text-sm font-semibold text-black">
                 Followers
               </th>
               <th className="px-6 py-3 text-left text-sm font-semibold text-black">
                 Following
-              </th>
+              </th> */}
               <th className="px-6 py-3 text-left text-sm font-semibold text-black">
                 status
               </th>
@@ -132,8 +132,8 @@ function UserManagment() {
                 </td>
 
                 <td className="px-6 py-3 text-sm">{user.phone}</td>
-                <td className="px-6 py-3 text-sm">{user.followers}</td>
-                <td className="px-6 py-3 text-sm">{user.following}</td>
+                {/* <td className="px-6 py-3 text-sm">{user.followers}</td>
+                <td className="px-6 py-3 text-sm">{user.following}</td> */}
                 <td className="px-6 py-3">
                   <label className="relative cursor-pointer">
                     <td className="px-6 py-3">
