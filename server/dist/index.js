@@ -23,6 +23,7 @@ app.use((0, express_session_1.default)({
     saveUninitialized: true,
 }));
 // Middleware
+console.log("hey");
 app.use((0, cors_1.default)({
     origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
