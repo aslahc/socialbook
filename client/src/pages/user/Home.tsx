@@ -61,7 +61,11 @@ function Home() {
 
   const fetchUser = async (): Promise<void> => {
     try {
+      console.log("req users from ront");
+
       const response = await axiosInstance.get("/fetchData");
+      console.log(" res got users from ront");
+
       dispatch(setUsers(response.data.usersData));
     } catch (error) {
       console.error("Error:", error);

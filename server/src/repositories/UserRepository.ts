@@ -117,6 +117,7 @@ export class UserRepository {
 
   async findUsers(): Promise<IUser[]> {
     try {
+      console.log("entering");
       const users = await User.find();
       return users;
     } catch (error) {

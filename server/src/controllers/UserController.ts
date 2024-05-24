@@ -241,8 +241,9 @@ export const fetchUsers = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log("entering to fetch ysers ");
     const users = await userRepository.findUsers();
-
+    console.log("users", users);
     res.status(200).json({
       success: true,
       message: "User signup  successfully",

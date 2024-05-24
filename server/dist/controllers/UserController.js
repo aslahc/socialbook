@@ -222,7 +222,9 @@ exports.default = generatePassword;
 //fetch the all user details
 const fetchUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log("entering to fetch ysers ");
         const users = yield userRepository.findUsers();
+        console.log("users", users);
         res.status(200).json({
             success: true,
             message: "User signup  successfully",

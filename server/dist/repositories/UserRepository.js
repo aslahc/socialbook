@@ -138,6 +138,7 @@ class UserRepository {
     findUsers() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log("entering");
                 const users = yield user_1.default.find();
                 return users;
             }
