@@ -16,6 +16,8 @@ import database from "./config/database";
 
 dotenv.config();
 const app = express();
+console.log(process.env.PORT, "env.................");
+
 const PORT = process.env.PORT || 8000;
 
 app.use(
@@ -50,7 +52,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(cookieParser());
-
 const server = http.createServer(app);
 const io: Server = new Server(4000, {
   cors: { origin: "*" },

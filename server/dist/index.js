@@ -16,6 +16,7 @@ const http_1 = __importDefault(require("http"));
 const database_1 = __importDefault(require("./config/database"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+console.log(process.env.PORT, "env.................");
 const PORT = process.env.PORT || 8000;
 app.use((0, express_session_1.default)({
     secret: "secret-key",
