@@ -29,9 +29,6 @@ function UserProfile() {
 
         <div className="mt-4 flex ">
           <div className="w-64">
-            <div className="">
-              <NameCard />
-            </div>
             <div className="mt-4">
               <SideNav />
             </div>

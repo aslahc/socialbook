@@ -100,9 +100,6 @@ const SavedPost: React.FC = () => {
 
       <div className="mt-4 flex">
         <div className="">
-          <div className="h-24">
-            <NameCard />
-          </div>
           <div className="">
             <SideNav />
           </div>

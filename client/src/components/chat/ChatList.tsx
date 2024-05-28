@@ -30,14 +30,12 @@ function ChatList({ onUserSelect }: ChatListProps) {
                 className="object-cover h-16 w-16 rounded-full"
                 alt=""
               />
-              <div className="absolute bottom-0 right-0 h-4 w-4 bg-indigo-400 rounded-full border-2 border-white"></div>
             </div>
           </div>
           <div className="w-3/4 ml-4">
             <div className="text-lg font-semibold text-indigo-400">
               {user.username}
             </div>
-            <div className="text-gray-500">Available</div>
           </div>
         </div>
       ))}

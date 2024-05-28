@@ -25,7 +25,7 @@ function UserStory({ story }: UserStoryProps) {
   const [showStory, setShowStory] = useState<boolean>(false);
 
   return (
-    <div>
+    <div className="flex gap-4 mb-4">
       <div
         className="relative bg-white rounded-lg shadow-md overflow-hidden"
         style={{

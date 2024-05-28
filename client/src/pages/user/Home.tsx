@@ -113,70 +113,58 @@ function Home() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen overflow-hidden">
       {/* Navbar Component */}
       <div className="flex justify-between px-1 py-1">
-        {/* Admin Logo Card */}
-        {/* <div className="w-1/3">
-          <AdminLogoCard />
-        </div> */}
-
-        {/* Navbar */}
-        {/* <div className="w-9/12 fixed top-0 right-0 flex justify-end"> */}
         <Navbar />
-        {/* </div> */}
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-1 mt-4">
+      <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <div className="sticky left-0 top-0 h-screen">
-          {/* NameCard Component */}
-
-          {/* SideNav Component */}
+        <div className="sticky left-0 top-0 h-screen hidden md:block">
+          <div className="p-4">
+            {/* NameCard Component */}
+            {/* <NameCard /> */}
+          </div>
           <div>
             <SideNav />
           </div>
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 max-w-4xl ml-4">
+        <div className="flex-1 max-w-full md:max-w-4xl mx-4 overflow-y-auto">
           {/* AddStory and UserStory Container */}
-          <div className="flex items-center mb-4 justify-between ">
-            {/* AddStory Component */}
-            <div className="mr-3">
-              <AddStory />
-            </div>
-
-            {/* Container for User Stories with Horizontal Scroll */}
-            <div className="relative w-[550px] overflow-x-auto">
-              <div
-                className="flex"
-                ref={storiesContainerRef}
-                style={{
-                  width: `${storyData.length * cardWidth}px`,
-                  transition: "transform 0.3s ease-in-out",
-                }}
-              >
-                {/* User Stories Rendering */}
-                {storyData &&
-                  storyData.map((story, index) => (
-                    <div
-                      key={story._id}
-                      className="inline-flex"
-                      style={{ width: `${cardWidth}px`, gap: "19px" }}
-                    >
-                      <UserStory story={story} />
-                    </div>
-                  ))}
+          <div className="flex flex-col md:flex-row items-center mb-4 justify-between">
+            {/* AddStory and UserStory Container */}
+            <div className="flex flex-row w-full">
+              {/* AddStory Component */}
+              <div className="mr-2 md:mr-3">
+                <AddStory />
               </div>
 
-              {/* Horizontal Scrollbar */}
-              <div className="overflow-x-auto">
+              {/* Container for User Stories with Horizontal Scroll */}
+              <div className="flex-1 overflow-x-auto">
                 <div
-                  className="scrollbar-track scrollbar-thumb-rounded scrollbar-thumb-gray-400 scrollbar-track-gray-200"
-                  style={{ width: `${storyData.length * cardWidth}px` }}
-                />
+                  className="flex"
+                  ref={storiesContainerRef}
+                  style={{
+                    width: `${storyData.length * cardWidth}px`,
+                    transition: "transform 0.3s ease-in-out",
+                  }}
+                >
+                  {/* User Stories Rendering */}
+                  {storyData &&
+                    storyData.map((story, index) => (
+                      <div
+                        key={story._id}
+                        className="inline-flex"
+                        style={{ width: `${cardWidth}px`, gap: "19px" }}
+                      >
+                        <UserStory story={story} />
+                      </div>
+                    ))}
+                </div>
               </div>
             </div>
           </div>
@@ -198,7 +186,7 @@ function Home() {
         </div>
 
         {/* UserSuggestion Component (Aligned to the Right) */}
-        <div className="hidden sm:block ml-auto">
+        <div className="hidden lg:block ml-4 w-96 mt-3">
           <UserSuggetion userId={userId} />
         </div>
       </div>

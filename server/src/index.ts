@@ -39,7 +39,6 @@ declare module "express-session" {
   }
 }
 // Middleware
-console.log("hey");
 app.use(
   cors({
     origin: "*",

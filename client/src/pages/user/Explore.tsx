@@ -59,9 +59,6 @@ function Explore() {
       <div className="mt-4 flex ">
         {/* Side Navigation and NameCard (Hidden on Mobile) */}
         <div className="">
-          <div className="h-24">
-            <NameCard />
-          </div>
           <div className="">
             <SideNav />
           </div>

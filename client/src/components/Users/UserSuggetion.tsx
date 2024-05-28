@@ -66,7 +66,7 @@ const UserSuggestion: React.FC<UserSuggestionProps> = ({ userId }) => {
               suggestedUsers.map((user) => (
                 <li
                   key={user._id.toString()}
-                  className="py-3 sm:py-4 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors duration-300 cursor-pointer"
+                  className="py-3 sm:py-4 hover:bg-gray-100 dark:hover:bg-indigo-200 hover:px-3 rounded-md transition-colors duration-300 cursor-pointer"
                 >
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">

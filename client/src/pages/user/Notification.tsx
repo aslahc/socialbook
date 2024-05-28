@@ -94,9 +94,6 @@ function Notification() {
       <Navbar />
       <div className="mt-4 flex">
         <div>
-          <div className="h-24">
-            <NameCard />
-          </div>
           <div>
             <SideNav />
           </div>
