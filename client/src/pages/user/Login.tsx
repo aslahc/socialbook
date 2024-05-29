@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "../../utils/reducers/userDetails";
@@ -19,7 +19,9 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const googleLogin = useGoogleLogin();
-
+  useEffect(() => {
+    toast.success("Username:   user, Password: 111");
+  }, []);
   const [formData, setFormData] = useState<FormInputs>({
     username: "",
     password: "",

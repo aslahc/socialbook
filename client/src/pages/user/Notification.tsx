@@ -144,7 +144,7 @@ function Notification() {
                     className="bg-red-600 text-white rounded-md px-4 py-2 neumorphism hover:bg-red-700 flex items-center"
                   >
                     <svg
-                      className="w-5 h-5 mr-2"
+                      className="w-5 h-5 sm:w-5 sm:h-5 mr-0 sm:mr-2"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -157,7 +157,7 @@ function Notification() {
                         d="M6 18L18 6M6 6l12 12"
                       />
                     </svg>
-                    Dismiss
+                    <span className="hidden sm:block">Dismiss</span>
                   </button>
                 </div>
               ))}

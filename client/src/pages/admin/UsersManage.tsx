@@ -1,33 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import AdminLogoCard from "../../components/layouts/AdminLogoCard";
 import AdminSIdeBar from "../../components/layouts/AdminSIdeBar";
 import AdminNavbar from "../../components/layouts/AdminNavbar";
+import TotalReport from "../../components/adminDashboard/TotalReport";
+import Graph from "../../components/adminDashboard/Graph";
+import { FaBars, FaTimes } from "react-icons/fa";
 import UserManagment from "../../components/Users/UserManagment";
+function AdminDashboard() {
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
 
-function UsersManage() {
+  const toggleSidebar = () => {
+    setSidebarVisible(!isSidebarVisible);
+  };
+
   return (
-    <div>
-      <div className=" flex">
-        <div className="w-64">
-          <div className="mt-4">
-            {/* Include the NameCard component */}
-            <AdminLogoCard />
-          </div>
+    <div className="flex flex-col md:flex-row">
+      {/* Toggle Button for Mobile */}
+      <div className="md:hidden flex justify-between items-center p-4 bg-gray-100">
+        <div className="text-xl font-bold">Admin Dashboard</div>
+        <button
+          onClick={toggleSidebar}
+          className="bg-indigo-500 text-white p-2 rounded-lg shadow-lg"
+        >
+          {isSidebarVisible ? "Hide Menu" : "Show Menu"}
+        </button>
+      </div>
 
-          <div className="mt-4">
-            {/* Include the AdminSIdeBar component */}
-            <AdminSIdeBar />
-          </div>
+      {/* Sidebar and LogoCard for Desktop and Mobile */}
+      <div
+        className={`w-64 md:block ${
+          isSidebarVisible ? "block" : "hidden"
+        } md:h-auto md:relative fixed top-0 left-0 z-50 md:z-0 bg-white shadow-lg md:shadow-none`}
+      >
+        <div className="mt-4">
+          <AdminLogoCard />
         </div>
+        <div className="mt-4">
+          <AdminSIdeBar />
+        </div>
+      </div>
 
-        <div className="w-full">
-          {/* Include the AdminNavbar component */}
-          <AdminNavbar />
-          <UserManagment />
-        </div>
+      {/* Main Content */}
+      <div className="flex-1 p-4">
+        <UserManagment />
       </div>
     </div>
   );
 }
 
-export default UsersManage;
+export default AdminDashboard;

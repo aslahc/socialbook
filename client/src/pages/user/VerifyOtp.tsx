@@ -144,7 +144,7 @@ function VerifyOtp() {
               <p>Email Verification</p>
             </div>
             <div className="flex flex-row text-sm font-medium text-gray-400">
-              <p>We have sent a code to your email ba**@dipainhouse.com</p>
+              <p>We have sent a code to your email</p>
             </div>
           </div>
           <form className="mt-8" onSubmit={handleVerify}>
@@ -164,18 +164,20 @@ function VerifyOtp() {
               ))}
             </div>
             <div className="flex flex-col mt-8 space-y-5">
-              <button className="w-full py-5 bg-blue-700 text-white text-sm rounded-xl shadow-sm focus:outline-none">
+              <button className="w-full py-5 bg-indigo-500 text-white text-sm rounded-xl shadow-sm focus:outline-none">
                 Verify Account
               </button>
               <div className="flex items-center justify-center text-sm font-medium space-x-1 text-gray-500">
                 <p>Didn't receive code?</p>
                 {/* Show the resend button when timer runs out */}
                 {resendDisabled ? (
-                  <button className="text-blue-600" onClick={handleResendOtp}>
+                  <button className="text-blue-500" onClick={handleResendOtp}>
                     Resend OTP
                   </button>
                 ) : (
-                  <p>Resend OTP in {timer} seconds</p>
+                  <p className="text-indigo-500">
+                    Resend OTP in {timer} seconds
+                  </p>
                 )}
               </div>
             </div>

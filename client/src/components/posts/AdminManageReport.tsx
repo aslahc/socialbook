@@ -3,21 +3,18 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import axiosInstance from "../../axios/axios";
 
-// Extract baseURL from axiosInstance.defaults
-// const baseURL = axiosInstance.defaults.baseURL;
-
 interface Report {
-  postId: {
-    postUrl: string;
-  };
+  postId: { postUrl: string };
   reason: string;
-  isBlocked: boolean; // Corrected property name to 'isBlocked'
+  isBlocked: boolean;
 }
 
-// Define type for the component state
 type ReportState = Report[];
+
 function AdminManageReport() {
   const [reports, setReports] = useState<ReportState>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const reportsPerPage = 5; // Set the desired number of reports per page
 
   useEffect(() => {
     fetchReport();
@@ -26,9 +23,8 @@ function AdminManageReport() {
   const fetchReport = async (): Promise<void> => {
     try {
       const response = await axiosInstance.get(`/admin/fetchReport`);
-
       if (response.status === 200) {
-        setReports(response.data.reportedPost || []); // Handle potential absence of data
+        setReports(response.data.reportedPost || []);
       }
     } catch (error) {
       console.log(error);
@@ -38,16 +34,12 @@ function AdminManageReport() {
   const toggleBlockPost = async (report: Report) => {
     try {
       const updatedIsBlocked = !report.isBlocked;
-
-      // Send POST request to block/unblock the post
       const response = await axiosInstance.post(`/admin/blockPost`, {
         postId: report.postId,
         isBlocked: updatedIsBlocked,
       });
 
-      // Check if the request was successful (status 200)
       if (response.status === 200) {
-        // Update local state to reflect the change
         setReports((prevReports) =>
           prevReports.map((prevReport) =>
             prevReport.postId === report.postId
@@ -55,22 +47,28 @@ function AdminManageReport() {
               : prevReport
           )
         );
-
-        // Optionally refetch updated data from server
-        // This can be useful if you want to ensure the latest data is displayed
-        //   fetchReport();
       } else {
         console.log("Failed to update block status");
       }
     } catch (error) {
       console.log("Error toggling block status:", error);
-      // You can add more detailed error handling here
     }
   };
 
+  // Calculate the number of pages
+  const totalPages = Math.ceil(reports.length / reportsPerPage);
+
+  // Get the current page's reports
+  const indexOfLastReport = currentPage * reportsPerPage;
+  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
+  const currentReports = reports.slice(indexOfFirstReport, indexOfLastReport);
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
-    <div>
-      <div className="overflow-x-auto m-9 rounded-3xl">
+    <div className="overflow-x-auto m-9 rounded-3xl">
+      <div className="w-full overflow-x-auto">
         <table className="min-w-full bg-white font-sans">
           <thead className="whitespace-nowrap">
             <tr>
@@ -86,14 +84,18 @@ function AdminManageReport() {
             </tr>
           </thead>
           <tbody className="whitespace-nowrap">
-            {reports.map((report, index) => (
+            {currentReports.map((report, index) => (
               <tr className="odd:bg-blue-50" key={index}>
                 <td className="px-6 py-3 text-sm">
-                  <img
-                    className="max-h-32 max-w-32"
-                    src={report.postId.postUrl} // Assuming postId is a URL string
-                    alt="Post Image"
-                  />
+                  {report.postId.postUrl ? (
+                    <img
+                      className="max-h-32 max-w-32 sm:max-h-24 sm:max-w-24 md:max-h-32 md:max-w-32"
+                      src={report.postId.postUrl}
+                      alt="Post Image"
+                    />
+                  ) : (
+                    <p>{report.postId.postUrl}</p>
+                  )}
                 </td>
                 <td className="px-6 py-3 text-sm">{report.reason}</td>
                 <td className="px-6 py-3">
@@ -110,6 +112,26 @@ function AdminManageReport() {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-center mt-4">
+          <nav>
+            <ul className="flex">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <li key={index}>
+                  <button
+                    onClick={() => paginate(index + 1)}
+                    className={`px-3 py-1 mx-1 rounded ${
+                      currentPage === index + 1
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
   );

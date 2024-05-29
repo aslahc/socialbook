@@ -144,3 +144,10 @@
   box-shadow: inset 5px 5px 10px #e0e7ff, inset -5px -5px 10px #ffffff;
   background-color: #f7fafc;
 }
+
+@media (max-width: 640px) {
+  /* Styles for mobile screens */
+  .min-w-full {
+    min-width: 640px; /* Set the minimum width of the table */
+  }
+}

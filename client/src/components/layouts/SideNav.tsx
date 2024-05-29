@@ -7,6 +7,7 @@ import {
   FiCompass,
   FiFolder,
   FiBell,
+  FiPlayCircle,
 } from "react-icons/fi";
 import { FaUser } from "react-icons/fa";
 
@@ -18,14 +19,14 @@ function SideNav() {
       <ul className="py-2 md:py-4 md:px-14 flex flex-row justify-around md:flex-col md:justify-start md:items-start">
         <li
           onClick={() => navigate("/home")}
-          className="flex items-center justify-center py-2 md:py-4 text-indigo-500 hover:rounded-lg hover:bg-indigo-200 cursor-pointer md:w-full"
+          className="flex items-center justify-center py-2 md:py-4 text-indigo-500 hover:rounded-lg hover:bg-indigo-200   cursor-pointer md:w-full"
         >
           <FiHome />
           <span className="hidden md:inline ml-2">HOME</span>
         </li>
         <li
           onClick={() => navigate("/chat")}
-          className="flex items-center justify-center py-2 md:py-4 text-indigo-500 hover:rounded-lg hover:bg-indigo-200 cursor-pointer md:w-full"
+          className="flex items-center justify-center py-2 md:py-4 text-indigo-500 hover:rounded-lg hover:bg-indigo-200  cursor-pointer md:w-full"
         >
           <FiMessageSquare />
           <span className="hidden md:inline ml-2">MESSAGE</span>
@@ -41,10 +42,10 @@ function SideNav() {
           onClick={() => navigate("/reel")}
           className="flex items-center justify-center py-2 md:py-4 text-indigo-500 hover:rounded-lg hover:bg-indigo-200 cursor-pointer md:w-full"
         >
-          <FiCompass />
+          <FiPlayCircle />
           <span className="hidden md:inline ml-2">Reels</span>
         </li>
-        <li className="flex items-center justify-center py-2 md:py-4 text-indigo-500 hover:rounded-lg hover:bg-indigo-200 cursor-pointer md:w-full">
+        {/* <li className="flex items-center justify-center py-2 md:py-4 text-indigo-500 hover:rounded-lg hover:bg-indigo-200 cursor-pointer md:w-full">
           <FiFolder />
           <span
             onClick={() => navigate("/Collections")}
@@ -52,6 +53,14 @@ function SideNav() {
           >
             COLLECTION
           </span>
+        </li> */}
+        <li
+          onClick={() => navigate("/Collections")}
+          className="flex items-center justify-center py-2 md:py-4 text-indigo-500 hover:rounded-lg hover:bg-indigo-200 cursor-pointer md:w-full"
+        >
+          <FiFolder />
+
+          <span className="hidden md:inline ml-2"> COLLECTION</span>
         </li>
         <li
           onClick={() => navigate("/Notification")}

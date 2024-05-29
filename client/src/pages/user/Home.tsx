@@ -122,12 +122,12 @@ function Home() {
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <div className="sticky left-0 top-0 h-screen hidden md:block">
-          <div className="p-4">
+        <div className="sticky left-0 top-0 h-screen ">
+          <div className=" mt-3">
             {/* NameCard Component */}
             {/* <NameCard /> */}
           </div>
-          <div>
+          <div className="stiky">
             <SideNav />
           </div>
         </div>
@@ -135,16 +135,16 @@ function Home() {
         {/* Main Content Area */}
         <div className="flex-1 max-w-full md:max-w-4xl mx-4 overflow-y-auto">
           {/* AddStory and UserStory Container */}
-          <div className="flex flex-col md:flex-row items-center mb-4 justify-between">
+          <div className="flex flex-col md:flex-row items-center mb-4 mx-3 mt-2 justify-between">
             {/* AddStory and UserStory Container */}
-            <div className="flex flex-row w-full">
+            <div className="flex flex-row w-full  overflow-x-auto">
               {/* AddStory Component */}
               <div className="mr-2 md:mr-3">
                 <AddStory />
               </div>
 
               {/* Container for User Stories with Horizontal Scroll */}
-              <div className="flex-1 overflow-x-auto">
+              <div className="flex-1 ">
                 <div
                   className="flex"
                   ref={storiesContainerRef}

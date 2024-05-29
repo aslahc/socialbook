@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "../../utils/store/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import LogoutConfirm from "./LogoutConfirm";
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -12,9 +13,9 @@ function Navbar() {
   const [showModal, setShowModal] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+    setShowLogoutConfirm(!showLogoutConfirm);
   };
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState<Boolean>(false);
 
   const usersData = useSelector((state: RootState) => state.users.users);
 
@@ -134,6 +135,9 @@ function Navbar() {
           {/* Font Awesome Logout Icon */}
         </button>
       </nav>
+      {showLogoutConfirm && (
+        <LogoutConfirm onClose={() => setShowLogoutConfirm(false)} />
+      )}
     </div>
   );
 }

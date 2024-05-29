@@ -191,7 +191,7 @@ const CreatePost = () => {
 
   return (
     <div>
-      <div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl">
+      <div className="bg-white rounded-xl shadow-lg p-6 mx-2 max-w-2xl">
         <div className="flex items-center mb-4">
           <img
             src={userData?.profileimg || "/download.jpeg"}

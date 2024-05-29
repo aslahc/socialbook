@@ -114,8 +114,12 @@ function SignUp() {
       });
 
       const responseData = await response.json();
-      toast.error(responseData.error);
-
+      if (
+        responseData.error === "email is exist" ||
+        responseData.error === "Username already exists"
+      ) {
+        toast.error(responseData.error);
+      }
       if (response.ok) {
         if (responseData.success) {
           const userData = responseData.userData;
@@ -133,18 +137,6 @@ function SignUp() {
           password: "",
           confirmPassword: "",
         });
-      } else {
-        // Handle non-200 status codes
-        if (responseData.error === "Username already exists") {
-          // Display toast for username already exists error
-          // toast.error(responseData.error);
-        } else if (responseData.error === "email is exist") {
-          // toast.error(responseData.error)
-        } else {
-          // Display toast for other errors
-          const errorMessage = responseData.message || "";
-          toast.error(errorMessage);
-        }
       }
     } catch (error: any) {
       // Handle fetch error

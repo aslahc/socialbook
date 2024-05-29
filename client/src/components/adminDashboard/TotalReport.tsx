@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../axios/axios";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 interface ReportData {
   totalUsers: number;
@@ -29,61 +31,29 @@ function TotalReport() {
   }
 
   return (
-    <div className="flex flex-wrap justify-center gap-8 p-4 bg-gray-100">
-      <div className="bg-white rounded-lg shadow-lg p-4 w-64 text-center">
-        <div className="text-xl font-bold text-indigo-600 mb-4">
-          Total Users
+    <div className="flex flex-wrap justify-center gap-8 bg-gray-100 p-4">
+      {Object.entries(reportData).map(([key, value]) => (
+        <div className="bg-white rounded-lg shadow-lg p-4 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 text-center">
+          <div className="text-xl font-bold text-indigo-600 mb-4">
+            {key
+              .replace(/([A-Z])/g, " $1")
+              .replace(/^./, (str) => str.toUpperCase())}
+          </div>
+          <div style={{ width: 80, height: 80, margin: "0 auto" }}>
+            <CircularProgressbar
+              value={value}
+              text={`${value}`}
+              styles={buildStyles({
+                pathColor: `#4f46e5`,
+                textColor: "#4f46e5",
+              })}
+            />
+          </div>
+          <div className="text-gray-600 mt-2">
+            {key.replace(/([A-Z])/g, " $1").toLowerCase()}
+          </div>
         </div>
-        <div className="text-5xl font-semibold text-gray-800">
-          {reportData.totalUsers}
-        </div>
-        <div className="text-gray-600 mt-2">users</div>
-      </div>
-      <div className="bg-white rounded-lg shadow-lg p-4 w-64 text-center">
-        <div className="text-xl font-bold text-indigo-600 mb-4">
-          Total Posts
-        </div>
-        <div className="text-5xl font-semibold text-gray-800">
-          {reportData.totalPosts}
-        </div>
-        <div className="text-gray-600 mt-2">posts</div>
-      </div>
-      <div className="bg-white rounded-lg shadow-lg p-4 w-64 text-center">
-        <div className="text-xl font-bold text-indigo-600 mb-4">
-          Total Active Users
-        </div>
-        <div className="text-5xl font-semibold text-gray-800">
-          {reportData.totalActiveUsers}
-        </div>
-        <div className="text-gray-600 mt-2">active users</div>
-      </div>
-      <div className="bg-white rounded-lg shadow-lg p-4 w-64 text-center">
-        <div className="text-xl font-bold text-indigo-600 mb-4">
-          Total Likes
-        </div>
-        <div className="text-5xl font-semibold text-gray-800">
-          {reportData.totalReels}
-        </div>
-        <div className="text-gray-600 mt-2">likes</div>
-      </div>
-      <div className="bg-white rounded-lg shadow-lg p-4 w-64 text-center">
-        <div className="text-xl font-bold text-indigo-600 mb-4">
-          Total Comments
-        </div>
-        <div className="text-5xl font-semibold text-gray-800">
-          {reportData.totalComments}
-        </div>
-        <div className="text-gray-600 mt-2">comments</div>
-      </div>
-      <div className="bg-white rounded-lg shadow-lg p-4 w-64 text-center">
-        <div className="text-xl font-bold text-indigo-600 mb-4">
-          Total Reported Posts
-        </div>
-        <div className="text-5xl font-semibold text-gray-800">
-          {reportData.totalReportedPosts}
-        </div>
-        <div className="text-gray-600 mt-2">reported posts</div>
-      </div>
+      ))}
     </div>
   );
 }

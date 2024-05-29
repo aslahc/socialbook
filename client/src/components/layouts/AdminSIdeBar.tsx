@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import LogoutConfirm from "./LogoutConfirm";
 function AdminSIdeBar() {
+  const handleLogout = () => {
+    setShowLogoutConfirm(!showLogoutConfirm);
+    // localStorage.removeItem("admin");
+
+    // navigate("/login");
+    // Additional logout logic (e.g., redirecting to login page)
+  };
   const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState<Boolean>(false);
 
   return (
     <div className="sticky top-0 h-screen">
@@ -39,9 +47,18 @@ function AdminSIdeBar() {
             >
               Reports
             </li>
+            <li
+              onClick={handleLogout}
+              className="px-4 py-4 text-white hover:bg-indigo-600 cursor-pointer text-center rounded-lg shadow-inner transition-colors duration-300"
+            >
+              logount
+            </li>
           </ul>
         </nav>
       </div>
+      {showLogoutConfirm && (
+        <LogoutConfirm onClose={() => setShowLogoutConfirm(false)} />
+      )}
     </div>
   );
 }

@@ -208,7 +208,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
 
   return (
     <div>
-      <div className="border   max-w-xl mx-11  mt-8 p-4 bg-white shadow-md rounded-md">
+      <div className="border   max-w-2xl mx-2  mt-8 p-4 bg-white shadow-md rounded-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <span className="relative flex h-10 w-15 shrink-0 overflow-hidden  mr-4 ">

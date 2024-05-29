@@ -39,7 +39,9 @@ function ProfileCard({ userData }: { userData: User }) {
       setIsFollowing(false);
     }
   }, [userId, userData]);
-
+  const PostsData = useSelector((state: RootState) => state.postData.posts);
+  // Filter the user's posts based on their ID
+  const userPosts = PostsData.filter((post) => post.userId._id === userId);
   const handleFollow = async () => {
     await followUserAction(userData._id, userId);
   };
@@ -59,8 +61,8 @@ function ProfileCard({ userData }: { userData: User }) {
           }
           alt="Banner image"
         />
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-b from-transparent to-gray-900 opacity-50 h-16 flex items-center justify-between px-4">
-          <h1 className="text-white text-sm md:text-lg font-medium">
+        <div className="absolute bottom-0 left-0 right-0 0 h-16 flex items-center justify-between px-4">
+          <h1 className="text-white  text-sm md:text-lg font-medium">
             {userData.profession || "Add profession"}
           </h1>
         </div>
@@ -121,7 +123,9 @@ function ProfileCard({ userData }: { userData: User }) {
         <ul className="flex flex-wrap justify-center md:justify-start px-4 py-2 divide-x divide-gray-200">
           <li className="px-3 py-2 flex items-center space-x-2">
             <span className="text-gray-500 text-xs md:text-sm">Posts</span>
-            <span className="font-medium text-xs md:text-base">0</span>
+            <span className="font-medium text-xs md:text-base">
+              {userPosts.length}
+            </span>
           </li>
           <li className="px-3 py-2 flex items-center space-x-2">
             <span className="text-gray-500 text-xs md:text-sm">Following</span>
