@@ -1,4 +1,4 @@
-# Social Media Project
+# SocialBook - Social Media Project
 
 
 ## Description
